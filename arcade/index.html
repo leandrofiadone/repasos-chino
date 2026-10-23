@@ -1253,19 +1253,19 @@ function fireworks(cv, ms) {
    Juego 1: Tonos con el dedo
    ============================================================ */
 const ETAPAS = [
-  {id:'e1', nombre:'Arriba o abajo', ds:'Tono 1 contra tono 4: alto y parejo, o cae fuerte.', n:14, base:6.4,
+  {id:'e1', nombre:'Arriba o abajo', ds:'Tono 1 contra tono 4: alto y parejo, o cae fuerte.', n:14, base:7,
     pool:() => TD.uno.filter(w => [1, 4].includes(w.s[0][1]))},
-  {id:'e2', nombre:'¿Sube o baja?', ds:'Tono 2 contra tono 3, la trampa de siempre: el 2 sube; el 3 baja a lo grave y vuelve.', n:14, base:6,
+  {id:'e2', nombre:'¿Sube o baja?', ds:'Tono 2 contra tono 3, la trampa de siempre: el 2 sube; el 3 baja a lo grave y vuelve.', n:14, base:6.6,
     pool:() => TD.uno.filter(w => [2, 3].includes(w.s[0][1]))},
-  {id:'e3', nombre:'Los cuatro', ds:'Los cuatro tonos mezclados, de a una sílaba.', n:16, base:5.4, pool:() => TD.uno},
-  {id:'e4', nombre:'Con liviano', ds:'Palabras con una sílaba liviana: para esa, un toque.', n:12, base:4.6,
+  {id:'e3', nombre:'Los cuatro', ds:'Los cuatro tonos mezclados, de a una sílaba.', n:16, base:6, pool:() => TD.uno},
+  {id:'e4', nombre:'Con liviano', ds:'Palabras con una sílaba liviana: para esa, un toque.', n:12, base:5.2,
     pool:() => TD.liviano.concat(shuffle(TD.uno).slice(0, 6))},
-  {id:'e5', nombre:'De a dos', ds:'Palabras de dos sílabas: dos trazos seguidos.', n:14, base:4.5, pool:() => TD.dos},
-  {id:'e6', nombre:'Largas', ds:'Tres y cuatro sílabas: un trazo por cada una.', n:10, base:4.2, pool:() => TD.largas},
-  {id:'e7', nombre:'Solo de oído', ds:'No ves la palabra hasta contestar. Puntos dobles.', n:16, base:4.8, oculto:true, voz:true,
+  {id:'e5', nombre:'De a dos', ds:'Palabras de dos sílabas: dos trazos seguidos.', n:14, base:5.1, pool:() => TD.dos},
+  {id:'e6', nombre:'Largas', ds:'Tres y cuatro sílabas: un trazo por cada una.', n:10, base:4.8, pool:() => TD.largas},
+  {id:'e7', nombre:'Solo de oído', ds:'No ves la palabra hasta contestar. Puntos dobles.', n:16, base:5.4, oculto:true, voz:true,
     pool:() => TD.uno.concat(TD.liviano, TD.dos)},
 ];
-const SINFIN = {id:'sinfin', nombre:'Sin fin', ds:'Tres vidas y cada vez más rápido.', base:5.6};
+const SINFIN = {id:'sinfin', nombre:'Sin fin', ds:'Tres vidas y cada vez más rápido.', base:6.2};
 const ALLW = {};
 TD.uno.concat(TD.liviano, TD.dos, TD.largas).forEach(w => { ALLW[w.hz] = w; });
 function etState(id) { return S.tonos.et[id] || {st:0, best:0}; }
@@ -1378,7 +1378,7 @@ function tonosScene(et) {
   function spawn() {
     const w = nextWord();
     const n = w.s.length;
-    const speedK = endless ? Math.max(0.5, Math.pow(0.978, G.nOk)) : 1;
+    const speedK = endless ? Math.max(0.55, Math.pow(0.982, G.nOk)) : 1;
     const dur = G.base * speedK * (0.62 + 0.38 * n) * (TTS.ok ? 1 : 1.1);
     /* una sílaba: un farol grande; varias: una tira de faroles, uno por sílaba */
     let lw, lh, step = 0;
@@ -1467,14 +1467,15 @@ function tonosScene(et) {
     const acc = endless ? 0 : G.ok / total;
     let stars = null, pass = true, title = '', record = false, sub = '';
     if (!endless) {
-      stars = (G.bad <= 1 && acc >= 0.85) ? 3 : acc >= 0.8 ? 2 : acc >= 0.6 ? 1 : 0;
+      /* tres estrellas con hasta dos errores; para pasar alcanza con algo más de la mitad */
+      stars = (G.bad <= 2 && acc >= 0.85) ? 3 : acc >= 0.75 ? 2 : acc >= 0.55 ? 1 : 0;
       pass = stars > 0;
       const prev = etState(et.id);
       record = G.score > (prev.best || 0) && prev.best > 0;
       S.tonos.et[et.id] = {st:Math.max(prev.st || 0, stars), best:Math.max(prev.best || 0, G.score)};
       title = stars === 3 ? '¡Perfecto!' : pass ? '¡Etapa superada!' : 'Casi';
       const idx = ETAPAS.indexOf(et);
-      sub = `Etapa ${idx + 1} · ${et.nombre}` + (pass ? '' : ' · necesitás 6 de cada 10 para pasar');
+      sub = `Etapa ${idx + 1} · ${et.nombre}` + (pass ? '' : ` · necesitás ${Math.ceil(0.55 * total)} de ${total} para pasar`);
       ev('tonos_estrellas', stars);
     } else {
       record = G.score > (S.tonos.sinfin || 0) && S.tonos.sinfin > 0;
@@ -1775,7 +1776,7 @@ function ninjaScene() {
     const grp = pickGroup();
     const cands = voice ? grp.items : grp.items.filter(i => i.es);
     const target = pick(cands);
-    const n = Math.min(5, 2 + Math.floor((G.wave - 1) / 4));
+    const n = Math.min(5, 2 + Math.floor((G.wave - 1) / 5));
     const same = (a, b) => a.py.toLowerCase() === b.py.toLowerCase() || a.hz === b.hz;
     const items = [target];
     for (const it of shuffle(grp.items)) if (items.length < n && !items.some(x => same(x, it))) items.push(it);
@@ -1785,9 +1786,9 @@ function ninjaScene() {
     const lanes = shuffle(items.map((_, i) => i));
     G.queue = shuffle(items).map((it, i) => ({it, lane:lanes[i], n:items.length, delay:i * (0.2 + Math.random() * 0.14)}));
     G.state = 'announce'; G.launchAt = Infinity; G.annT = E.time;
-    G.g = E.h * Math.min(1.55, 1.0 + G.wave * 0.03);
-    if (voice) say(target.hz, {rate:0.8, onstart:() => { if (G.target === target) G.launchAt = Math.min(G.launchAt, E.time + 0.3); }});
-    else G.launchAt = E.time + 1.1;
+    G.g = E.h * Math.min(1.35, 0.8 + G.wave * 0.025);
+    if (voice) say(target.hz, {rate:0.8, onstart:() => { if (G.target === target) G.launchAt = Math.min(G.launchAt, E.time + 0.5); }});
+    else G.launchAt = E.time + 1.4;
   }
   function launch(q) {
     const it = q.it, r = G.r, W = E.w, H = E.h;
@@ -1991,13 +1992,13 @@ function startCorredor() {
   sc.intro();
 }
 function corredorScene() {
-  const G = {phase:'intro', speed:24, scroll:0, rows:[], blds:[], strs:[], lane:0, rx:0, tilt:0, lives:3, score:0, streak:0, maxs:0, words:0, done:0,
+  const G = {phase:'intro', speed:19, scroll:0, rows:[], blds:[], strs:[], lane:0, rx:0, tilt:0, lives:4, score:0, streak:0, maxs:0, words:0, done:0,
     f:null, chosen:[], plan:[], marks:[], spawned:0, pause:0, turbo:0, stumble:0, used:new Set(), missed:[], built:[], start:null, hy:0, gy:0, t:0};
   const proj = z => R3.F / (R3.F + Math.max(-R3.F * 0.7, z));
   const gY = z => G.hy + (G.gy - G.hy) * proj(z);
   const lX = (l, z) => E.w / 2 + l * E.w * 0.31 * proj(z);
   const multOf = () => Math.min(4, 1 + Math.floor(G.streak / 3));
-  const hud = () => { $('#hProg').innerHTML = hearts(G.lives, 3); };
+  const hud = () => { $('#hProg').innerHTML = hearts(G.lives, 4); };
   function layout() { G.hy = E.h * 0.31; G.gy = E.h * 0.9; }
   function initWorld() {
     G.blds = [];
@@ -2100,7 +2101,7 @@ function corredorScene() {
     if (clean) { floater(E.w / 2, E.h * 0.45, '¡Frase!', CSSV.gold, {size:38, vy:-24, max:1.4}); floater(E.w / 2, E.h * 0.45 + 40, '+' + bonus, '#fff', {size:26, vy:-24, max:1.4}); }
     if (TTS.ok) say(f.hz, {rate:0.85});
     ev('corredor_frase', 1);
-    G.speed = Math.min(42, 24 + G.done * 1.5);
+    G.speed = Math.min(34, 19 + G.done);
     panel(true);
     G.nextAt = E.time + 1.7;
   }
@@ -2203,7 +2204,7 @@ function corredorScene() {
       layout(); initWorld(); hud();
       overlay(`<div class="lab">Corredor de frases</div><h3>Armá la frase corriendo</h3>
         <p>Arriba está la frase en español. Pasá por el arco que tiene la palabra que sigue en chino.</p>
-        <p>Deslizá a la izquierda o a la derecha, o tocá abajo la palabra que querés. Si pasás por la que no va, perdés una vida.</p>
+        <p>Deslizá a la izquierda o a la derecha, o tocá abajo la palabra que querés. Si pasás por la que no va, perdés una vida. Tenés cuatro.</p>
         <div class="acts"><button class="btn" type="button" data-act="go">¡Dale!</button><button class="btn ghost" type="button" data-act="quit">Volver</button></div>`);
     },
     go() { closeOverlay(); newSentence(); G.phase = 'ready'; countdown(() => { G.phase = 'play'; G.pause = 0.2; }); },
@@ -2211,7 +2212,7 @@ function corredorScene() {
     update(dt) {
       if (G.phase === 'intro' || G.phase === 'end') return;
       const run = G.phase === 'play' || G.phase === 'over';
-      if (G.phase === 'ready') { G.speed = 24; }
+      if (G.phase === 'ready') { G.speed = 19; }
       const v = G.phase === 'over' ? G.speed * 0.3 : G.speed * (G.turbo > 0 ? 1.4 : 1);
       G.scroll = (G.scroll + v * dt) % 10;
       for (const b of G.blds) { b.z -= v * dt; if (b.z < -10) Object.assign(b, newBld(b.z + 16 * 13, b.side)); }
@@ -2331,7 +2332,7 @@ const DIAS = [
 ];
 function cafeCfg(d) {
   return {n:Math.min(9, 3 + d), como:d >= 2, gusta:d >= 2, no:d >= 3, dos:d >= 3, hay:d >= 4, que:d >= 4, agotado:d >= 4,
-    oido:d >= 6 && TTS.ok, pat:Math.max(20, 36 - d * 2)};
+    oido:d >= 6 && TTS.ok, pat:Math.max(24, 42 - d * 2)};
 }
 function drinkSvg(b, cls) {
   const col = b.col;
@@ -2621,7 +2622,7 @@ function cafeScene(day) {
       else nextBeat(1300);
     } else {
       G.badB++; cu.clean = false;
-      cu.pat -= cu.patMax * 0.18; cu.mood = 'angry';
+      cu.pat -= cu.patMax * 0.15; cu.mood = 'angry';
       const right = G.opts[okI];
       const why = o.why || CL(o.key).why || right.why || `Quería decir «${CL(right.key).es}».`;
       vendor(right.key, true, why);
@@ -2652,7 +2653,7 @@ function cafeScene(day) {
       nextBeat(900);
     } else {
       cu.tries++; G.badB++; cu.clean = false;
-      cu.pat -= cu.patMax * 0.25; cu.mood = 'angry';
+      cu.pat -= cu.patMax * 0.2; cu.mood = 'angry';
       const wrongId = G.tray.find(x => !cu.beat.items.includes(x));
       if (wrongId) talk(`noes:${wrongId}`); else talk(cu.beat.line);
       const wantTxt = cu.beat.items.map(id => `{${BEB[id].py}|${BEB[id].hz}}`).join(' y ');
@@ -2705,7 +2706,7 @@ function cafeScene(day) {
     G.phase = 'end';
     G.timers.forEach(clearTimeout);
     const n = cfg.n, ratio = G.sat / n;
-    const stars = ratio >= 0.9 && G.badB <= 2 ? 3 : ratio >= 0.7 ? 2 : ratio >= 0.5 ? 1 : 0;
+    const stars = ratio >= 0.9 && G.badB <= 3 ? 3 : ratio >= 0.65 ? 2 : ratio >= 0.5 ? 1 : 0;
     S.cafe.st = S.cafe.st || {}; S.cafe.best = S.cafe.best || {};
     const prevBest = S.cafe.best[day] || 0, record = G.earned > prevBest && prevBest > 0;
     S.cafe.st[day] = Math.max(S.cafe.st[day] || 0, stars);
