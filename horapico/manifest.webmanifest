@@ -1,0 +1,30 @@
+{
+  "name": "Hora pico",
+  "short_name": "Hora pico",
+  "description": "Un café de Pekín en hora pico: grupos, turistas, pedidos largos, cuentas, vueltos y clientes muy raros, con lo visto en clase.",
+  "lang": "es-AR",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0d1c",
+  "theme_color": "#0a0d1c",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
