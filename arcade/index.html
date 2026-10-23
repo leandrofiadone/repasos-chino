@@ -1992,7 +1992,7 @@ function startCorredor() {
   sc.intro();
 }
 function corredorScene() {
-  const G = {phase:'intro', speed:19, scroll:0, rows:[], blds:[], strs:[], lane:0, rx:0, tilt:0, lives:4, score:0, streak:0, maxs:0, words:0, done:0,
+  const G = {phase:'intro', speed:13, scroll:0, rows:[], blds:[], strs:[], lane:0, rx:0, tilt:0, lives:4, score:0, streak:0, maxs:0, words:0, done:0,
     f:null, chosen:[], plan:[], marks:[], spawned:0, pause:0, turbo:0, stumble:0, used:new Set(), missed:[], built:[], start:null, hy:0, gy:0, t:0};
   const proj = z => R3.F / (R3.F + Math.max(-R3.F * 0.7, z));
   const gY = z => G.hy + (G.gy - G.hy) * proj(z);
@@ -2101,7 +2101,7 @@ function corredorScene() {
     if (clean) { floater(E.w / 2, E.h * 0.45, '¡Frase!', CSSV.gold, {size:38, vy:-24, max:1.4}); floater(E.w / 2, E.h * 0.45 + 40, '+' + bonus, '#fff', {size:26, vy:-24, max:1.4}); }
     if (TTS.ok) say(f.hz, {rate:0.85});
     ev('corredor_frase', 1);
-    G.speed = Math.min(34, 19 + G.done);
+    G.speed = Math.min(26, 13 + G.done * 0.7);
     panel(true);
     G.nextAt = E.time + 1.7;
   }
@@ -2212,7 +2212,7 @@ function corredorScene() {
     update(dt) {
       if (G.phase === 'intro' || G.phase === 'end') return;
       const run = G.phase === 'play' || G.phase === 'over';
-      if (G.phase === 'ready') { G.speed = 19; }
+      if (G.phase === 'ready') { G.speed = 13; }
       const v = G.phase === 'over' ? G.speed * 0.3 : G.speed * (G.turbo > 0 ? 1.4 : 1);
       G.scroll = (G.scroll + v * dt) % 10;
       for (const b of G.blds) { b.z -= v * dt; if (b.z < -10) Object.assign(b, newBld(b.z + 16 * 13, b.side)); }
