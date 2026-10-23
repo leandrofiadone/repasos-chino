@@ -1784,9 +1784,9 @@ function ninjaScene() {
     G.target = target; G.group = grp;
     /* cada bollo sale por su carril, así no se tapan entre ellos */
     const lanes = shuffle(items.map((_, i) => i));
-    G.queue = shuffle(items).map((it, i) => ({it, lane:lanes[i], n:items.length, delay:i * (0.2 + Math.random() * 0.14)}));
+    G.queue = shuffle(items).map((it, i) => ({it, lane:lanes[i], n:items.length, delay:i * (0.32 + Math.random() * 0.16)}));
     G.state = 'announce'; G.launchAt = Infinity; G.annT = E.time;
-    G.g = E.h * Math.min(1.35, 0.8 + G.wave * 0.025);
+    G.g = E.h * Math.min(0.95, 0.5 + G.wave * 0.015);
     if (voice) say(target.hz, {rate:0.8, onstart:() => { if (G.target === target) G.launchAt = Math.min(G.launchAt, E.time + 0.5); }});
     else G.launchAt = E.time + 1.4;
   }
