@@ -26,8 +26,9 @@
 <style>
 /* una consola de laca: la escena arriba, como una ventana; abajo, el panel de una caja de té */
 :root {
-  --bg:#0e1424; --panel:#161e35; --panel2:#1d2745; --borde:#2b3760; --tinta:#f6ecd6; --mute:#9aa3bd;
+  --bg:#150d12; --panel:#23161b; --panel2:#311f25; --borde:#553631; --tinta:#f8ecd4; --mute:#c4ab96;
   --laca:#c9333b; --laca2:#e2574a; --oro:#f0b232; --oro2:#ffe08a; --jade:#2e8d68; --jade2:#58c897; --madera:#5a3620;
+  --papel:#f6e7c6; --papel2:#e7cf9c; --tpapel:#3b2416; --tpapel2:#7a5a3e;
   --f-pix:"Pixelify Sans", "Nunito", system-ui, sans-serif;
   --f-ui:"Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-hz:"PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
@@ -48,11 +49,11 @@ button:focus-visible { outline:3px solid var(--oro2); outline-offset:2px; }
 canvas { image-rendering:pixelated; image-rendering:crisp-edges; }
 
 /* ---------- botones ---------- */
-.btn { display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:52px; padding:10px 18px; border:0; border-radius:4px;
+.btn { display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:52px; padding:10px 18px; border:0; border-radius:10px;
   background:var(--laca); color:#fff; font:700 17px/1.2 var(--f-ui); box-shadow:0 4px 0 #7d1e2c, inset 0 2px 0 rgba(255,255,255,.18); }
 .btn:active { transform:translateY(2px); box-shadow:0 2px 0 #7d1e2c; }
 .btn small { font:600 12px/1.2 var(--f-ui); opacity:.85; }
-.btn.sec { background:var(--panel2); box-shadow:0 4px 0 #0b1020, inset 0 0 0 2px var(--borde); color:var(--tinta); }
+.btn.sec { background:var(--panel2); box-shadow:0 4px 0 #0b0508, inset 0 0 0 2px var(--borde); color:var(--tinta); }
 .btn.grande { min-height:62px; font-size:19px; }
 .fila { display:flex; gap:10px; flex-wrap:wrap; }
 .fila > .btn { flex:1 1 140px; }
@@ -66,7 +67,7 @@ canvas { image-rendering:pixelated; image-rendering:crisp-edges; }
 .titulo h1 { margin:0; font:600 clamp(30px, 9vw, 48px)/1 var(--f-pix); letter-spacing:.01em; text-wrap:balance; }
 .titulo h1 span { display:block; }
 .titulo .t1 { color:var(--tinta); font-size:.62em; }
-.titulo .t2 { color:var(--oro2); text-shadow:3px 3px 0 var(--laca), 6px 6px 0 #0b1020; }
+.titulo .t2 { color:var(--oro2); text-shadow:3px 3px 0 var(--laca), 6px 6px 0 #0b0508; }
 .tsub { margin:0; color:var(--mute); max-width:46ch; }
 .tbotones { display:flex; flex-direction:column; gap:12px; }
 .aviso { margin:0; padding:12px 14px; background:var(--panel2); border-left:4px solid var(--oro); }
@@ -74,13 +75,13 @@ canvas { image-rendering:pixelated; image-rendering:crisp-edges; }
 
 /* ---------- el juego ---------- */
 .juego { height:100%; max-width:760px; margin:0 auto; display:flex; flex-direction:column; }
-.barra { display:flex; align-items:center; gap:6px; padding:6px max(10px, env(safe-area-inset-right, 0px)) 6px max(12px, env(safe-area-inset-left, 0px)); min-height:44px; background:#0b1020; }
+.barra { display:flex; align-items:center; gap:6px; padding:6px max(10px, env(safe-area-inset-right, 0px)) 6px max(12px, env(safe-area-inset-left, 0px)); min-height:44px; background:linear-gradient(#2a1418, #1a0d11); box-shadow:inset 0 -2px 0 #7d1e2c; }
 .lugar { flex:1; min-width:0; font:600 16px/1.1 var(--f-pix); color:var(--oro2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .hora { display:inline-flex; align-items:center; gap:5px; font:600 15px/1 var(--f-pix); color:var(--tinta); font-variant-numeric:tabular-nums; padding:0 4px; }
 .hora .i { width:17px; height:17px; color:var(--oro); }
 .ib { width:42px; height:42px; display:grid; place-items:center; border:0; border-radius:4px; background:var(--panel2); color:var(--tinta); }
 .ib:active { background:var(--borde); }
-.escena { position:relative; flex:none; background:#000; box-shadow:0 3px 0 var(--madera), 0 6px 0 #2a180d; }
+.escena { position:relative; flex:none; background:#000; box-shadow:0 3px 0 #8a6420, 0 6px 0 #2a180d; overflow:hidden; }
 .escena::after { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 75% 70% at 50% 46%, transparent 62%, rgba(8,6,20,.38) 100%); }
 .escena canvas { display:block; width:100%; height:auto; aspect-ratio:16 / 9; touch-action:manipulation; cursor:pointer; }
 .fundido { position:absolute; inset:0; background:#000; opacity:0; pointer-events:none; transition:opacity .25s; }
@@ -91,20 +92,49 @@ canvas { image-rendering:pixelated; image-rendering:crisp-edges; }
 .mk.sal { background:var(--jade2); box-shadow:0 0 0 3px rgba(0,0,0,.45), 0 0 12px var(--jade); }
 .mk.imp { width:22px; height:22px; margin:-11px 0 0 -11px; background:var(--oro); box-shadow:0 0 0 3px rgba(0,0,0,.5), 0 0 0 6px var(--oro2), 0 0 22px var(--oro); }
 @keyframes late { to { transform:scale(1.3); } }
-.frase { min-height:34px; padding:8px max(16px, env(safe-area-inset-right, 0px)) 4px max(16px, env(safe-area-inset-left, 0px)); font:600 15px/1.3 var(--f-pix); color:var(--oro2); text-align:center; }
+.frase { min-height:40px; display:flex; align-items:center; justify-content:center; gap:8px; padding:8px max(14px, env(safe-area-inset-right, 0px)) 4px max(14px, env(safe-area-inset-left, 0px)); font:600 15px/1.3 var(--f-pix); color:var(--oro2); text-align:center; }
 .frase .hz { font-family:var(--f-hz); }
-.panel { flex:1; min-height:0; overflow-y:auto; padding:6px max(12px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); }
+.frase.callada { display:none; }
+/* la tira de «Ahora»: lo próximo que hay que hacer */
+.frase.meta { margin:8px max(10px, env(safe-area-inset-right, 0px)) 0 max(10px, env(safe-area-inset-left, 0px)); padding:8px 12px; justify-content:flex-start; text-align:left; cursor:pointer;
+  background:linear-gradient(90deg, #3a2410, #2a1a14 70%); border-radius:10px; box-shadow:inset 0 0 0 2px #8a6420, 0 3px 0 #0c0608; font:600 15px/1.3 var(--f-ui); color:var(--tinta); }
+.frase.meta .i { width:22px; height:22px; color:var(--oro); flex:none; }
+.frase.meta .mt { flex:1; min-width:0; }
+.frase.meta .mt b { font:600 12px/1 var(--f-pix); color:var(--oro); letter-spacing:.08em; text-transform:uppercase; margin-right:4px; }
+.frase.meta .mv { font:700 22px/1 var(--f-ui); color:var(--oro); }
+.frase.meta.nueva { animation:avisa 1.2s ease-out 2; }
+.frase.meta .prog { display:inline-block; font-style:normal; background:var(--oro); color:#2a180d; border-radius:4px; padding:0 6px; font:800 12px/1.5 var(--f-ui); margin-right:2px; vertical-align:1px; }
+@keyframes avisa { 0% { box-shadow:inset 0 0 0 2px var(--oro2), 0 0 0 0 rgba(255,224,138,.7), 0 3px 0 #0c0608; } 100% { box-shadow:inset 0 0 0 2px #8a6420, 0 0 0 14px rgba(255,224,138,0), 0 3px 0 #0c0608; } }
+.panel { flex:1; min-height:0; overflow-y:auto; padding:8px max(12px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+  background:radial-gradient(120% 50% at 50% 0%, #2d1a20, transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='72' viewBox='0 0 120 72'%3E%3Cg fill='none' stroke='%23f0b232' stroke-opacity='.07' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M8 52c0-8 10-12 16-6 2-10 18-10 20 0 6-6 16-2 14 6M68 20c0-8 10-12 16-6 2-10 18-10 20 0 6-6 16-2 14 6'/%3E%3Cpath d='M30 50c3-3 7-3 9 1M90 18c3-3 7-3 9 1'/%3E%3C/g%3E%3C/svg%3E") repeat; }
+/* el primer plano: nombres y carteles arriba de la escena */
+.ppx { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.ppn { position:absolute; bottom:8%; display:flex; flex-direction:column; gap:1px; padding:6px 12px 7px; background:rgba(20,10,14,.86); border-radius:6px; box-shadow:0 0 0 2px var(--oro); color:var(--tinta); font:600 12px/1.2 var(--f-ui); animation:entraN .35s cubic-bezier(.2,1.4,.4,1); max-width:58%; }
+.ppn.izq { left:4%; } .ppn.der { right:4%; text-align:right; }
+.ppn .py { font:600 19px/1.1 var(--f-pix); color:var(--oro2); }
+.ppn .hz { font-size:16px; color:var(--tinta); }
+@keyframes entraN { from { transform:translateY(16px) scale(.9); opacity:0; } }
+.ppt { position:absolute; left:50%; top:46%; transform:translate(-50%, -50%); font:700 clamp(28px, 10vw, 46px)/1 var(--f-pix); color:var(--oro2); text-shadow:3px 3px 0 var(--laca), 6px 6px 0 #0b0508; white-space:nowrap; animation:golpeT 1.3s ease-out forwards; }
+.ppt.vs { font-size:clamp(34px, 12vw, 58px); }
+.ppt.chico { font-size:clamp(20px, 6.5vw, 30px); top:66%; }
+.ppt.mal { color:#ffd0c4; text-shadow:3px 3px 0 #4a1622, 6px 6px 0 #0b0508; }
+@keyframes golpeT { 0% { transform:translate(-50%, -50%) scale(2.2); opacity:0; } 14% { transform:translate(-50%, -50%) scale(.92); opacity:1; } 24% { transform:translate(-50%, -50%) scale(1.04); } 78% { opacity:1; } 100% { transform:translate(-50%, -64%) scale(1); opacity:0; } }
+.cartel { position:absolute; top:8px; left:8px; display:flex; flex-direction:column; padding:5px 12px 6px; background:rgba(26,12,16,.88); border-left:4px solid var(--laca); border-radius:3px; color:var(--oro2); font:600 16px/1.15 var(--f-pix); transform:translateX(-120%); pointer-events:none; }
+.cartel span { font:600 12px/1.2 var(--f-ui); color:var(--tinta); }
+.cartel.on { animation:cartel 2.6s ease-in-out forwards; }
+@keyframes cartel { 0% { transform:translateX(-120%); } 12%, 82% { transform:translateX(0); } 100% { transform:translateX(-120%); } }
 
 /* verbos e inventario */
-.verbos { display:grid; grid-template-columns:repeat(5, 1fr); gap:6px; }
-.vb { display:flex; flex-direction:column; align-items:center; gap:3px; padding:9px 2px 7px; min-height:60px; border:0; border-radius:4px; background:var(--panel2);
-  box-shadow:inset 0 0 0 2px var(--borde); font:600 13px/1 var(--f-pix); color:var(--tinta); }
-.vb .i { width:24px; height:24px; color:var(--oro); }
-.vb.on { background:var(--oro); color:#2a180d; box-shadow:inset 0 0 0 2px var(--oro2); }
-.vb.on .i { color:#2a180d; }
-.inv { display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr)); gap:8px; margin-top:12px; }
-.it { display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 4px; min-height:96px; border:0; border-radius:4px; background:var(--panel); box-shadow:inset 0 0 0 2px var(--borde); text-align:center; }
-.it canvas { width:48px; height:48px; }
+.verbos { display:grid; grid-template-columns:repeat(5, 1fr); gap:4px; padding:8px 4px 6px; border-radius:12px; background:linear-gradient(#3b2418, #2a1912); box-shadow:inset 0 2px 0 rgba(255,220,160,.12), 0 3px 0 #0c0608; }
+.vb { display:flex; flex-direction:column; align-items:center; gap:4px; padding:0; min-height:64px; border:0; background:none; font:600 12.5px/1 var(--f-pix); color:var(--tinta); }
+.vb .i { width:44px; height:44px; padding:10px; border-radius:50%; color:var(--oro2); background:radial-gradient(circle at 40% 32%, #5a3a2c, #2a1814 70%); box-shadow:0 0 0 2px #8a6420, 0 3px 0 #0c0608; }
+.vb.on .i { color:#2a180d; background:radial-gradient(circle at 40% 32%, #ffe9a8, #f0b232 70%); box-shadow:0 0 0 2px var(--oro2), 0 0 14px rgba(240,178,50,.6); }
+.vb.on { color:var(--oro2); }
+.vb:active .i { transform:translateY(2px); box-shadow:0 0 0 2px #8a6420, 0 1px 0 #0c0608; }
+.inv { display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:8px; margin-top:12px; }
+.it { display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 4px 7px; min-height:98px; border:0; border-radius:10px; background:linear-gradient(#2a1a1e, #1c1115); box-shadow:inset 0 0 0 2px var(--borde), 0 3px 0 #0c0608; text-align:center; }
+.it canvas { width:52px; height:52px; filter:drop-shadow(0 2px 0 rgba(0,0,0,.5)); }
 .it .n { font:700 13px/1.15 var(--f-ui); }
 .it .z { display:flex; flex-direction:column; align-items:center; font-size:11.5px; line-height:1.2; color:var(--mute); }
 .it .z .py { font-weight:700; }
@@ -119,60 +149,111 @@ canvas { image-rendering:pixelated; image-rendering:crisp-edges; }
 .it .badge { position:absolute; top:4px; right:4px; padding:1px 5px; border-radius:3px; background:var(--laca); color:#fff; font:700 10px/1.4 var(--f-ui); letter-spacing:.04em; text-transform:uppercase; }
 .vacio { color:var(--mute); margin:8px 2px; }
 
-/* diálogo */
-.linea { display:grid; grid-template-columns:84px 1fr; grid-template-rows:auto auto; gap:10px 12px; align-items:start; padding:12px; background:var(--panel); border-radius:4px; box-shadow:inset 0 0 0 2px var(--borde); cursor:pointer; min-height:120px; }
-#ret { width:84px; height:84px; background:var(--panel2); border-radius:4px; box-shadow:inset 0 0 0 2px var(--borde); }
+/* diálogo: retrato grande y globo de papel con la cola hacia quien habla */
+.linea { position:relative; display:grid; grid-template-columns:auto minmax(0, 1fr); grid-template-rows:auto auto; gap:10px 10px; align-items:start; padding:14px 0 0; cursor:pointer; min-height:150px; }
+.linea.der { grid-template-columns:minmax(0, 1fr) auto; }
+.linea.der #ret { order:2; transform:scaleX(-1); }
+.linea.der .dtexto { order:1; }
+.linea.der .dbotones { order:3; }
+#ret { width:108px; height:108px; border-radius:12px; background:radial-gradient(circle at 50% 38%, #fff3d0 0, #f0c674 46%, #b06a2c 100%); box-shadow:0 0 0 3px #2a1410, 0 0 0 5px var(--oro), 0 7px 0 #0c0608; }
+.linea.izq #ret { animation:entraI .28s cubic-bezier(.2,1.3,.4,1); }
+.linea.der #ret { animation:entraD .28s cubic-bezier(.2,1.3,.4,1); }
+@keyframes entraI { from { transform:translateX(-14px) scale(.9); opacity:.3; } }
+@keyframes entraD { from { transform:scaleX(-1) translateX(-14px) scale(.9); opacity:.3; } }
 #ret[hidden] { display:none; }
 #ret[hidden] + .dtexto { grid-column:1 / -1; }
-.dtexto { min-width:0; display:flex; flex-direction:column; gap:6px; }
-.dtexto .quien { font:600 13px/1.1 var(--f-pix); color:var(--oro); letter-spacing:.04em; }
-.dtexto .zh { font-size:22px; line-height:1.3; }
-.dtexto .zh .hz { font-size:19px; }
-.dtexto .es { color:var(--mute); font-size:15px; }
+.dtexto { position:relative; min-width:0; display:flex; flex-direction:column; gap:6px; padding:16px 15px 13px; background:var(--papel); color:var(--tpapel); border-radius:14px; box-shadow:0 0 0 2px #2a1410, 0 5px 0 #8e6d3f, 0 5px 0 2px #2a1410; }
+.linea.izq .dtexto::before, .linea.der .dtexto::before { content:""; position:absolute; top:30px; width:16px; height:18px; background:var(--papel); }
+.linea.izq .dtexto::before { left:-13px; clip-path:polygon(100% 0, 0 55%, 100% 100%); }
+.linea.der .dtexto::before { right:-13px; clip-path:polygon(0 0, 100% 55%, 0 100%); }
+.dtexto .quien { position:absolute; top:-12px; left:12px; padding:3px 10px 4px; border-radius:5px; background:var(--laca); color:#fff; font:600 13px/1.1 var(--f-pix); letter-spacing:.03em; box-shadow:0 2px 0 #5a1420; max-width:calc(100% - 24px); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.linea.der .dtexto .quien { left:auto; right:12px; background:var(--jade); box-shadow:0 2px 0 #124c39; }
+.dtexto .quien .hz { color:#fff; opacity:.9; }
+.dtexto .zh { font-size:23px; line-height:1.3; color:#2a1608; }
+.dtexto .zh .py { color:#7d1e2c; }
+.dtexto .zh .hz { font-size:20px; color:#2a1608; word-break:keep-all; overflow-wrap:anywhere; }
+.dtexto .zh.pop { animation:pop .32s cubic-bezier(.2,1.6,.4,1); transform-origin:left center; }
+@keyframes pop { from { transform:scale(.86); opacity:.2; } }
+.dtexto .es { color:var(--tpapel2); font-size:15.5px; font-weight:600; }
 .dtexto .cast { font-size:17px; line-height:1.45; }
-.dtexto .narr { font-size:17px; line-height:1.5; color:var(--tinta); }
-.dtexto .ojo { padding:10px 12px; background:#2a1c14; border-left:4px solid var(--oro); font-size:16px; }
-.dtexto .ojo .lab { display:block; color:var(--oro); margin-bottom:4px; }
-.trad { align-self:flex-start; border:0; background:none; padding:4px 0; color:var(--oro2); font:700 14px/1.2 var(--f-ui); text-decoration:underline; text-underline-offset:3px; }
+.dtexto .cast .py, .dtexto .narr .py, .dtexto .ojo .py { color:#7d1e2c; }
+.dtexto .narr { font-size:17px; line-height:1.5; }
+.tw { visibility:hidden; }
+.tw.v { visibility:visible; }
+/* el narrador: un cartel de cuento, oscuro y con borde dorado */
+.linea.narr .dtexto { background:linear-gradient(#2c1b20, #20131a); color:var(--tinta); box-shadow:0 0 0 2px var(--oro), 0 0 0 5px #2a1410, 0 6px 0 4px #0c0608; border-radius:8px; padding:16px 16px 14px; }
+.linea.narr .dtexto .narr { font-style:italic; }
+.linea.narr .dtexto .narr .py { color:var(--oro2); font-style:normal; }
+.linea.narr .dtexto .narr .hz { color:var(--tinta); }
+/* «Ojo»: una notita pegada */
+.linea.nota .dtexto { background:#ffe89a; box-shadow:0 0 0 2px #2a1410, 0 5px 0 #b08a2a, 0 5px 0 2px #2a1410; transform:rotate(-.6deg); }
+.dtexto .ojo { font-size:16.5px; line-height:1.45; }
+.dtexto .ojo .lab { display:block; color:#9a2a20; margin-bottom:4px; letter-spacing:.14em; }
+.trad { align-self:flex-start; border:0; background:none; padding:4px 0; color:#7d1e2c; font:700 14px/1.2 var(--f-ui); text-decoration:underline; text-underline-offset:3px; }
 .dbotones { grid-column:1 / -1; display:flex; align-items:center; gap:10px; }
-.oir { width:40px; height:40px; display:grid; place-items:center; border:0; border-radius:50%; background:var(--panel2); color:var(--oro2); box-shadow:inset 0 0 0 2px var(--borde); flex:none; }
-.seguir { margin-left:auto; font:600 13px/1 var(--f-pix); color:var(--mute); animation:titila 1.2s steps(2) infinite; }
+.oir { width:42px; height:42px; display:grid; place-items:center; border:0; border-radius:50%; background:radial-gradient(circle at 40% 32%, #5a3a2c, #2a1814 70%); color:var(--oro2); box-shadow:0 0 0 2px #8a6420, 0 3px 0 #0c0608; flex:none; }
+.seguir { margin-left:auto; font:600 13px/1 var(--f-pix); color:var(--oro2); animation:titila 1.2s steps(2) infinite; }
+.seguir::after { content:" ▸"; }
 @keyframes titila { 50% { opacity:.35; } }
 .ops { display:flex; flex-direction:column; gap:8px; }
 .oask { font:600 14px/1.3 var(--f-pix); color:var(--oro); letter-spacing:.03em; }
 .olista { display:flex; flex-direction:column; gap:8px; }
-.op { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; width:100%; min-height:56px; padding:12px 14px; border:0; border-radius:4px; background:var(--panel2); box-shadow:inset 0 0 0 2px var(--borde); text-align:left; }
-.op .py { font-size:19px; }
+.op { position:relative; display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; width:100%; min-height:58px; padding:12px 14px 12px 46px; border:0; border-radius:12px; background:linear-gradient(#3a252a, #2c1b20); color:var(--tinta);
+  box-shadow:inset 0 0 0 2px #6a4636, 0 4px 0 #0c0608; text-align:left; animation:entraOp .3s cubic-bezier(.2,1.2,.4,1) backwards; }
+.op::before { content:counter(op); counter-increment:op; position:absolute; left:12px; top:50%; transform:translateY(-50%); width:24px; height:24px; display:grid; place-items:center; border-radius:50%; background:var(--oro); color:#2a180d; font:700 13px/1 var(--f-ui); }
+.olista { counter-reset:op; }
+.op:nth-child(2) { animation-delay:.04s; } .op:nth-child(3) { animation-delay:.08s; } .op:nth-child(4) { animation-delay:.12s; } .op:nth-child(5) { animation-delay:.16s; } .op:nth-child(6) { animation-delay:.2s; }
+@keyframes entraOp { from { transform:translateY(10px); opacity:0; } }
+.op .py { font-size:19px; color:var(--oro2); }
 .op .hz { font-size:17px; }
 .op.cast { font:700 17px/1.3 var(--f-ui); }
-.op:active { background:var(--borde); }
-.aviso-item { position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom, 0px)); transform:translate(-50%, 140%); visibility:hidden; display:flex; align-items:center; gap:10px; padding:10px 16px 10px 10px; background:#2a1c14; border-radius:4px; box-shadow:0 0 0 2px var(--oro), 0 8px 24px rgba(0,0,0,.5); transition:transform .25s; z-index:20; max-width:calc(100% - 32px); pointer-events:none; }
+.op:active { transform:translateY(2px); box-shadow:inset 0 0 0 2px var(--oro), 0 2px 0 #0c0608; }
+.op.bien { background:linear-gradient(#1f6a4c, #165238); box-shadow:inset 0 0 0 3px var(--jade2), 0 4px 0 #0c0608; }
+.op.bien::before { content:"✓"; background:var(--jade2); }
+.op.mal { background:linear-gradient(#6a1f2a, #521620); box-shadow:inset 0 0 0 3px var(--laca2), 0 4px 0 #0c0608; animation:sacude .35s; }
+.op.mal::before { content:"✕"; background:var(--laca2); color:#fff; }
+.op.apagada { opacity:.4; }
+@keyframes sacude { 25% { transform:translateX(-6px); } 50% { transform:translateX(5px); } 75% { transform:translateX(-3px); } }
+.aviso-item { position:fixed; left:50%; bottom:calc(18px + env(safe-area-inset-bottom, 0px)); transform:translate(-50%, 140%); visibility:hidden; display:flex; align-items:center; gap:10px; padding:10px 16px 10px 10px; background:#2a1c14; border-radius:10px; box-shadow:0 0 0 2px var(--oro), 0 8px 24px rgba(0,0,0,.5); transition:transform .25s; z-index:20; max-width:calc(100% - 32px); pointer-events:none; }
 .aviso-item.on { transform:translate(-50%, 0); visibility:visible; }
 .aviso-item canvas { width:32px; height:32px; }
 
-/* duelo */
+/* duelo: el ataque, el sahumerio que se consume y el resultado al toque */
 .duelo { display:flex; flex-direction:column; gap:6px; }
-.dnom { display:flex; justify-content:space-between; font:600 13px/1.2 var(--f-pix); color:var(--oro); }
-.pista { display:flex; gap:6px; justify-content:center; padding:6px 0; }
-.pista span { width:14px; height:14px; background:var(--panel2); box-shadow:inset 0 0 0 2px var(--borde); }
-.pista span.fin { background:#3a1620; }
-.pista span:first-child.fin { background:#3a1620; }
-.pista span:last-child.fin { background:#14392a; }
-.pista span.yo { background:var(--oro2); box-shadow:0 0 10px var(--oro); }
-.ataque { padding:10px 12px; background:var(--panel); box-shadow:inset 0 0 0 2px var(--laca); border-radius:4px; font-size:21px; }
-.ataque .quien { font:600 13px/1.2 var(--f-pix); color:var(--laca2); margin-bottom:4px; }
-.ataque.tuyo { box-shadow:inset 0 0 0 2px var(--jade); font-size:16px; }
-.ataque.tuyo .quien { color:var(--jade2); }
-.ataque .es { color:var(--mute); }
+.ataque { position:relative; padding:12px 14px 14px; background:var(--papel); color:var(--tpapel); border-radius:12px; box-shadow:0 0 0 2px #2a1410, 0 0 0 5px var(--laca), 0 6px 0 4px #0c0608; font-size:22px; }
+.ataque .quien { font:600 13px/1.2 var(--f-pix); color:#9a2a20; margin-bottom:4px; letter-spacing:.03em; }
+.ataque .py { color:#7d1e2c; }
+.ataque .hz { color:#2a1608; }
+.ataque.tuyo { box-shadow:0 0 0 2px #2a1410, 0 0 0 5px var(--jade), 0 6px 0 4px #0c0608; font-size:16px; }
+.ataque.tuyo .quien { color:#1d6a4c; }
+.ataque .es { color:var(--tpapel2); font-size:15px; }
+.ataque { padding-right:58px; }
+.ataque .oir { position:absolute; right:10px; top:50%; transform:translateY(-50%); width:38px; height:38px; }
+.par small { font:700 11px/1.3 var(--f-ui); letter-spacing:.12em; text-transform:uppercase; color:var(--tpapel2); }
+#ret[hidden] + .dtexto::before { display:none; }
+.linea.cuadro .dtexto { padding-top:14px; }
+.combo { display:flex; justify-content:space-between; align-items:center; font:600 13px/1.2 var(--f-pix); color:var(--oro2); }
+.combo i { font-style:normal; display:inline-flex; gap:4px; }
+.combo i b { width:12px; height:12px; border-radius:50%; background:#3a2a20; box-shadow:inset 0 0 0 2px #6a4636; }
+.combo i b.si { background:var(--oro2); box-shadow:0 0 8px var(--oro); }
+.mecha { height:10px; border-radius:5px; background:#2a1a14; box-shadow:inset 0 0 0 2px #4a3020; overflow:hidden; }
+.mecha i { display:block; height:100%; width:100%; background:linear-gradient(90deg, var(--laca2), var(--oro), var(--oro2)); transform-origin:left; animation:mecha linear forwards; }
+.mecha.apuro i { animation-name:mecha, parpadea; }
+@keyframes mecha { to { transform:scaleX(0); } }
+@keyframes parpadea { 50% { opacity:.4; } }
 .cruce { display:flex; flex-direction:column; gap:8px; }
-.cruce .lab { color:var(--laca2); }
-.cruce.bien .lab { color:var(--jade2); }
-.cruce.par0 .lab { color:var(--oro); }
+.cruce .lab { color:#9a2a20; font-size:13px; }
+.cruce.bien .lab { color:#1d6a4c; }
+.cruce.par0 .lab { color:#9a6a10; }
 .par { display:flex; flex-direction:column; gap:6px; }
-.par > div { display:flex; flex-direction:column; padding:8px 10px; background:var(--panel2); border-radius:4px; font-size:18px; }
-.par .es { font-size:14px; color:var(--mute); }
+.par > div { display:flex; flex-direction:column; padding:8px 10px; background:rgba(255,255,255,.55); border-radius:8px; font-size:18px; box-shadow:inset 0 0 0 1px rgba(59,36,22,.18); }
+.par .py { color:#7d1e2c; }
+.par .es { font-size:14px; color:var(--tpapel2); }
 .aprende { font-size:15px; }
-.aprende .ojo { display:block; padding:8px 10px; background:#2a1c14; border-left:4px solid var(--oro); }
+.aprende .ojo { display:block; padding:8px 10px; background:#ffe89a; border-left:4px solid #b08a2a; border-radius:4px; color:var(--tpapel); }
+.res { display:flex; flex-direction:column; gap:2px; padding:8px 12px; border-radius:10px; background:#163a2c; box-shadow:inset 0 0 0 2px var(--jade2); font-size:15px; color:var(--tinta); animation:entraOp .25s; }
+.res.mal { background:#3a161e; box-shadow:inset 0 0 0 2px var(--laca2); }
+.res .es { color:var(--mute); }
 
 /* capítulos y capas */
 .capitulo { position:fixed; inset:0; z-index:30; display:grid; place-items:center; background:#060912; padding:24px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); animation:aparece .5s; }
@@ -286,6 +367,7 @@ body.ocupado .vb, body.ocupado .it { opacity:.55; }
   <symbol id="i-ajustes" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="15" cy="7" r="2.3" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="9" cy="17" r="2.3" fill="none" stroke="currentColor" stroke-width="2.2"/></symbol>
   <symbol id="i-lupa" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m15 15 5.5 5.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
   <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-brujula" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.6 8.4 13.4 13.4 8.4 15.6 10.6 10.6z" fill="currentColor"/></symbol>
 </svg>
 
 <div id="titulo" class="titulo">
@@ -309,6 +391,8 @@ body.ocupado .vb, body.ocupado .it { opacity:.55; }
   <div class="escena">
     <canvas id="cv" width="320" height="180" aria-label="La escena"></canvas>
     <div id="marcas" class="marcas" aria-hidden="true"></div>
+    <div id="ppx" class="ppx" aria-hidden="true"></div>
+    <div id="cartel" class="cartel" aria-hidden="true"></div>
     <div id="fundido" class="fundido" aria-hidden="true"></div>
   </div>
   <div class="frase" id="frase" aria-live="polite">&nbsp;</div>
@@ -319,7 +403,7 @@ body.ocupado .vb, body.ocupado .it { opacity:.55; }
     </div>
     <div id="dialogo" hidden>
       <div class="linea" id="linea">
-        <canvas id="ret" width="96" height="96"></canvas>
+        <canvas id="ret" width="128" height="128"></canvas>
         <div class="dtexto" id="dtexto" aria-live="polite"></div>
         <div class="dbotones" id="dbotones"></div>
       </div>
@@ -378,16 +462,17 @@ const PN = ['', 'ink', 'sombra', 'navy', 'azul', 'celeste', 'cielo', 'cielo2', '
   'naranja', 'marron2', 'verde0', 'blanco', 'brA', 'brB', 'brC', 'llA', 'llB', 'fant', 'fant0', 'negro', 'cieloA', 'cieloB', 'cieloC', 'luz',
   'violeta2', 'gris2', 'cafe', 'cafe2', 'lila', 'estrella', 'astro', 'niebla'];
 const P = Object.fromEntries(PN.map((n, i) => [n, i]).filter(x => x[0]));
+/* colores con más contraste: sombras más hondas, medios más saturados, luces más claras */
 const BASE = {
-  ink:'#1b1426', sombra:'#2b2440', navy:'#23305a', azul:'#3a5a9a', celeste:'#79b4e0', cielo:'#a9d8f0', cielo2:'#d6eef6', nube:'#fbf6ea',
-  mar0:'#1b4a66', mar:'#2c7391', mar2:'#4fa3b4', espuma:'#bfe8e0', arena:'#e8cf95', arena0:'#c2a065',
-  mad2:'#c08a55', mad:'#8e5a34', mad0:'#5a3620', pie2:'#c7c0b1', pie:'#8f887c', pie0:'#59544c', teja0:'#263a39', teja:'#3d6359', teja2:'#5f8f80',
-  rojo0:'#7d1e2c', rojo:'#c9333b', rojo2:'#f0675a', oro:'#f0b232', oro2:'#ffe08a', jade0:'#1d5a45', jade:'#2e8d68', hoja:'#79c257', bambu:'#a7cf5a',
-  piel2:'#f7d2b2', piel:'#e3a983', piel0:'#b97a58', pelo:'#251a1f', pelo2:'#5d3b29', pared:'#efe3c8', pared0:'#cbb994', vidrio:'#2c3d5e', farol:'#ff9a5c',
-  violeta:'#6c4a92', rosa:'#e47b9c', crema:'#fff3d3', gris:'#5d6a80', turq:'#2aa39a', naranja:'#f18b3b', marron2:'#d0a174', verde0:'#2b4a2d', blanco:'#ffffff',
-  brA:'#2c7391', brB:'#4fa3b4', brC:'#bfe8e0', llA:'#ffb35c', llB:'#ff7a45', fant:'#a8f0e0', fant0:'#5fb8a8', negro:'#0b0910',
-  cieloA:'#79b4e0', cieloB:'#a9d8f0', cieloC:'#d6eef6', luz:'#fff7c8', violeta2:'#9a7cc2', gris2:'#9aa3b5', cafe:'#4a2a17', cafe2:'#7a4a2a', lila:'#c9b6e4',
-  estrella:'#79b4e0', astro:'#fff6d0', niebla:'#d6eef6',
+  ink:'#120b1e', sombra:'#251a3b', navy:'#1c2858', azul:'#2f58b4', celeste:'#6cb2ec', cielo:'#a3d9f7', cielo2:'#d8f2fb', nube:'#fffaf0',
+  mar0:'#123f63', mar:'#1f6f98', mar2:'#3fa6c4', espuma:'#c4f2ea', arena:'#f0d48e', arena0:'#c39a52',
+  mad2:'#cb8a48', mad:'#8a4f26', mad0:'#4f2a14', pie2:'#cfc6b4', pie:'#8a8172', pie0:'#4e4840', teja0:'#1a302e', teja:'#2f6356', teja2:'#5b9a84',
+  rojo0:'#741426', rojo:'#d62c38', rojo2:'#ff6a55', oro:'#f7ad25', oro2:'#ffe27a', jade0:'#124c39', jade:'#1f936a', hoja:'#6fc94a', bambu:'#a9d84e',
+  piel2:'#fad4b0', piel:'#e6a676', piel0:'#b86f47', pelo:'#1c1218', pelo2:'#5e3620', pared:'#f4e6c6', pared0:'#c9b285', vidrio:'#2c3d5e', farol:'#ff9a5c',
+  violeta:'#6a3f9e', rosa:'#ec6f98', crema:'#fff4d0', gris:'#566480', turq:'#1fae9f', naranja:'#f7852b', marron2:'#d29f6c', verde0:'#203f22', blanco:'#ffffff',
+  brA:'#1f6f98', brB:'#3fa6c4', brC:'#c4f2ea', llA:'#ffb35c', llB:'#ff7a45', fant:'#a8f0e0', fant0:'#4fb8a4', negro:'#07050c',
+  cieloA:'#6cb2ec', cieloB:'#a3d9f7', cieloC:'#d8f2fb', luz:'#fff7c8', violeta2:'#9a76d0', gris2:'#9aa3b5', cafe:'#3f220f', cafe2:'#7a4422', lila:'#cbb4ea',
+  estrella:'#6cb2ec', astro:'#fff6d0', niebla:'#d8f2fb',
 };
 /* las otras horas: cielo propio y el resto teñido */
 const hex2 = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
@@ -419,13 +504,20 @@ function horaPal(min) {
   if (h >= 17 && h < 19) return 'tarde';
   return 'noche';
 }
-/* paletas como enteros ABGR para pintar rápido */
+/* paletas como enteros ABGR para pintar rápido. De paso, más contraste y más color:
+   las sombras bajan, las luces suben y los medios se saturan (salvo la piel y el blanco). */
 const LE = new Uint8Array(new Uint32Array([1]).buffer)[0] === 1;
+const SIN_REFUERZO = new Set(['piel2', 'piel', 'piel0', 'blanco', 'negro', 'ink', 'fant', 'fant0', 'nube', 'crema', 'astro', 'luz']);
+function refuerzo(c, n) {
+  if (SIN_REFUERZO.has(n)) return c;
+  const l = 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2];
+  return c.map(v => Math.round(clamp(128 + ((l + (v - l) * 1.22) - 128) * 1.1, 0, 255)));
+}
 function pal32(pal) {
   const out = new Uint32Array(PN.length);
   PN.forEach((n, i) => {
     if (!i) { out[i] = 0; return; }
-    const [r, g, b] = hex2(pal[n] || '#ff00ff');
+    const [r, g, b] = refuerzo(hex2(pal[n] || '#ff00ff'), n);
     out[i] = LE ? ((255 << 24) | (b << 16) | (g << 8) | r) >>> 0 : ((r << 24) | (g << 16) | (b << 8) | 255) >>> 0;
   });
   return out;
@@ -560,9 +652,21 @@ class Px {
   }
 }
 /* de índices a píxeles de verdad, con la paleta de la hora y los colores que ciclan */
-function pintar(px, pal, img) {
+function pintar(px, pal, img, palFondo, mascara) {
   const out = new Uint32Array(img.data.buffer), d = px.d;
-  for (let i = 0; i < d.length; i++) out[i] = pal[d[i]];
+  if (!palFondo) { for (let i = 0; i < d.length; i++) out[i] = pal[d[i]]; return; }
+  for (let i = 0; i < d.length; i++) out[i] = (mascara[i] ? pal : palFondo)[d[i]];
+}
+/* el fondo, un poquito velado hacia el color del aire: así los personajes se despegan */
+function velar(pal, color, k) {
+  const out = new Uint32Array(pal.length), [vr, vg, vb] = hex2(color);
+  for (let i = 0; i < pal.length; i++) {
+    const v = pal[i]; if (!i) { out[i] = 0; continue; }
+    const r = LE ? v & 255 : v >>> 24, g = LE ? (v >>> 8) & 255 : (v >>> 16) & 255, b = LE ? (v >>> 16) & 255 : (v >>> 8) & 255;
+    const R_ = Math.round(r + (vr - r) * k), G_ = Math.round(g + (vg - g) * k), B_ = Math.round(b + (vb - b) * k);
+    out[i] = LE ? ((255 << 24) | (B_ << 16) | (G_ << 8) | R_) >>> 0 : ((R_ << 24) | (G_ << 16) | (B_ << 8) | 255) >>> 0;
+  }
+  return out;
 }
 function cicloPal(base, t) {
   const p = base.slice();
@@ -867,88 +971,345 @@ function frames(id) {
   return (SPR[id] = fr);
 }
 
-/* ---------- retratos: cabeza grande para el panel de diálogo ---------- */
+/* ============================================================
+   Retratos: caras de 64 × 64 en tres cuartos, luz desde arriba
+   a la izquierda (sombra de dos tonos) y ocho gestos, con su
+   marca de historieta: la vena del enojo, la gota de la duda…
+   f = {emo, boca (hablando), parpado (parpadeo)}
+   ============================================================ */
+const EMOS = ['neutral', 'feliz', 'risa', 'enojado', 'sorpresa', 'triste', 'picaro', 'duda'];
+const CARA = {
+  tito:{forma:'redonda', ojos:'grandes', cejas:2, nariz:'chica', boca:'ancha', pecas:true, iris:'cafe2', emo:'feliz'},
+  wang_xs:{forma:'cuadrada', ojos:'rasgados', cejas:3, nariz:'ancha', boca:'chica', arrugas:1, emo:'neutral'},
+  wang_tt:{forma:'redonda', ojos:'chicos', cejas:1, nariz:'chica', boca:'chica', arrugas:1, labios:'rojo', emo:'feliz'},
+  wang_xj:{forma:'ovalada', ojos:'grandes', cejas:1, nariz:'chica', boca:'chica', labios:'rosa', pestanas:true, emo:'neutral'},
+  wang_ls:{forma:'larga', ojos:'almendra', cejas:2, nariz:'recta', boca:'chica', labios:'rojo0', pestanas:true, emo:'neutral'},
+  li_ms:{forma:'ovalada', ojos:'chicos', cejas:1, nariz:'chica', boca:'chica', pestanas:true, emo:'neutral'},
+  wu_bs:{forma:'larga', ojos:'cansados', cejas:3, cejasLargas:true, nariz:'ganchuda', boca:'chica', arrugas:2, emo:'neutral'},
+  li_tt:{forma:'redonda', ojos:'rasgados', cejas:1, nariz:'chica', boca:'chica', arrugas:2, labios:'rojo', emo:'picaro'},
+  chen_xs:{forma:'gordita', ojos:'chicos', cejas:3, nariz:'redonda', boca:'ancha', emo:'neutral'},
+  lin_ns:{forma:'fina', ojos:'rasgados', cejas:2, nariz:'recta', boca:'chica', lunar:true, labios:'rojo', pestanas:true, emo:'picaro'},
+  chen_xj:{forma:'redonda', ojos:'grandes', cejas:1, nariz:'chica', boca:'chica', pestanas:true, emo:'feliz'},
+  li_xs:{forma:'cuadrada', ojos:'almendra', cejas:3, nariz:'recta', boca:'ancha', curita:true, emo:'picaro'},
+  wu_ns:{forma:'ovalada', ojos:'almendra', cejas:1, nariz:'chica', boca:'chica', pestanas:true, labios:'violeta', emo:'neutral'},
+  mali:{forma:'redonda', ojos:'grandes', cejas:1, nariz:'chica', boca:'ancha', pecas:true, iris:'azul', pestanas:true, emo:'feliz'},
+  dawei:{forma:'larga', ojos:'almendra', cejas:2, nariz:'recta', boca:'ancha', iris:'jade', emo:'feliz'},
+  vendedora:{forma:'cuadrada', ojos:'rasgados', cejas:2, nariz:'ancha', boca:'ancha', lunar:true, labios:'rojo', emo:'picaro'},
+  capitan:{forma:'cuadrada', ojos:'rasgados', cejas:3, nariz:'ganchuda', boca:'ancha', cicatriz:true, iris:'oro2', emo:'enojado'},
+  capitan_vivo:{forma:'cuadrada', ojos:'rasgados', cejas:3, nariz:'ganchuda', boca:'ancha', arrugas:2, cicatriz:true, emo:'feliz'},
+  nene:{forma:'redonda', ojos:'grandes', cejas:1, nariz:'chica', boca:'chica', pecas:true, emo:'feliz'},
+};
+const RAMPA = {piel2:['piel2', 'piel', 'piel0', 'crema'], piel:['piel', 'piel0', 'mad', 'piel2'], fant:['fant', 'fant0', 'navy', 'blanco']};
+const LUZ_PELO = {pelo:'gris', pelo2:'mad2', gris2:'blanco', rosa:'crema', blanco:'blanco', fant0:'fant'};
+const SOM_PELO = {pelo:'negro', pelo2:'mad0', gris2:'gris', rosa:'rojo0', blanco:'pie2', fant0:'navy'};
+const FORMAS = {redonda:[17, 18], ovalada:[16, 19], cuadrada:[17, 18], larga:[15, 20], gordita:[19, 18], fina:[15, 19]};
+const OJOS = {grandes:[9, 8], redondos:[8, 7], almendra:[9, 6], chicos:[7, 5], rasgados:[9, 5], cansados:[8, 5]};
+/* cejas: [punta de adentro, punta de afuera, arco] (positivo = más abajo); par = [cerca, lejos] */
+const CEJAS = {neutral:[0, 0, -1], feliz:[-1, 0, -1], risa:[-2, -1, -2], enojado:[3, -2, 0], sorpresa:[-4, -3, -2],
+  triste:[-3, 2, 0], picaro:[[-3, -2, -2], [1, -1, 0]], duda:[[1, 0, 0], [-4, -3, -1]]};
 function retrato(id, f) {
-  const sp = SPEC[id] || SPEC.tito, W = 48, H = 48, B = new Px(W, H);
-  const cx = 24, cy = 25, rx = 15, ry = 16;
-  const piel = C_(sp.piel), pielS = sh(sp.piel), pc = C_(sp.pelo), topC = C_(sp.top);
-  const top = cy - ry, st = sp.peinado;
-  /* la cinta de la vincha, detrás */
-  if (sp.cinta) { const k = C_(sp.vincha || 'rojo'); B.poly([[cx - rx, cy - 10], [cx - rx - 8, cy - 2], [cx - rx - 6, cy + 1], [cx - rx + 1, cy - 7]], k); B.poly([[cx - rx, cy - 8], [cx - rx - 5, cy + 6], [cx - rx - 2, cy + 7], [cx - rx + 2, cy - 5]], k); }
-  /* hombros */
-  B.poly([[cx - 20, H], [cx - 16, cy + 13], [cx + 16, cy + 13], [cx + 20, H]], topC);
-  B.maskRect(0, cy + 12, cx - 12, H, sh(sp.top), [topC]);
-  if (sp.rayas) for (let x = cx - 18; x < cx + 20; x += 5) B.maskRect(x, cy + 14, 2, H, C_(sp.rayas), [topC]);
-  if (sp.ribete) B.maskRect(cx - 1, cy + 13, 2, H, C_(sp.ribete), [topC]);
-  if (sp.delantal) B.rect(cx - 9, cy + 16, 18, H, C_(sp.delantal));
-  if (sp.panuelo) B.poly([[cx - 6, cy + 13], [cx + 6, cy + 13], [cx, cy + 20]], C_(sp.panuelo));
-  B.rect(cx - 5, cy + 9, 10, 6, piel);
-  if (sp.mono) { B.poly([[cx - 7, cy + 12], [cx, cy + 15], [cx - 7, cy + 18]], P.ink); B.poly([[cx + 7, cy + 12], [cx, cy + 15], [cx + 7, cy + 18]], P.ink); B.rect(cx - 1, cy + 14, 2, 2, P.rojo); }
-  /* pelo de atrás */
-  if (['largo', 'trenza', 'melena', 'colita', 'colitas'].includes(st)) B.rect(cx - rx - 1, cy - 6, rx * 2 + 2, st === 'melena' ? 22 : 18, pc);
-  if (st === 'trenza') B.rect(cx - rx - 2, cy + 8, 5, 14, pc);
-  /* cara */
-  B.ell(cx, cy, rx, ry, piel);
-  B.ell(cx - rx, cy + 2, 2.5, 4, piel); B.ell(cx + rx, cy + 2, 2.5, 4, piel);
-  B.set(cx - rx, cy + 2, pielS); B.set(cx + rx, cy + 2, pielS);
-  /* pelo arriba */
-  if (st === 'panuelo') { const k = C_(sp.panueloCol); B.ell(cx, cy - 8, rx + 3, 10, k); B.hl(cx - rx - 2, cx + rx + 2, cy - 2, sh(sp.panueloCol)); }
-  else if (st === 'pelado') { B.rect(cx - rx - 2, cy - 6, 5, 9, pc); B.rect(cx + rx - 2, cy - 6, 5, 9, pc); if (!sp.fantasma) { B.set(cx - 5, top + 3, P.blanco); B.set(cx - 4, top + 3, P.blanco); } }
-  else {
-    B.ell(cx, cy - 8, rx + 1, 10, pc);
-    B.rect(cx - rx - 1, cy - 8, 4, 12, pc); B.rect(cx + rx - 3, cy - 8, 4, 12, pc);
-    if (st === 'rulos') for (const [x, y] of [[-14, -10], [-9, -16], [-2, -18], [5, -17], [11, -14], [15, -8], [-16, -3], [16, -1]]) B.circ(cx + x, cy + y, 4, pc);
-    if (st === 'flequillo' || st === 'melena') B.poly([[cx - rx, cy - 10], [cx + rx, cy - 10], [cx + rx - 2, cy - 3], [cx - 4, cy - 5], [cx - rx + 1, cy - 2]], pc);
-    if (st === 'corto') B.poly([[cx - rx, cy - 9], [cx + rx, cy - 9], [cx + rx - 1, cy - 5], [cx - rx + 1, cy - 5]], pc);
-    if (st === 'puntas') for (const x of [-12, -6, 0, 6, 12]) B.poly([[cx + x - 4, top + 6], [cx + x, top - 3], [cx + x + 4, top + 6]], pc);
-    if (st === 'rodete') B.circ(cx, top - 1, 6, pc);
-    if (st === 'odango') { B.circ(cx - 10, top, 5, pc); B.circ(cx + 10, top, 5, pc); }
-    if (st === 'colitas') { B.ell(cx - rx - 4, cy - 2, 4, 6, pc); B.ell(cx + rx + 4, cy - 2, 4, 6, pc); }
-    if (st === 'colita') B.ell(cx + rx + 3, cy - 6, 3, 5, pc);
-    /* la frente */
-    B.ell(cx, cy - 2, rx - 3, 7, piel);
-    if (st === 'flequillo' || st === 'melena') B.poly([[cx - rx + 2, cy - 9], [cx + rx - 2, cy - 9], [cx + rx - 3, cy - 4], [cx - 3, cy - 6], [cx - rx + 3, cy - 3]], pc);
+  f = f || {};
+  const sp = SPEC[id] || SPEC.tito, cr = CARA[id] || CARA.tito, W = 64, H = 64, B = new Px(W, H);
+  const dormido = !!(sp.dormido && !f.emo && !f.despierto);
+  const emo = dormido ? 'neutral' : (f.emo || cr.emo || 'neutral');
+  const [cBase, cSom, cHon, cLuz] = (RAMPA[sp.piel] || RAMPA.piel2).map(n => P[n]);
+  const hc = C_(sp.pelo), hs = P[SOM_PELO[sp.pelo] || 'ink'], hh = P[LUZ_PELO[sp.pelo] || 'gris'];
+  const top_ = C_(sp.top), topS = sh(sp.top);
+  const [rx, ry] = FORMAS[cr.forma] || FORMAS.redonda;
+  const alto = sp.gorro === 'alas' || sp.gorro === 'tricornio' || sp.gorro === 'helice';
+  const cx = 31, cy = alto ? 31 : 28, fx = 2, ey = cy + 3, my = ey + 11, nx = cx + fx + 1, ny = ey + 1;
+  const st = sp.peinado;
+  const enCara = (x, y, k) => { const u = (x - cx) / (rx + (k || 0)), v = (y - cy) / (ry + (k || 0)); return u * u + v * v <= 1; };
+  /* ---------- pelo de atrás ---------- */
+  if (st === 'melena') B.poly([[cx - rx - 3, cy - 8], [cx + rx + 3, cy - 8], [cx + rx + 6, cy + 24], [cx - rx - 6, cy + 24]], hc);
+  if (st === 'colita') { B.ell(cx - rx - 4, cy + 3, 4.5, 12, hc); B.rect(cx - rx - 3, cy - 7, 5, 3, P.rojo); }
+  if (st === 'colitas') { B.ell(cx - rx - 5, cy + 6, 5.5, 11, hc); B.ell(cx + rx + 5, cy + 6, 5.5, 11, hc); B.rect(cx - rx - 3, cy - 4, 5, 3, P.crema); B.rect(cx + rx - 1, cy - 4, 5, 3, P.crema); }
+  if (sp.cinta) {
+    const k = C_(sp.vincha || 'rojo');
+    B.poly([[cx - rx + 2, cy - 12], [cx - rx - 11, cy - 5], [cx - rx - 9, cy - 1], [cx - rx + 2, cy - 8]], k);
+    B.poly([[cx - rx + 1, cy - 10], [cx - rx - 7, cy + 9], [cx - rx - 3, cy + 10], [cx - rx + 3, cy - 6]], k);
   }
-  /* ojos */
-  const ey = cy + 1;
-  const ojo = (x) => {
-    if (f.parpado || (sp.dormido && !f.despierto)) { B.hl(x - 2, x + 2, ey + 1, P.ink); return; }
-    B.ell(x, ey, 2.5, 3.3, P.blanco); B.rect(x, ey - 1, 2, 4, P.ink); B.set(x + 1, ey - 1, P.blanco);
+  /* ---------- hombros y ropa ---------- */
+  B.poly([[cx - 28, H], [cx - 20, cy + 22], [cx + 21, cy + 22], [cx + 29, H]], top_);
+  for (let y = cy + 22; y < H; y++) for (let x = 0; x < W; x++) if (B.get(x, y) === top_ && x - cx > 9 - (y - cy - 22) * 0.4) B.set(x, y, topS);
+  if (sp.rayas) for (let x = cx - 25; x < cx + 27; x += 6) B.maskRect(x, cy + 23, 2, H, C_(sp.rayas), [top_, topS]);
+  if (sp.vestido === 'tunica') { const r = C_(sp.ribete || 'oro'); B.poly([[cx - 9, cy + 22], [cx + 1, cy + 36], [cx + 11, cy + 22]], P.crema); B.line(cx - 9, cy + 22, cx + 1, cy + 36, r); B.line(cx + 11, cy + 22, cx + 1, cy + 36, r); }
+  else if (sp.vestido === 'qipao') { const r = C_(sp.ribete || 'oro'); B.rect(cx - 6, cy + 19, 14, 5, top_); B.hl(cx - 6, cx + 7, cy + 19, r); B.line(cx + 1, cy + 24, cx + 9, cy + 32, r); B.circ(cx + 6, cy + 28, 1.4, P.oro2); }
+  else if (sp.ribete) B.maskRect(cx, cy + 23, 2, H, C_(sp.ribete), [top_, topS]);
+  if (sp.delantal) { const d = C_(sp.delantal); B.rect(cx - 9, cy + 28, 20, H, d); B.line(cx - 9, cy + 28, cx - 13, cy + 22, d); B.line(cx + 10, cy + 28, cx + 14, cy + 22, d); B.hl(cx - 9, cx + 10, cy + 28, sh(sp.delantal)); B.maskRect(cx + 6, cy + 29, 5, H, sh(sp.delantal), [d]); }
+  if (sp.gorro === 'tricornio') { for (const y of [cy + 29, cy + 34]) B.circ(cx + 5, y, 1.3, P.oro); B.line(cx - 8, cy + 22, cx - 2, cy + 32, P.oro); B.line(cx + 12, cy + 22, cx + 6, cy + 32, P.oro); }
+  /* cuello: siempre a la sombra del mentón */
+  B.rect(cx - 5, cy + ry - 5, 11, 9, cSom); B.rect(cx + 3, cy + ry - 5, 3, 9, cHon);
+  if (sp.panuelo) { const k = C_(sp.panuelo); B.poly([[cx - 9, cy + 21], [cx + 11, cy + 21], [cx + 1, cy + 30]], k); B.poly([[cx - 1, cy + 23], [cx + 3, cy + 23], [cx + 5, cy + 33], [cx - 2, cy + 33]], k); B.hl(cx + 1, cx + 3, cy + 24, sh(sp.panuelo)); }
+  if (sp.mono) { B.poly([[cx - 8, cy + 20], [cx + 1, cy + 24], [cx - 8, cy + 28]], P.ink); B.poly([[cx + 10, cy + 20], [cx + 1, cy + 24], [cx + 10, cy + 28]], P.ink); B.rect(cx - 1, cy + 22, 3, 3, P.rojo); }
+  /* ---------- la cabeza ---------- */
+  if (cr.forma === 'cuadrada') { B.ell(cx, cy - 2, rx, ry - 2, cBase); B.poly([[cx - rx + 1, cy], [cx + rx - 1, cy], [cx + rx - 4, cy + ry - 1], [cx - rx + 4, cy + ry - 1]], cBase); }
+  else B.ell(cx, cy, rx, ry, cBase);
+  if (cr.forma === 'fina') B.poly([[cx - 7, cy + ry - 7], [cx + 9, cy + ry - 7], [cx + 2, cy + ry + 1]], cBase);
+  if (cr.forma === 'gordita') B.ell(cx + 1, cy + ry - 2, 12, 4.5, cBase);
+  /* oreja (la de este lado) */
+  B.ell(cx - rx, ey + 2, 3, 4.5, cBase); B.vl(cx - rx, ey, ey + 4, cSom); B.set(cx - rx + 1, ey + 5, cHon);
+  if (sp.aros) { B.circ(cx - rx, ey + 8, 1.6, P.oro); B.set(cx - rx, ey + 8, P.oro2); }
+  /* ---------- pelo de arriba ---------- */
+  const ventana = (dy, rxx, ryy) => { for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const u = (x - cx - 1) / rxx, v = (y - (cy + dy)) / ryy; if (u * u + v * v <= 1 && B.get(x, y) === hc && enCara(x, y)) B.set(x, y, cBase); } };
+  const rulos = [[-16, -6], [-13, -13], [-7, -18], [0, -20], [7, -19], [13, -15], [17, -8], [18, 0], [-18, 1], [-17, 8], [18, 7]];
+  if (st === 'rulos') {
+    for (const [x, y] of rulos) B.circ(cx + x, cy + y, 5.4, hc);
+    ventana(5, rx - 2, ry - 4);
+    for (const [x, y] of [[-9, -12], [-3, -14], [3, -14], [9, -12]]) B.circ(cx + x, cy + y, 3.6, hc);
+  } else if (st === 'pelado') {
+    B.rect(cx - rx - 1, cy - 5, 4, 11, hc); B.rect(cx + rx - 2, cy - 5, 3, 10, hc);
+  } else if (st === 'panuelo') {
+    const k = C_(sp.panueloCol);
+    B.ell(cx, cy - 8, rx + 3, ry - 4, k);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const u = (x - cx - 1) / (rx - 1), v = (y - (cy + 6)) / (ry - 2); if (u * u + v * v <= 1 && B.get(x, y) === k) B.set(x, y, enCara(x, y) ? cBase : 0); }
+    B.ell(cx - rx - 3, cy - 4, 4, 3.5, k); B.poly([[cx - rx - 5, cy - 3], [cx - rx - 10, cy + 6], [cx - rx - 6, cy + 7], [cx - rx - 2, cy - 1]], k);
+    for (let y = 0; y < cy; y++) for (let x = cx + 6; x < W; x++) if (B.get(x, y) === k && (x - cx) * 0.7 + (y - cy) * -0.3 > 9) B.set(x, y, sh(sp.panueloCol));
+    for (const [x, y] of [[-8, -15], [0, -17], [7, -13], [-12, -8]]) B.set(cx + x, cy + y, P.crema);
+    B.rect(cx - rx + 1, cy - 3, 3, 7, hc);
+  } else {
+    B.ell(cx, cy - 7, rx + 1.5, ry - 6, hc);
+    B.rect(cx - rx - 1, cy - 7, 4, st === 'corto' || st === 'puntas' ? 9 : 14, hc);
+    ventana(st === 'rodete' || st === 'corto' ? 4 : 6, rx - 2, ry - (st === 'rodete' ? 3 : 4));
+    if (st === 'rodete') { B.circ(cx - 3, cy - ry - 1, 7, hc); B.ell(cx - 2, cy - ry + 3, 9, 3, hc); }
+    if (st === 'odango') { B.circ(cx - 11, cy - ry + 1, 6, hc); B.circ(cx + 11, cy - ry + 1, 6, hc); }
+    if (st === 'puntas') for (let k = -3; k <= 3; k++) B.poly([[cx + k * 6 - 4, cy - ry + 9], [cx + k * 6 + 2, cy - ry - 5 - (k & 1) * 3], [cx + k * 6 + 5, cy - ry + 9]], hc);
+    if (st === 'flequillo') B.poly([[cx - rx + 1, cy - 14], [cx + rx, cy - 13], [cx + rx - 1, cy - 6], [cx + 6, cy - 8], [cx, cy - 5], [cx - rx + 2, cy - 7]], hc);
+    if (st === 'melena' || st === 'trenza' || st === 'colitas') B.poly([[cx - rx + 1, cy - 15], [cx + rx - 1, cy - 14], [cx + rx - 2, cy - 7], [cx + 4, cy - 9], [cx - 2, cy - 6], [cx - rx + 2, cy - 7]], hc);
+    if (st === 'colita') B.poly([[cx - rx, cy - 14], [cx + rx, cy - 12], [cx + rx - 3, cy - 7], [cx - 4, cy - 10]], hc);
+    if (st === 'trenza') { for (let y = cy + 2; y < H - 2; y += 4) B.ell(cx - rx + 1 - (y - cy) * 0.12, y, 3, 2.4, hc); B.rect(cx - rx - 2, H - 6, 5, 3, C_(sp.vincha || 'rojo')); }
+  }
+  /* ---------- ojos ---------- */
+  const [ow, oh] = OJOS[cr.ojos] || OJOS.almendra;
+  const iris = C_(cr.iris || (sp.fantasma ? 'navy' : 'cafe'));
+  const xI = cx - 8 + fx, xD = cx + 7 + fx, blancoOjo = sp.fantasma ? P.navy : P.blanco;
+  const ojo = (xc, lado) => {
+    const w = lado > 0 ? ow - 1 : ow, h = oh + (emo === 'sorpresa' ? 2 : 0), x0 = xc - (w >> 1), y0 = ey - (h >> 1);
+    if (f.parpado || dormido || emo === 'risa') {
+      /* cerrado: arco hacia arriba si se ríe, hacia abajo si parpadea o duerme */
+      const arriba = emo === 'risa' && !f.parpado && !dormido;
+      for (let i = 0; i < w; i++) { const t = (i - (w - 1) / 2) / ((w - 1) / 2), d = Math.round((arriba ? -2 : 1.5) * (1 - t * t)); B.set(x0 + i, ey + d, P.ink); if (arriba && Math.abs(t) < 0.8) B.set(x0 + i, ey + d + 1, P.ink); }
+      if (!arriba) B.set(lado < 0 ? x0 - 1 : x0 + w, ey - 1, P.ink);
+      return;
+    }
+    /* el blanco, con las esquinas cortadas */
+    const fil = [];
+    for (let r = 0; r < h; r++) {
+      const ins = r === 0 ? 2 : r === h - 1 ? (h > 5 ? 2 : 1) : (r === 1 || r === h - 2) && h > 5 ? 1 : 0;
+      fil.push([y0 + r, x0 + ins, x0 + w - 1 - ins]); B.hl(x0 + ins, x0 + w - 1 - ins, y0 + r, blancoOjo);
+    }
+    /* iris grande, pupila y dos brillos: lo que le da vida */
+    const mira = emo === 'picaro' ? 1 : emo === 'duda' ? -1 : 0;
+    let iw = Math.max(3, Math.min(5, Math.round(w * 0.56))), ih = h - 1;
+    if (emo === 'sorpresa') { iw = Math.max(2, iw - 2); ih = Math.max(2, h - 4); }
+    const ix0 = Math.round(xc - iw / 2 + 0.5) + mira + (lado < 0 ? 1 : 0), iy0 = emo === 'sorpresa' ? y0 + ((h - ih) >> 1) : y0 + (emo === 'triste' ? 1 : 0);
+    for (let y = iy0; y < iy0 + ih; y++) for (let x = ix0; x < ix0 + iw; x++) {
+      const esq = (x === ix0 || x === ix0 + iw - 1) && (y === iy0 || y === iy0 + ih - 1) && iw > 3;
+      if (!esq && B.get(x, y) === blancoOjo) B.set(x, y, iris);
+    }
+    const pw = iw >= 4 ? 2 : 1, px0 = ix0 + ((iw - pw) >> 1), py0 = iy0 + Math.max(1, (ih >> 1) - 1);
+    B.rect(px0, py0, pw, Math.min(2, ih - 1), sp.fantasma ? P.oro : P.ink);
+    { if (iw >= 4 && ih >= 4) B.rect(ix0, iy0 + 1, 2, 2, P.blanco); else B.set(ix0, iy0, P.blanco); if (ih >= 5) B.set(ix0 + iw - 1, iy0 + ih - 2, P.blanco); }
+    /* párpado de arriba: una línea gruesa que sobresale hacia afuera (y pestañas) */
+    const [ya, xa0, xa1] = fil[0];
+    B.hl(xa0 - 1, xa1 + 1, ya - 1, P.ink); B.set(xa0 - 1, ya, P.ink); B.set(xa1 + 1, ya, P.ink);
+    const afuera = lado < 0 ? x0 - 1 : x0 + w;
+    B.set(afuera, ya, P.ink); B.set(afuera + (lado < 0 ? -1 : 1), ya - 1, P.ink);
+    if (cr.pestanas) { B.set(afuera + (lado < 0 ? -1 : 1), ya - 2, P.ink); B.set(afuera, ya - 2, P.ink); }
+    for (const [yy, a, b] of fil.slice(1, -1)) { B.set(a - 1, yy, P.ink); B.set(b + 1, yy, P.ink); }
+    const [yb, xb0, xb1] = fil[fil.length - 1]; B.hl(xb0, xb1, yb + 1, cSom);
+    /* el gesto recorta el ojo con la piel */
+    const tapar = (x, y) => { const c = B.get(x, y); if (c === P.blanco || c === blancoOjo || c === iris || c === P.ink || c === P.oro) B.set(x, y, cBase); };
+    if (emo === 'feliz') { const n = Math.max(1, Math.round(h / 3)); for (const [yy, a, b] of fil.slice(-n)) for (let x = a - 1; x <= b + 1; x++) tapar(x, yy); B.hl(xb0, xb1, yb + 1, cBase); const yy = fil[fil.length - n][0]; for (let x = x0 + 1; x < x0 + w - 1; x++) B.set(x, yy, cSom); }
+    const corte = (prof, haciaAdentro) => {
+      for (let i = 0; i < w + 2; i++) {
+        const x = x0 - 1 + i, t = i / (w + 1), adentro = lado < 0 ? t : 1 - t, k = haciaAdentro === null ? prof : Math.round(prof * (haciaAdentro ? adentro : 1 - adentro));
+        for (let y = ya - 1; y < ya - 1 + k; y++) tapar(x, y);
+        if (k > 0 && B.get(x, ya - 1 + k) !== 0) B.set(x, ya - 1 + k, P.ink);
+      }
+    };
+    if (emo === 'enojado') corte(Math.round(h * 0.7) + 1, true);
+    if (emo === 'triste') corte(Math.round(h * 0.6) + 1, false);
+    if (emo === 'picaro') corte(Math.round(h * 0.45) + 1, null);
+    if (emo === 'duda' && lado < 0) corte(Math.round(h * 0.35) + 1, null);
+    if (cr.ojos === 'cansados') { B.hl(x0 + 1, x0 + w - 2, yb + 2, cSom); B.hl(x0, x0 + w - 1, ya - 3, cSom); }
   };
-  ojo(cx - 6); if (!sp.parche) ojo(cx + 6);
-  const ceja = C_(sp.viejo ? 'blanco' : sp.pelo === 'rosa' ? 'rojo0' : sp.pelo);
-  if (sp.fantasma) { B.line(cx - 9, ey - 6, cx - 4, ey - 4, P.navy); B.line(cx + 9, ey - 6, cx + 4, ey - 4, P.navy); }
-  else { B.hl(cx - 8, cx - 4, ey - 6, ceja); B.hl(cx + 4, cx + 8, ey - 6, ceja); }
-  if (sp.lentes) { for (const x of [cx - 6, cx + 6]) { B.hl(x - 4, x + 4, ey - 4, P.ink); B.hl(x - 4, x + 4, ey + 4, P.ink); B.vl(x - 4, ey - 4, ey + 4, P.ink); B.vl(x + 4, ey - 4, ey + 4, P.ink); } B.hl(cx - 2, cx + 2, ey - 2, P.ink); }
-  if (sp.parche) { B.ell(cx + 6, ey, 3.6, 3.6, P.ink); B.line(cx + 3, ey - 3, cx - 12, cy - 13, P.ink); B.line(cx + 9, ey - 2, cx + rx + 1, ey - 4, P.ink); }
-  /* nariz */
-  B.rect(cx, ey + 3, 2, 3, pielS);
-  /* boca */
-  const my = ey + 9;
-  if (sp.bigote) B.rect(cx - 5, my - 2, 11, 2, C_(sp.bigote));
-  if (f.boca) { B.ell(cx, my + 1, 3.5, 2.5, P.rojo0); B.hl(cx - 2, cx + 2, my + 2, P.rojo); }
-  else { B.hl(cx - 3, cx + 3, my, sp.fantasma ? P.navy : P.mad0); B.set(cx - 4, my - 1, sp.fantasma ? P.navy : P.mad0); B.set(cx + 4, my - 1, sp.fantasma ? P.navy : P.mad0); }
-  if (sp.barba === 'larga') { const bc = C_(sp.barbaCol || 'blanco'); B.poly([[cx - 11, my - 3], [cx + 11, my - 3], [cx + 7, my + 12], [cx, my + 18], [cx - 7, my + 12]], bc); if (f.boca) B.ell(cx, my + 1, 3.5, 2.5, P.rojo0); else B.hl(cx - 3, cx + 3, my, sh(sp.barbaCol || 'blanco')); }
-  if (sp.hielo) for (const [x, y] of [[cx - 6, my + 12], [cx, my + 18], [cx + 6, my + 12]]) { B.vl(x, y, y + 3, P.fant); }
-  if (sp.barba === 'sombra') B.dith(cx - 10, my - 3, 21, 7, piel, pielS, 0.35);
-  if (sp.rubor || sp.mano === 'abanico' || sp.mano === 'abanico_grande' || id === 'mali') { B.rect(cx - 11, ey + 5, 3, 2, P.rosa); B.rect(cx + 9, ey + 5, 3, 2, P.rosa); }
-  if (sp.aros) { B.rect(cx - rx - 1, cy + 6, 2, 3, P.oro); B.rect(cx + rx, cy + 6, 2, 3, P.oro); }
-  if (sp.viejo) { B.hl(cx - 9, cx - 6, ey + 5, pielS); B.hl(cx + 6, cx + 9, ey + 5, pielS); }
-  /* sombreros, vinchas y adornos */
-  if (sp.sombrero === 'conico') { B.poly([[cx - 24, cy - 8], [cx, cy - 26], [cx + 24, cy - 8]], P.arena); B.hl(cx - 23, cx + 23, cy - 8, P.arena0); B.line(cx - 12, cy - 13, cx + 12, cy - 13, P.arena0); }
-  if (sp.gorro === 'erudito') { B.rect(cx - 12, top - 6, 24, 9, P.ink); B.rect(cx - 16, top - 1, 32, 3, P.ink); }
-  if (sp.gorro === 'alas') { B.rect(cx - 11, top - 9, 22, 12, P.ink); B.hl(cx - 9, cx + 9, top - 8, P.sombra); B.rect(cx - 13, top - 1, 26, 4, P.ink); B.rect(0, top - 3, W, 2, P.ink); B.rect(0, top - 6, 4, 6, P.ink); B.rect(W - 4, top - 6, 4, 6, P.ink); }
+  ojo(xI, -1); if (!sp.parche) ojo(xD, 1);
+  /* ---------- cejas: el gesto se ve sobre todo acá ---------- */
+  const cejaC = sp.fantasma ? P.navy : C_(sp.viejo ? 'blanco' : sp.pelo === 'rosa' ? 'rojo0' : sp.pelo === 'blanco' ? 'pie2' : sp.pelo);
+  const ceja = (xc, lado) => {
+    let g = CEJAS[emo] || CEJAS.neutral; if (Array.isArray(g[0])) g = g[lado < 0 ? 0 : 1];
+    const w = (lado > 0 ? ow - 1 : ow) + 2, yb = ey - (oh >> 1) - 4, th = cr.cejas || 2;
+    for (let i = 0; i < w; i++) {
+      const t = i / (w - 1), x = lado < 0 ? xc + (w >> 1) - i : xc - (w >> 1) + i;
+      const y = Math.round(yb + g[0] * (1 - t) + g[1] * t + g[2] * (1 - Math.pow(2 * t - 1, 2)));
+      const grosor = Math.max(1, th - (i === w - 1 ? 1 : 0));
+      B.rect(x, y, 1, grosor, cejaC);
+      if (cr.cejasLargas && i === w - 1) { B.rect(x + (lado < 0 ? -1 : 1), y + 1, 1, 3, cejaC); B.set(x + (lado < 0 ? -2 : 2), y + 4, cejaC); }
+    }
+  };
+  ceja(xI, -1); if (!sp.parche) ceja(xD, 1); else ceja(xD, 1);
+  /* ---------- nariz ---------- */
+  if (cr.nariz === 'recta') { B.vl(nx + 2, ny, ny + 6, cSom); B.hl(nx - 1, nx + 2, ny + 8, cSom); B.set(nx - 1, ny + 7, cHon); B.set(nx + 2, ny + 7, cHon); B.vl(nx, ny + 3, ny + 5, cLuz); }
+  if (cr.nariz === 'chica') { B.hl(nx, nx + 2, ny + 7, cSom); B.set(nx + 2, ny + 6, cSom); B.set(nx - 1, ny + 5, cLuz); }
+  if (cr.nariz === 'ancha') { B.hl(nx - 2, nx + 4, ny + 8, cSom); B.set(nx - 2, ny + 7, cHon); B.set(nx + 4, ny + 7, cHon); B.vl(nx + 3, ny + 3, ny + 6, cSom); B.set(nx, ny + 5, cLuz); }
+  if (cr.nariz === 'ganchuda') { B.line(nx + 1, ny - 1, nx + 4, ny + 4, cSom); B.vl(nx + 4, ny + 4, ny + 7, cSom); B.hl(nx, nx + 4, ny + 9, cSom); B.set(nx + 1, ny + 8, cHon); B.set(nx, ny + 2, cLuz); B.set(nx + 1, ny + 3, cLuz); }
+  if (cr.nariz === 'redonda') { B.ell(nx + 1, ny + 6, 3.4, 3, cBase); B.hl(nx - 1, nx + 3, ny + 9, cSom); B.vl(nx + 4, ny + 5, ny + 8, cSom); B.set(nx, ny + 4, cLuz); B.set(nx - 1, ny + 8, cHon); B.set(nx + 2, ny + 8, cHon); }
+  /* ---------- arrugas y marcas ---------- */
+  if (cr.arrugas) {
+    B.hl(cx - 6, cx + 4, cy - 10, cSom); if (cr.arrugas > 1) B.hl(cx - 4, cx + 6, cy - 12, cSom);
+    B.line(xI - 6, ey, xI - 7, ey + 1, cSom); B.line(nx - 4, ny + 8, nx - 6, my + 1, cSom); B.line(nx + 5, ny + 8, nx + 7, my + 1, cSom);
+  }
+  if (cr.pecas) for (const [x, y] of [[-12, 6], [-10, 7], [-13, 8], [9, 6], [11, 7]]) B.set(cx + fx + x, ey + y - 1, cSom);
+  if (sp.rubor || (!sp.fantasma && (emo === 'risa' || (emo === 'feliz' && (cr.pecas || id === 'wang_tt'))))) { B.dith(xI - 5, ey + 5, 5, 2, cBase, P.rosa, 0.5); B.dith(xD - 1, ey + 5, 4, 2, cBase, P.rosa, 0.5); }
+  if (cr.lunar) B.set(cx + fx + 8, my + 2, cHon);
+  if (cr.cicatriz) { B.line(xI - 3, ey - 6, xI + 2, ey + 7, cHon); }
+  if (cr.curita) { B.rect(nx - 3, ny + 1, 6, 3, P.crema); B.set(nx - 1, ny + 2, P.pie2); B.set(nx + 1, ny + 2, P.pie2); }
+  /* ---------- boca ---------- */
+  const mx = cx + fx + 1, mw = cr.boca === 'ancha' ? 11 : 7, mh = mw >> 1;
+  const labio = cr.labios ? C_(cr.labios) : P.ink;
+  const curva = (k, c, ancho) => { const a = ancho || mh; for (let x = -a; x <= a; x++) { const t = x / a; B.set(mx + x, my + Math.round(k * (1 - t * t)), c); } };
+  if (sp.barba === 'sombra') for (let y = my - 4; y < cy + ry; y++) for (let x = cx - rx + 5; x < cx + rx - 1; x++) { const c = B.get(x, y); if (c === cBase && ((x + y) & 1)) B.set(x, y, cSom); }
+  const abre = (w2, h2, dientes, c) => {
+    B.ell(mx, my + 1, w2 + 0.6, h2 + 0.6, c || (labio === P.ink ? P.ink : labio)); B.ell(mx, my + 1, Math.max(0.6, w2 - 0.4), Math.max(0.6, h2 - 0.4), P.rojo0);
+    if (dientes) B.hl(mx - Math.max(0, Math.floor(w2) - 1), mx + Math.max(0, Math.floor(w2) - 1), my + 1 - Math.floor(h2) + 1, P.blanco);
+    if (h2 >= 2) B.hl(mx - 1, mx + 1, my + Math.floor(h2), P.rosa);
+  };
+  if (dormido) { abre(1.4, 1.6, false); B.circ(nx + 5, ny + 8, 3.2, P.celeste); B.set(nx + 4, ny + 6, P.blanco); B.set(nx + 3, ny + 7, P.blanco); }
+  else if (!f.boca) {
+    if (emo === 'feliz') { curva(2, labio); B.set(mx - mh - 1, my - 1, cSom); B.set(mx + mh + 1, my - 1, cSom); }
+    else if (emo === 'risa') { abre(mh, 3.4, true); }
+    else if (emo === 'enojado') { curva(-2, labio, mh - 1); B.hl(mx - 2, mx + 2, my + 2, cSom); }
+    else if (emo === 'sorpresa') abre(1.8, 2.8, false);
+    else if (emo === 'triste') { curva(-2, labio, mh - 1); B.set(mx, my + 2, cSom); }
+    else if (emo === 'picaro') { B.line(mx - mh + 1, my + 1, mx + mh, my - 1, labio); B.set(mx + mh + 1, my - 2, labio); B.set(mx + mh, my - 3, cSom); }
+    else if (emo === 'duda') { B.hl(mx - mh + 2, mx + mh - 1, my, labio); B.set(mx + mh, my - 1, labio); B.set(mx - mh + 1, my + 1, labio); }
+    else { B.hl(mx - mh + 1, mx + mh - 1, my, labio); B.set(mx - mh, my - 1, cr.labios ? labio : cSom); B.set(mx + mh, my - 1, cr.labios ? labio : cSom); B.hl(mx - 2, mx + 1, my + 2, cSom); }
+  } else {
+    if (emo === 'feliz' || emo === 'risa') abre(mh, 3, true);
+    else if (emo === 'enojado') { B.rect(mx - mh, my - 2, mw, 6, P.ink); B.rect(mx - mh + 1, my - 1, mw - 2, 4, P.rojo0); B.hl(mx - mh + 1, mx + mh - 1, my - 1, P.blanco); B.hl(mx - mh + 1, mx + mh - 1, my + 2, P.blanco); for (let x = mx - mh + 2; x < mx + mh; x += 2) B.vl(x, my - 1, my + 2, P.pie2); }
+    else if (emo === 'sorpresa') abre(2.6, 3.6, false);
+    else if (emo === 'triste') abre(Math.max(2, mh - 2), 1.8, false);
+    else if (emo === 'picaro') { abre(Math.max(2, mh - 1), 2, true); B.set(mx + mh + 1, my - 2, cSom); }
+    else abre(Math.max(2, mh - 1), 2.4, true);
+  }
+  if (sp.bigote) { B.poly([[mx - mh - 2, my - 2], [mx - 1, my - 5], [mx + 1, my - 5], [mx + mh + 2, my - 2], [mx + mh + 3, my + 1], [mx, my - 2], [mx - mh - 3, my + 1]], C_(sp.bigote)); }
+  if (sp.barba === 'larga') {
+    const bc = C_(sp.barbaCol || 'blanco'), bs = sh(sp.barbaCol || 'blanco');
+    const bigote = [[mx - mh - 3, my - 3], [mx - 1, my - 5], [mx + 2, my - 5], [mx + mh + 3, my - 3], [mx + mh + 4, my + 1], [mx + 1, my - 2], [mx - mh - 4, my + 1]];
+    B.poly([[cx - rx + 4, my - 2], [mx - mh - 1, my + 2], [mx + mh + 1, my + 2], [cx + rx - 3, my - 2], [cx + 13, my + 9], [cx + 3, my + 22], [cx - 7, my + 9]], bc);
+    if (!f.boca && emo !== 'risa' && emo !== 'sorpresa') B.hl(mx - mh + 1, mx + mh - 1, my + 1, P.ink); else abre(Math.max(2, mh - 1), f.boca ? 2.4 : 3, true);
+    B.poly(bigote, bc);
+    for (let y = my; y < H; y++) for (let x = cx + 4; x < W; x++) if (B.get(x, y) === bc && x - cx > 8 - (y - my) * 0.5) B.set(x, y, bs);
+    for (const x of [-4, 0, 4]) B.line(mx + x - 2, my + 5, mx + x - 3, my + 13, bs);
+    if (sp.hielo) for (const [x, y] of [[-5, 14], [2, 20], [9, 12]]) B.vl(mx + x, my + y, my + y + 3, P.blanco);
+  }
+  /* ---------- luz y sombra de la cara ---------- */
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const c = B.get(x, y); if (c !== cBase && c !== cSom) continue;
+    if (y > cy + ry + 2) continue;
+    const u = (x - (cx - 4)) / rx, v = (y - (cy - 4)) / (ry + 1), u2 = (x - (cx - 3)) / (rx + 2.4), v2 = (y - (cy - 3)) / (ry + 2.4);
+    const lit = u * u + v * v <= 1, borde = u2 * u2 + v2 * v2 > 1;
+    if (c === cBase) { if (borde) B.set(x, y, cHon); else if (!lit) B.set(x, y, cSom); }
+    else if (!lit && enCara(x, y)) B.set(x, y, cHon);
+  }
+  /* la sombra que tira el pelo sobre la frente */
+  if (st !== 'pelado') for (let x = 0; x < W; x++) for (let y = 1; y < cy + 4; y++) { const c = B.get(x, y); if ((c === cBase || c === cSom) && (B.get(x, y - 1) === hc || B.get(x, y - 1) === C_(sp.panueloCol || 'ink'))) { B.set(x, y, c === cBase ? cSom : cHon); break; } }
+  /* brillo del pómulo y de la pelada */
+  B.hl(xI - 3, xI - 1, ey + 4, cLuz);
+  if (st === 'pelado' && !sp.gorro) { B.hl(cx - 9, cx - 4, cy - ry + 3, cLuz); B.hl(cx - 7, cx - 5, cy - ry + 2, cLuz); }
+  /* ---------- luz y sombra del pelo ---------- */
+  if (st !== 'pelado' && st !== 'panuelo') {
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (B.get(x, y) !== hc) continue;
+      const u = (x - (cx - 6)) / (rx + 6), v = (y - (cy - 10)) / (ry + 4);
+      if (u * u + v * v > 1 || (x > cx + 4 && y > cy - 4)) B.set(x, y, hs);
+    }
+    if (st === 'rulos') { for (const [x, y] of rulos) if (x < 12) { const X = cx + x - 2, Y = cy + y - 3; if (B.get(X, Y) === hc) { B.hl(X, X + 1, Y, hh); B.set(X - 1, Y + 1, hh); } } }
+    else for (const [x, y, l] of [[-11, -14, 4], [-6, -17, 5], [1, -18, 3]]) { const Y = cy + y + (alto ? 0 : 0); for (let i = 0; i < l; i++) if (B.get(cx + x + i, Y) === hc) B.set(cx + x + i, Y, hh); }
+  }
+  /* ---------- anteojos, parche, sombreros y adornos ---------- */
+  if (sp.lentes) {
+    for (const x of [xI, xD]) { for (let a = 0; a < 360; a += 10) { const r = a * Math.PI / 180; B.set(Math.round(x + Math.cos(r) * 5.5), Math.round(ey + Math.sin(r) * 4.6), P.ink); } B.set(x + 3, ey - 3, P.blanco); B.set(x + 2, ey - 2, P.blanco); }
+    B.hl(xI + 6, xD - 6, ey - 1, P.ink); B.line(xI - 6, ey - 1, cx - rx, ey - 3, P.ink);
+  }
+  if (sp.parche) { B.ell(xD, ey, 4.5, 4, P.ink); B.set(xD - 2, ey - 2, P.gris); B.line(xD - 3, ey - 4, cx - rx + 2, cy - 13, P.ink); B.line(xD + 4, ey - 2, cx + rx + 1, ey - 4, P.ink); }
+  if (sp.sombrero === 'conico') {
+    B.poly([[1, cy - 6], [cx + 1, 1], [W - 2, cy - 6]], P.arena); B.hl(1, W - 2, cy - 6, P.arena0); B.hl(2, W - 3, cy - 5, P.arena0);
+    for (const k of [12, 21]) B.line(cx + 1 - k, cy - 6 - Math.round(k * 0.4), cx + 1 + k, cy - 6 - Math.round(k * 0.4), P.arena0);
+    for (let y = 0; y < cy - 4; y++) for (let x = cx + 2; x < W; x++) if (B.get(x, y) === P.arena) B.set(x, y, P.arena0);
+    for (let x = cx - rx; x <= cx + rx; x++) for (let y = cy - 4; y < cy - 1; y++) { const c = B.get(x, y); if (c === cBase) B.set(x, y, cSom); else if (c === cSom) B.set(x, y, cHon); }
+  }
+  if (sp.gorro === 'alas') {
+    const t = cy - ry - 8;
+    B.rect(cx - 11, t, 23, 14, P.ink); B.rect(cx - 13, t + 10, 27, 5, P.ink); B.hl(cx - 9, cx + 9, t + 1, P.sombra); B.hl(cx - 9, cx + 9, t + 9, P.sombra);
+    for (const s of [-1, 1]) { B.rect(s < 0 ? cx - 25 : cx + 13, t + 8, 13, 2, P.ink); B.ell(cx + s * 27, t + 9, 4.5, 3, P.ink); B.hl(cx + s * 27 - 2, cx + s * 27, t + 8, P.sombra); }
+  }
   if (sp.gorro === 'tricornio') {
-    B.poly([[cx - 24, cy - 10], [cx - 15, top - 8], [cx, top - 3], [cx + 15, top - 8], [cx + 24, cy - 10]], P.navy); B.hl(cx - 22, cx + 22, cy - 10, P.oro); B.circ(cx, top - 1, 3, P.blanco); B.set(cx - 1, top - 2, P.ink); B.set(cx + 1, top - 2, P.ink);
-    if (sp.hielo) for (const x of [cx - 19, cx - 12, cx - 5, cx + 8, cx + 15, cx + 20]) B.vl(x, cy - 9, cy - 7 + (x & 1) * 2, P.fant);
+    const t = cy - ry;
+    B.poly([[cx - 27, cy - 7], [cx - 18, t - 10], [cx + 1, t - 5], [cx + 19, t - 10], [cx + 28, cy - 7]], P.navy);
+    for (let y = 0; y < cy - 6; y++) for (let x = cx + 6; x < W; x++) if (B.get(x, y) === P.navy) B.set(x, y, P.sombra);
+    B.hl(cx - 25, cx + 26, cy - 7, P.oro); B.hl(cx - 24, cx + 25, cy - 6, P.oro);
+    B.circ(cx + 1, t - 1, 3.4, P.blanco); B.set(cx, t - 2, P.ink); B.set(cx + 2, t - 2, P.ink); B.hl(cx, cx + 2, t + 1, P.ink);
+    if (sp.hielo) for (const x of [cx - 21, cx - 13, cx - 6, cx + 9, cx + 16, cx + 22]) B.vl(x, cy - 5, cy - 3 + (x & 1) * 2, P.fant);
   }
   if (sp.gorro === 'helice') {
-    B.ell(cx, top + 3, rx + 1, 9, P.rojo); B.maskRect(cx - 9, top - 7, 6, 12, P.oro, [P.rojo]); B.maskRect(cx + 3, top - 7, 6, 12, P.azul, [P.rojo]);
-    B.rect(cx - 1, top - 10, 2, 5, P.ink); B.rect(cx - 10, top - 12, 20, 2, P.oro); B.rect(cx - 1, top - 12, 2, 2, P.rojo);
+    B.ell(cx, cy - ry + 4, rx + 1, 10, P.rojo);
+    for (let y = 0; y < cy - ry + 14; y++) for (let x = 0; x < W; x++) { if (B.get(x, y) !== P.rojo) continue; const k = Math.floor((x - cx + 30) / 7) % 3; if (k === 1) B.set(x, y, P.oro); if (k === 2) B.set(x, y, P.azul); }
+    B.rect(cx - 1, cy - ry - 11, 2, 6, P.ink); B.rect(cx - 11, cy - ry - 13, 22, 2, P.oro); B.rect(cx - 1, cy - ry - 13, 2, 2, P.rojo);
   }
-  if (sp.vincha) B.maskRect(cx - rx - 2, cy - 11, rx * 2 + 4, 3, C_(sp.vincha), [pc, piel]);
-  if (sp.horquilla) { B.line(cx - 10, top + 2, cx + 9, top - 6, P.oro); B.line(cx - 9, top - 6, cx + 10, top + 1, P.rojo); B.circ(cx + 9, top - 6, 1.5, P.rosa); }
-  if (sp.lapiz) { B.line(cx - 9, top - 7, cx + 6, top + 3, P.oro); B.line(cx - 9, top - 6, cx + 6, top + 4, P.naranja); B.rect(cx - 10, top - 8, 2, 2, P.rosa); }
+  if (sp.vincha) { const k = C_(sp.vincha); for (let y = cy - ry + 8; y < cy - ry + 11; y++) for (let x = 0; x < W; x++) { const c = B.get(x, y); if (c === hc || c === hs || c === hh) B.set(x, y, y === cy - ry + 10 ? sh(sp.vincha) : k); } }
+  if (sp.horquilla) { B.line(cx - 12, cy - ry + 1, cx + 7, cy - ry - 8, P.oro); B.line(cx - 11, cy - ry - 8, cx + 8, cy - ry + 1, P.rojo); B.circ(cx + 7, cy - ry - 8, 1.6, P.rosa); }
+  if (sp.lapiz) { B.line(cx - 11, cy - ry - 7, cx + 5, cy - ry + 3, P.oro); B.line(cx - 11, cy - ry - 6, cx + 5, cy - ry + 4, P.naranja); B.rect(cx - 12, cy - ry - 8, 2, 2, P.rosa); }
+  /* ---------- la marca del gesto, como en las historietas ---------- */
+  const ex = 54, eY = alto ? 18 : 10;
+  if (emo === 'enojado' && !dormido) for (const [dx, dy] of [[-2, -2], [2, -2], [-2, 2], [2, 2]]) { B.hl(ex + dx - (dx < 0 ? 1 : 0), ex + dx + (dx > 0 ? 1 : 0), eY + dy, P.rojo); B.vl(ex + dx, eY + dy - (dy < 0 ? 1 : 0), eY + dy + (dy > 0 ? 1 : 0), P.rojo); }
+  if (emo === 'sorpresa') { B.line(ex - 6, eY - 3, ex - 8, eY - 8, P.oro); B.line(ex - 1, eY - 1, ex + 3, eY - 5, P.oro); B.line(ex + 1, eY + 4, ex + 6, eY + 3, P.oro); }
+  if (emo === 'duda') { const gx = cx + rx - 1, gy = cy - 9; B.ell(gx, gy + 2, 2.2, 2.6, P.celeste); B.poly([[gx - 1, gy], [gx, gy - 4], [gx + 1, gy]], P.celeste); B.set(gx - 1, gy + 1, P.blanco); }
+  if (emo === 'triste') { const tx = xI - 2, ty = ey + 3; B.vl(tx, ty, ty + 2, P.celeste); B.rect(tx - 1, ty + 3, 3, 2, P.celeste); B.set(tx, ty + 3, P.blanco); }
+  if (emo === 'picaro') { const sx = xD + 6, sy = ey - 7; B.vl(sx, sy - 2, sy + 2, P.oro2); B.hl(sx - 2, sx + 2, sy, P.oro2); B.set(sx, sy, P.blanco); }
+  if (emo === 'risa') { for (const [a, b2, c2, d] of [[ex - 2, eY + 2, ex + 3, eY - 1], [ex, eY + 7, ex + 6, eY + 6]]) B.line(a, b2, c2, d, P.oro); }
+  B.outline(P.ink);
+  return B;
+}
+
+/* ---------- el mono, de cerca: cara de corazón, orejas grandes y la hoja en la cabeza ---------- */
+function retratoMono(f) {
+  f = f || {};
+  const B = new Px(64, 64), emo = f.emo || 'feliz', cx = 32, cy = 32;
+  /* hombros y cuerpo */
+  B.ell(cx, 62, 22, 12, P.mad);
+  /* orejas */
+  for (const s of [-1, 1]) { B.circ(cx + s * 21, cy, 7.5, P.mad); B.circ(cx + s * 21, cy, 4.2, P.marron2); B.set(cx + s * 21 + (s > 0 ? -1 : 1), cy - 1, P.piel); }
+  /* la cabeza, con pelo de punta arriba */
+  B.circ(cx, cy, 19, P.mad);
+  for (let k = -3; k <= 3; k++) B.poly([[cx + k * 5 - 3, cy - 16], [cx + k * 5 + (k & 1 ? 1 : -1), cy - 23 - (k & 1)], [cx + k * 5 + 3, cy - 16]], P.mad);
+  /* la máscara de la cara, en forma de corazón */
+  B.circ(cx - 7, cy - 3, 8.5, P.marron2); B.circ(cx + 7, cy - 3, 8.5, P.marron2); B.ell(cx, cy + 7, 13, 10, P.marron2);
+  /* sombra a la derecha (la luz viene de arriba a la izquierda) */
+  for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++) {
+    const c = B.get(x, y), u = (x - (cx - 5)) / 22, v = (y - (cy - 6)) / 23;
+    if (u * u + v * v <= 1) continue;
+    if (c === P.mad) B.set(x, y, P.mad0); else if (c === P.marron2) B.set(x, y, P.mad);
+  }
+  B.hl(cx - 12, cx - 7, cy - 15, P.mad2); B.hl(cx - 14, cx - 12, cy - 13, P.mad2);
+  /* ojos grandes y brillosos */
+  const ojo = (x, lado) => {
+    if (f.parpado || emo === 'risa') { for (let i = -3; i <= 3; i++) B.set(x + i, cy - 2 + (emo === 'risa' ? -Math.round(2 * (1 - (i * i) / 9)) + 1 : Math.round(1.5 * (1 - (i * i) / 9))), P.ink); return; }
+    const r = emo === 'sorpresa' ? 5 : 4.4;
+    B.circ(x, cy - 2, r, P.ink); B.circ(x, cy - 2, r - 1.2, P.cafe); B.circ(x + 0.5, cy - 1, 1.6, P.ink);
+    B.rect(x - 2, cy - 5, 2, 2, P.blanco); B.set(x + 2, cy + 1, P.blanco);
+    if (emo === 'enojado') { B.line(x - 5 * lado, cy - 9, x + 4 * lado, cy - 6, P.mad0); }
+  };
+  ojo(cx - 8, -1); ojo(cx + 8, 1);
+  /* nariz y boca */
+  B.set(cx - 2, cy + 6, P.mad0); B.set(cx + 2, cy + 6, P.mad0); B.hl(cx - 1, cx + 1, cy + 5, P.mad);
+  if (f.boca || emo === 'risa' || emo === 'sorpresa') { B.ell(cx, cy + 12, emo === 'sorpresa' ? 2.6 : 4.5, emo === 'sorpresa' ? 3.2 : 2.8, P.ink); B.ell(cx, cy + 12.5, emo === 'sorpresa' ? 1.4 : 3, 1.6, P.rojo0); if (emo !== 'sorpresa') B.hl(cx - 2, cx + 2, cy + 10, P.blanco); }
+  else for (let i = -5; i <= 5; i++) B.set(cx + i, cy + 11 + Math.round(1.8 * (1 - (i * i) / 25)), P.mad0);
+  if (emo === 'feliz' || emo === 'risa') { B.dith(cx - 15, cy + 5, 4, 2, P.marron2, P.rosa, 0.5); B.dith(cx + 12, cy + 5, 3, 2, P.mad, P.rosa, 0.5); }
+  /* la hoja de té en la cabeza: la mejor del año */
+  B.poly([[cx - 2, cy - 18], [cx + 4, cy - 30], [cx + 12, cy - 30], [cx + 10, cy - 22]], P.hoja); B.line(cx - 1, cy - 19, cx + 9, cy - 28, P.jade);
+  B.set(cx + 6, cy - 29, P.bambu); B.set(cx + 8, cy - 29, P.bambu);
   B.outline(P.ink);
   return B;
 }
@@ -1008,6 +1369,19 @@ const EW = 320, EH = 180;
 function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
 /* ---------- piezas sueltas ---------- */
+/* sombra de contacto: donde el piso se junta con la pared (o bajo un alero), una banda
+   que se oscurece de a puntitos. Le da profundidad y contraste a los escenarios. */
+function oscuro(c) { const n = PN[c]; return n && SOMBRA[n] ? P[SOMBRA[n]] : c; }
+function sombraBanda(B, x0, x1, y0, n, fuerza) {
+  fuerza = fuerza || 0.75;
+  for (let k = 0; k < n; k++) {
+    const y = y0 + k, d = fuerza * (1 - k / n);
+    for (let x = Math.max(0, x0); x <= Math.min(EW - 1, x1); x++) {
+      const h = ((x * 73856093) ^ (y * 19349663)) >>> 0, v = (h % 1000) / 1000;
+      if (v < d) { const c = B.get(x, y); if (c) B.set(x, y, oscuro(c)); }
+    }
+  }
+}
 function cielo(B, y1, o) {
   o = o || {};
   B.bandas(0, 0, EW, y1, [P.cieloA, P.cieloB, P.cieloC], 8);
@@ -1043,6 +1417,7 @@ function techo(B, x0, x1, yt, ye, c, cd, cr) {
   B.poly([[x0 - 6, ye - 5], [x0 + 1, ye], [x1 - 1, ye], [x1 + 6, ye - 5], [x1 - 7, yt + 3], [x0 + 7, yt + 3]], c);
   for (let x = x0 + 2; x < x1 - 1; x += 3) B.maskRect(x, yt + 3, 1, ye - yt - 2, cd, [c]);
   B.hl(x0 - 1, x1 + 1, ye, cd); B.hl(x0 + 1, x1 - 1, ye + 1, P.sombra);
+  sombraBanda(B, x0 + 1, x1 - 1, ye + 2, 4, 0.6);
   B.rect(x0 + 5, yt, x1 - x0 - 10, 3, cr || cd);
   B.poly([[x0 + 2, yt - 2], [x0 + 6, yt], [x0 + 6, yt + 3], [x0 + 3, yt + 1]], cr || cd);
   B.poly([[x1 - 2, yt - 2], [x1 - 6, yt], [x1 - 6, yt + 3], [x1 - 3, yt + 1]], cr || cd);
@@ -1075,6 +1450,7 @@ function tablones(B, x, y, w, h, cA, cB, cL, paso) {
     for (let xx = x + off; xx < x + w; xx += 34) B.vl(xx, yy, Math.min(y + h - 1, yy + paso - 1), cL);
     if (k % 3 === 1) B.dith(x, yy + 1, w, 1, cA, cB, 0.5);
   }
+  sombraBanda(B, x, x + w - 1, y, 9, 0.7);
 }
 function piso_piedra(B, y0, y1) {
   B.rect(0, y0, EW, y1 - y0, P.pie2);
@@ -1087,6 +1463,7 @@ function piso_piedra(B, y0, y1) {
     y += h;
   }
   B.dith(0, y0, EW, 4, P.pie, P.pie2, 0.5);
+  sombraBanda(B, 0, EW - 1, y0, 10, 0.75);
 }
 function ventana(B, x, y, w, h) {
   B.rect(x - 2, y - 2, w + 4, h + 4, P.mad0);
@@ -1565,6 +1942,13 @@ const SFX = {
   gong() { const c = sfxOk(); if (!c) return; const t = c.currentTime; [[110, 0.4], [164, 0.2], [221, 0.15]].forEach(([f, v]) => osc(c, AU.out, 'sine', f, t, 2.2, v, 0.02)); ruido(c, t, 0.4, 0.2, 900, 200); },
   fanfarria() { const c = sfxOk(); if (!c) return; const t = c.currentTime; [523, 659, 784, 1046, 784, 1046].forEach((f, i) => osc(c, AU.out, 'square', f, t + i * 0.11, 0.22, 0.06)); },
   tic() { const c = sfxOk(); if (!c) return; osc(c, AU.out, 'triangle', 660, c.currentTime, 0.05, 0.08); },
+  /* el primer plano entra con un zas */
+  zas() { const c = sfxOk(); if (!c) return; const t = c.currentTime; ruido(c, t, 0.18, 0.12, 600, 3800); },
+  /* golpe de té: tres seguidas en un duelo */
+  golpe() { const c = sfxOk(); if (!c) return; const t = c.currentTime; ruido(c, t, 0.3, 0.35, 2600, 300); [523, 784, 1046, 1568].forEach((f, i) => osc(c, AU.out, 'square', f, t + 0.05 + i * 0.05, 0.16, 0.06)); },
+  /* el reloj del duelo, cuando se acaba */
+  apuro() { const c = sfxOk(); if (!c) return; const t = c.currentTime; osc(c, AU.out, 'square', 1320, t, 0.05, 0.04); },
+  pierde() { const c = sfxOk(); if (!c) return; const t = c.currentTime; [392, 330, 262, 196].forEach((f, i) => osc(c, AU.out, 'triangle', f, t + i * 0.16, 0.3, 0.1)); },
   fantasma() { const c = sfxOk(); if (!c) return; const t = c.currentTime; const o = osc(c, AU.out, 'sine', 300, t, 1.4, 0.12, 0.3); o.frequency.linearRampToValueAtTime(180, t + 1.4); ruido(c, t, 1.2, 0.06, 300, 1200); },
   mono() { const c = sfxOk(); if (!c) return; const t = c.currentTime; [0, 0.16].forEach(d => { const o = osc(c, AU.out, 'square', 900, t + d, 0.12, 0.05); o.frequency.exponentialRampToValueAtTime(1500, t + d + 0.1); }); },
   /* encontrar algo importante: un arpegio pentatónico que sube y brilla */
@@ -2356,12 +2740,12 @@ function renderSync() { const el = $('#sync'); if (el) el.textContent = REF ? 'T
 
 /* ---------- la dificultad: cuánto te ayuda la isla ---------- */
 const DIFS = {
-  facil:{nombre:'Fácil', te:'Té suave', subt:true, maxMal:1, quitaMal:true, marcas:'todo', duelo:{aprendiz:2, maestra:2, capitan:3}, replicas:3,
-    puntos:['Al elegir qué decir, dos opciones: una buena y una mala.', 'Marcas sobre lo importante y sobre la gente que te puede ayudar.', 'Duelos cortos.', 'El castellano, debajo de cada frase.']},
-  normal:{nombre:'Normal', te:'Té de la casa', subt:true, maxMal:99, quitaMal:true, marcas:'cosas', duelo:{aprendiz:3, maestra:3, capitan:4}, replicas:5,
-    puntos:['Todas las opciones al elegir qué decir.', 'Marcas sobre los objetos importantes.', 'Duelos normales.', 'El castellano, debajo de cada frase.']},
-  dificil:{nombre:'Difícil', te:'Té del mono', subt:false, maxMal:99, quitaMal:false, marcas:'nada', duelo:{aprendiz:4, maestra:4, capitan:5}, replicas:6,
-    puntos:['Sin marcas: lo importante, lo encontrás vos.', 'El castellano, solo si lo pedís.', 'Si te equivocás, la opción mala no se va.', 'Duelos largos.']},
+  facil:{nombre:'Fácil', te:'Té suave', subt:true, maxMal:1, quitaMal:true, marcas:'todo', duelo:{aprendiz:2, maestra:3, capitan:3}, replicas:3, tiempo:0, aprendices:1, siempre:true,
+    puntos:['Al elegir qué decir, dos opciones: una buena y una mala.', 'Marcas sobre lo importante y sobre la gente que te puede ayudar.', 'Duelos cortos y sin reloj; para la Maestra alcanza con un aprendiz.', 'El castellano, debajo de cada frase.']},
+  normal:{nombre:'Normal', te:'Té de la casa', subt:true, maxMal:99, quitaMal:true, marcas:'cosas', duelo:{aprendiz:3, maestra:3, capitan:4}, replicas:4, tiempo:15, aprendices:2, siempre:true,
+    puntos:['Todas las opciones al elegir qué decir.', 'Marcas sobre los objetos importantes.', 'En los duelos, 15 segundos para contestar; para la Maestra, dos aprendices.', 'El castellano, debajo de cada frase.']},
+  dificil:{nombre:'Difícil', te:'Té del mono', subt:false, maxMal:99, quitaMal:false, marcas:'nada', duelo:{aprendiz:3, maestra:4, capitan:5}, replicas:5, tiempo:9, aprendices:3, siempre:false,
+    puntos:['Sin marcas: lo importante, lo encontrás vos.', 'El castellano, solo si lo pedís.', 'Si te equivocás, la opción mala no se va.', 'Duelos a 9 segundos, y solo con las réplicas que ya aprendiste.']},
 };
 const DIF = () => DIFS[S.cfg.dif] || DIFS.normal;
 function ponerDif(d) { if (!DIFS[d]) return; S.cfg.dif = d; S.cfg.sub = DIFS[d].subt; touch(); }
@@ -2471,10 +2855,24 @@ function brillar(g, luces, pal, t) {
   });
   g.restore();
 }
+/* la máscara de lo que va «adelante» (gente, objetos clave): se pinta con la paleta entera;
+   el resto, con la paleta apenas velada hacia el aire. Así los personajes se despegan del fondo. */
+const MK = new Uint8Array(EW * EH);
+function marcar(src, dx, dy, flip, v) {
+  dx = Math.round(dx); dy = Math.round(dy);
+  for (let y = 0; y < src.h; y++) {
+    const Y = dy + y; if (Y < 0 || Y >= EH) continue;
+    for (let x = 0; x < src.w; x++) { if (!src.d[y * src.w + (flip ? src.w - 1 - x : x)]) continue; const X = dx + x; if (X >= 0 && X < EW) MK[Y * EW + X] = v; }
+  }
+}
+function indicesDe(px) { const out = []; for (let i = 0; i < px.d.length; i++) if (px.d[i]) out.push(i); return Uint32Array.from(out); }
+const VELO = {dia:['#cfe7f5', 0.07], amanecer:['#f3cdbd', 0.09], tarde:['#f0a684', 0.09], noche:['#0b1030', 0.2]};
 function dibujar() {
   const esc = R.esc; if (!esc) return;
   const A = arte(esc.arte || esc.id), palN = esc.paleta || horaPal(S.min);
-  FR.d.set(A.bg.d);
+  /* primer plano: la escena se corta y se ve una cara de cerca */
+  if (R.pp) { dibujarPrimerPlano(); return; }
+  FR.d.set(A.bg.d); MK.fill(0);
   if (A.cielo) cieloVivo(FR, esc.id, R.t, palN);
   if (A.reloj) agujas(FR, A.reloj[0], A.reloj[1], A.reloj[2], S.min);
   if (esc.fondo) esc.fondo(FR, R.t);
@@ -2489,9 +2887,9 @@ function dibujar() {
   if (esc.encima) for (const e of esc.encima) if (!e.si || e.si()) cosas.push({y:e.y, d:e.d});
   cosas.sort((p, q) => p.y - q.y);
   for (const c of cosas) {
-    if (c.l) FR.blit(c.l.px, 0, 0);
+    if (c.l) { FR.blit(c.l.px, 0, 0); const ix = c.l.idx || (c.l.idx = indicesDe(c.l.px)); for (let i = 0; i < ix.length; i++) MK[ix[i]] = 0; }
     else if (c.d) c.d(FR, R.t);
-    else { const f = frameDe(c.a); FR.blit(f, Math.round(c.a.x) - 20, Math.round(c.a.y) - f.h + 2, c.a.dir < 0); }
+    else { const f = frameDe(c.a), x = Math.round(c.a.x) - 20, y = Math.round(c.a.y) - f.h + 2; FR.blit(f, x, y, c.a.dir < 0); marcar(f, x, y, c.a.dir < 0, 1); }
   }
   for (const p of R.part) p.d(FR, p);
   if (esc.frente) esc.frente(FR, R.t);
@@ -2500,13 +2898,127 @@ function dibujar() {
   if (imp) for (const k of imp.meta) { const h = puntoDe(k); if (h) { const [x, y] = h.brillo || [h.zona[0] + h.zona[2] / 2, h.zona[1] + h.zona[3] / 2]; destello(FR, x, y, R.t, x * 0.37); } }
   const marcas = marcasActuales(imp);
   if (!T3.ok) for (const m of marcas) marcaPx(FR, m.x, m.y, m.tipo, R.t);
-  pintar(FR, cicloPal(PAL32[palN], R.t), IMG);
+  const pal = cicloPal(PAL32[palN], R.t), [vc, vk] = esc.interior ? ['#24160f', palN === 'noche' ? 0.2 : 0.1] : VELO[palN];
+  pintar(FR, pal, IMG, velar(pal, vc, vk), MK);
   G2.putImageData(IMG, 0, 0);
   if (A.luces.length && (palN === 'noche' || palN === 'tarde') && !R.sinLuz) brillar(G2, A.luces, palN, R.t);
   if (T3.ok) T3.escena(G2, {id:esc.id, pal:palN, t:R.t, marcas, actores:R.actores, cap:S.cap, curado:F('curado')});
 }
+/* ============================================================
+   Primer plano: la escena se corta y se ve una cara de cerca,
+   con un fondo que cuenta el clima del momento. En los duelos,
+   las dos caras, una frente a la otra, y el choque de teteras.
+   ============================================================ */
+const RET = {};                        // retratos ya dibujados, por cara y gesto
+function retratoPx(id, f) {
+  const k = `${id}|${f.emo || ''}|${f.boca ? 1 : 0}${f.parpado ? 1 : 0}`;
+  return RET[k] || (RET[k] = id === 'wenwen' ? retratoWenwen({boca:f.boca}) : id === 'mono' ? retratoMono(f) : retrato(SPEC[id] ? id : 'tito', {boca:f.boca, emo:f.emo, parpado:f.parpado}));
+}
+let ANG = null;                        // ángulo de cada píxel desde el centro (para los rayos)
+function rayos(B, cx, cy, n, c1, c2, giro) {
+  if (!ANG || ANG.cx !== cx || ANG.cy !== cy) { ANG = new Float32Array(EW * EH); ANG.cx = cx; ANG.cy = cy; for (let y = 0; y < EH; y++) for (let x = 0; x < EW; x++) ANG[y * EW + x] = Math.atan2(y - cy, x - cx); }
+  const k = n / (Math.PI * 2), d = B.d;
+  for (let i = 0; i < d.length; i++) d[i] = (Math.floor((ANG[i] + Math.PI + giro) * k) & 1) ? c1 : c2;
+}
+const FONDOS_PP = {
+  sol:[P.oro, P.naranja], calido:[P.naranja, P.rojo], jade:[P.jade, P.jade0], frio:[P.navy, P.sombra], noche:[P.sombra, P.navy], rosa:[P.rosa, P.lila], cielo:[P.celeste, P.azul],
+};
+function fondoPP(B, fondo, t) {
+  if (fondo === 'escena') { const A = arte(R.esc.arte || R.esc.id); B.d.set(A.bg.d); return; }
+  if (fondo === 'duelo') {
+    /* mitad de Tito (jade) y mitad del rival (rojo), cortadas en diagonal, con rayos que giran */
+    rayos(B, 160, 96, 22, P.jade, P.jade0, t * 0.25);
+    const d = B.d;
+    for (let y = 0; y < EH; y++) { const corte = 160 + (y - 90) * 0.35; for (let x = Math.max(0, Math.floor(corte)); x < EW; x++) d[y * EW + x] = d[y * EW + x] === P.jade ? P.rojo : P.rojo0; }
+    for (let y = 0; y < EH; y++) { const X = Math.round(160 + (y - 90) * 0.35); B.set(X, y, P.oro2); B.set(X + 1, y, P.oro); }
+    return;
+  }
+  const [c1, c2] = FONDOS_PP[fondo] || FONDOS_PP.sol;
+  rayos(B, 160, 110, 18, c1, c2, t * 0.18);
+  if (fondo === 'frio' || fondo === 'noche') {
+    /* nieve que cae, o estrellas */
+    for (let i = 0; i < 46; i++) { const x = (i * 71 + Math.sin(t * 0.7 + i) * 9 + t * 4) % EW, y = fondo === 'frio' ? (i * 37 + t * (14 + (i % 5) * 4)) % EH : (i * 53) % EH; B.set(x, y, fondo === 'frio' ? P.blanco : (Math.sin(t * 3 + i) > 0.6 ? P.estrella : P.navy)); if (fondo === 'frio' && i % 3 === 0) B.set(x + 1, y, P.fant); }
+  }
+}
+/* un retrato al doble de tamaño (y marcado para que el velo no lo toque) */
+function blitX2(B, src, dx, dy, flip, blanco) {
+  dx = Math.round(dx); dy = Math.round(dy);
+  for (let y = 0; y < src.h; y++) for (let x = 0; x < src.w; x++) {
+    const c = src.d[y * src.w + (flip ? src.w - 1 - x : x)]; if (!c) continue;
+    const col = blanco && c !== P.ink ? P.blanco : c, X = dx + x * 2, Y = dy + y * 2;
+    for (let j = 0; j < 2; j++) { const yy = Y + j; if (yy < 0 || yy >= EH) continue; for (let i = 0; i < 2; i++) { const xx = X + i; if (xx < 0 || xx >= EW) continue; B.d[yy * EW + xx] = col; MK[yy * EW + xx] = 1; } }
+  }
+}
+/* ¿mueve la boca? mientras corre su texto o su voz */
+const mueveBoca = (id, now) => ((UI.tipeo && HABLA.quien === id) || now < (HABLA.voz[id] || 0)) && Math.floor(now / 120) % 2 === 0;
+function caraPP(id, emo, t, fase) {
+  const boca = mueveBoca(id, performance.now()), parp = !boca && (t * 0.9 + fase) % 4 < 0.12;
+  return retratoPx(id, {emo, boca, parpado:parp});
+}
+function dibujarPrimerPlano() {
+  const pp = R.pp, t = R.t, B = FR, dt = t - pp.t0;
+  MK.fill(0);
+  fondoPP(B, pp.fondo, t);
+  if (pp.duelo) {
+    const g = pp.golpe && t - pp.golpe.t < 0.32 ? pp.golpe : null;
+    for (const lado of ['izq', 'der']) {
+      const id = pp[lado], emo = pp['emo_' + lado], entra = Math.min(1, dt / 0.3), e = 1 - Math.pow(1 - entra, 3);
+      const sac = g && g.lado === lado ? Math.round(Math.sin(t * 90) * (g.fuerte ? 5 : 3)) : 0;
+      const x = lado === 'izq' ? 4 - (1 - e) * 140 + sac : 188 + (1 - e) * 140 + sac;
+      const px = caraPP(id, emo, t, lado === 'izq' ? 0 : 1.7);
+      if (px) blitX2(B, px, x, 180 - 128 - 6 + Math.round(Math.sin(t * 2.2 + (lado === 'izq' ? 0 : 1)) * 1.5), lado === 'der', g && g.lado === lado && t - g.t < 0.08);
+    }
+    /* el choque de teteras: dos chorros de té que empujan; el punto de choque dice quién va ganando */
+    const m = DUEL.meta || 3, x0 = 14, x1 = 306, mid = (x0 + x1) / 2, choque = Math.round(mid + (DUEL.pos / m) * (mid - x0 - 6)), y = 22;
+    B.rect(x0 - 2, y - 5, x1 - x0 + 4, 11, P.ink);
+    for (let x = x0; x <= x1; x++) {
+      const tito = x < choque, ond = Math.round(Math.sin(x * 0.45 - t * (tito ? 12 : -12)) * 1.2);
+      const c1 = tito ? P.hoja : P.rojo2, c2 = tito ? P.jade : P.rojo;
+      for (let j = -3; j <= 3; j++) B.set(x, y + j, Math.abs(j + ond) <= 1 ? (tito ? P.bambu : P.oro2) : Math.abs(j) <= 2 ? c1 : c2);
+    }
+    /* chispas en el choque */
+    for (let i = 0; i < 9; i++) { const a = t * 11 + i * 0.7, r = 3 + ((t * 30 + i * 5) % 7); B.set(choque + Math.cos(a) * r, y + Math.sin(a) * r * 0.8, i % 2 ? P.blanco : P.oro2); }
+    B.rect(choque - 1, y - 6, 3, 13, P.blanco);
+    /* las marcas de meta en cada punta */
+    for (let k = -m; k <= m; k++) { const X = Math.round(mid + (k / m) * (mid - x0 - 6)); B.set(X, y + 6, P.oro); B.set(X, y + 7, P.oro); }
+  } else {
+    const entra = Math.min(1, dt / 0.24), e = 1 - Math.pow(1 - entra, 3), lado = pp.lado === 'der' ? 1 : -1;
+    const baile = Math.round(Math.sin(t * 2) * 1.5);
+    const px = caraPP(pp.quien, pp.emo, t, 0);
+    const cambio = pp.cambio && t - pp.cambio < 0.5;
+    blitX2(B, px, 96 + (1 - e) * 150 * lado, 180 - 128 - 8 + baile, pp.flip, cambio && Math.floor(t * 20) % 2 === 0);
+  }
+  for (const p of R.part) p.d(B, p);
+  /* franjas de cine arriba y abajo */
+  B.rect(0, 0, EW, 10, P.negro); B.rect(0, EH - 10, EW, 10, P.negro);
+  const pal = cicloPal(PAL32.dia, t);
+  pintar(B, pal, IMG, velar(pal, '#160c12', pp.fondo === 'escena' ? 0.55 : 0.18), MK);
+  G2.putImageData(IMG, 0, 0);
+}
+/* poner y sacar un primer plano. o: emo, fondo, lado, nombre (cartel con el nombre), hasta (segundos) */
+function primerPlano(quien, o) {
+  o = o || {};
+  const nuevo = !R.pp || R.pp.duelo || R.pp.quien !== quien;
+  R.pp = {quien, emo:o.emo || (R.pp && !nuevo ? R.pp.emo : null), fondo:o.fondo || (R.pp && !nuevo ? R.pp.fondo : 'sol'), lado:o.lado || (quien === 'tito' ? 'der' : 'izq'),
+    t0:nuevo ? R.t : R.pp.t0, hasta:o.hasta ? R.t + o.hasta : null, flip:o.flip != null ? !!o.flip : quien === 'tito', fijo:!!o.fijo};
+  $('#ppx').innerHTML = o.nombre ? `<div class="ppn ${R.pp.lado}">${o.nombre}</div>` : '';
+  if (nuevo) SFX.zas();
+}
+function sinPrimerPlano() { R.pp = null; const x = $('#ppx'); if (x) x.innerHTML = ''; }
+function ppTexto(html, cls, ms) {
+  const x = $('#ppx'); if (!x) return;
+  const el = document.createElement('div'); el.className = 'ppt ' + (cls || ''); el.innerHTML = html; x.appendChild(el);
+  setTimeout(() => el.remove(), ms || 1400);
+}
+
+function temblar(dt) {
+  if (R.temblor > 0) R.temblor = Math.max(0, R.temblor - dt * 16);
+  CV.style.transform = R.temblor > 0.4 ? `translate(${((Math.random() - 0.5) * R.temblor * 0.6).toFixed(1)}px, ${((Math.random() - 0.5) * R.temblor * 0.6).toFixed(1)}px)` : '';
+}
 function paso(dt) {
   R.t += dt;
+  temblar(dt);
+  if (R.pp && R.pp.hasta && R.t > R.pp.hasta) sinPrimerPlano();
   const todos = R.actores.concat(R.tito ? [R.tito] : []);
   for (const a of todos) {
     if (a.habla > 0) a.habla -= dt;
@@ -2524,7 +3036,7 @@ function paso(dt) {
 function bucle(now) {
   const dt = (now - (R.last || now)) / 1000;
   /* a 30 cuadros por segundo alcanza, y cuida la batería */
-  if (dt >= 1 / 31 || !R.last) { R.last = now; if (UI.vista === 'juego') { paso(Math.min(0.06, dt)); dibujar(); } }
+  if (dt >= 1 / 31 || !R.last) { R.last = now; if (UI.vista === 'juego') { paso(Math.min(0.06, dt)); dibujar(); animarRet(now); } }
   requestAnimationFrame(bucle);
 }
 /* caminar hasta un punto (adentro de la zona por donde se camina) */
@@ -2549,7 +3061,20 @@ const UI = {vista:'titulo', verbo:null, item:null, ocupado:false, panel:'explora
 const VERBOS = [['mirar', 'Mirar', 'i-ojo'], ['agarrar', 'Agarrar', 'i-mano'], ['usar', 'Usar', 'i-engranaje'], ['hablar', 'Hablar', 'i-boca'], ['dar', 'Dar', 'i-regalo']];
 const VERBO_TXT = {mirar:'Mirar', agarrar:'Agarrar', usar:'Usar', hablar:'Hablar con', dar:'Dar', ir:'Ir a'};
 function nombreDe(h) { const n = typeof h.nombre === 'function' ? h.nombre() : h.nombre; return n || ''; }
-function frase(txt) { $('#frase').innerHTML = txt || '&nbsp;'; }
+function frase(txt) {
+  const el = $('#frase');
+  if (txt || UI.ocupado || UI.vista !== 'juego') { el.className = 'frase' + (UI.panel !== 'explorar' ? ' callada' : ''); el.innerHTML = txt || '&nbsp;'; el.removeAttribute('data-act'); el.removeAttribute('role'); return; }
+  renderMeta();
+}
+/* la tira de «Ahora»: lo próximo que hay que hacer, siempre a la vista. Se toca y abre la libreta. */
+function renderMeta() {
+  const el = $('#frase'), m = typeof metaActual === 'function' ? metaActual() : null;
+  if (!m) { el.className = 'frase'; el.innerHTML = '&nbsp;'; el.removeAttribute('data-act'); return; }
+  const clave = m.prog + '|' + m.txt, nueva = UI.meta !== clave; UI.meta = clave;
+  el.className = 'frase meta' + (nueva ? ' nueva' : '') + (UI.panel !== 'explorar' ? ' callada' : '');
+  el.dataset.act = 'libreta'; el.setAttribute('role', 'button');
+  el.innerHTML = `<svg class="i" aria-hidden="true"><use href="#i-brujula"/></svg><span class="mt"><b>Ahora</b> ${m.prog ? `<i class="prog">${esc(m.prog)}</i> ` : ''}${rich(m.txt)}</span><span class="mv" aria-hidden="true">›</span>`;
+}
 function fraseActual(h) {
   if (UI.item) {
     const it = ITEMS[UI.item];
@@ -2587,6 +3112,7 @@ function aviso(html, pinta) {
 }
 function panel(modo) {
   UI.panel = modo;
+  $('#frase').classList.toggle('callada', modo !== 'explorar');
   $('#explorar').hidden = modo !== 'explorar';
   $('#dialogo').hidden = modo === 'explorar';
   document.body.dataset.panel = modo;
@@ -2598,35 +3124,95 @@ function nombreQuien(id) { const q = QUIEN[id]; return typeof q === 'function' ?
 let avanzar = null;
 function esperarToque() { return new Promise(r => { avanzar = r; }); }
 function soltar() { const r = avanzar; avanzar = null; R.habla = null; r && r(); }
-function retratoCanvas(id, boca) {
-  const k = id + (boca ? 'b' : '');
-  if (ICON['r_' + k]) return ICON['r_' + k];
-  const px = id === 'wenwen' ? retratoWenwen({boca}) : retrato(SPEC[id] ? id : 'tito', {boca});
-  return (ICON['r_' + k] = aCanvas(px, 'dia', 2));
+function retratoCanvas(id, boca, emo, parpado) {
+  const k = `r_${id}_${emo || ''}_${boca ? 1 : 0}${parpado ? 1 : 0}`;
+  return ICON[k] || (ICON[k] = aCanvas(retratoPx(id, {boca, emo, parpado}), 'dia', 2));
 }
-const retratoDe = (quien, a) => (quien === 'wenwen' ? 'wenwen' : SPEC[quien] ? quien : a && SPEC[a.spec] ? a.spec : null);
-function pintarRetrato(id) {
-  const c = $('#ret'); if (!id) { c.hidden = true; return; }
-  c.hidden = false;
+/* la cara de quien habla: la de su personaje de ahora (el Capitán, curado, ya no es fantasma) */
+const retratoDe = (quien, a) => (quien === 'wenwen' || quien === 'mono' ? quien : a && SPEC[a.spec] ? a.spec : SPEC[quien] ? quien : null);
+/* el retrato del panel: mueve la boca mientras corre el texto o la voz, y parpadea de a ratos */
+const HABLA = {id:null, emo:null, quien:null, voz:{}, est:'', parp:0};
+function pintarRetrato(id, emo, dur) {
+  const c = $('#ret');
+  HABLA.id = id || null; HABLA.emo = emo || null;
+  if (id) HABLA.voz[id] = performance.now() + (dur || 0);
+  if (!id) { c.hidden = true; return; }
+  c.hidden = false; HABLA.est = ''; animarRet(performance.now());
+}
+function animarRet(now) {
+  const c = $('#ret'); if (!HABLA.id || c.hidden) return;
+  if (HABLA.parp < now - 4000 && Math.random() < 0.02) HABLA.parp = now;
+  const boca = mueveBoca(HABLA.id, now), parp = !boca && now - HABLA.parp < 130;
+  const est = `${HABLA.id}|${HABLA.emo}|${boca}|${parp}`;
+  if (est === HABLA.est) return;
+  HABLA.est = est;
   const g = c.getContext('2d'); g.imageSmoothingEnabled = false;
-  const draw = boca => { g.clearRect(0, 0, 96, 96); g.drawImage(retratoCanvas(id, boca), 0, 0, 96, 96); };
-  draw(false);
-  clearInterval(pintarRetrato.t);
-  let n = 0;
-  pintarRetrato.t = setInterval(() => { n++; draw(n % 2 === 1 && n < 10); if (n >= 10) clearInterval(pintarRetrato.t); }, 140);
+  g.clearRect(0, 0, c.width, c.height);
+  g.drawImage(retratoCanvas(HABLA.id, boca, HABLA.emo, parp), 0, 0, c.width, c.height);
 }
+/* el gesto de cada línea: por lo que dice, salvo que el guion lo pida */
+const EMO_HZ = [[/哈哈/, 'risa'], [/对不起/, 'triste'], [/太好|好喝了|真的|好玩|好听|很好的学生|谢谢/, 'feliz'], [/不好喝|不喝茶|太贵/, 'enojado'], [/^哦/, 'sorpresa'], [/吗？/, 'neutral']];
+function emoDe(quien, l, o) {
+  if (o && o.emo) return o.emo;
+  if (quien === 'capitan' && !F('curado')) return /哈哈/.test(l.hz) ? 'risa' : 'enojado';
+  for (const [re, e] of EMO_HZ) if (re.test(l.hz)) return e;
+  return null;
+}
+/* «[duda]¿Y ahora?»: el gesto puede venir pegado al texto */
+function sacarEmo(txt) { const m = /^\[(\w+)\]\s*/.exec(txt || ''); return m ? [m[1], txt.slice(m[0].length)] : [null, txt]; }
+/* el texto aparece de a poco; un toque lo completa */
+function tipear(el) {
+  if (UI.tipeo) UI.tipeo.fin();
+  if (window.__TEST__ || !el || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+  const spans = [];
+  const walk = n => {
+    for (const c of [...n.childNodes]) {
+      if (c.nodeType === 3) {
+        if (!c.textContent.trim()) continue;
+        const f = document.createDocumentFragment();
+        for (const ch of c.textContent) { const sp = document.createElement('span'); sp.className = 'tw'; sp.textContent = ch; f.appendChild(sp); spans.push(sp); }
+        c.replaceWith(f);
+      } else if (c.nodeType === 1) walk(c);
+    }
+  };
+  walk(el);
+  if (!spans.length) return;
+  const t0 = performance.now(), cps = 64;
+  const T = UI.tipeo = {spans, n:0, fin() { for (let i = this.n; i < spans.length; i++) spans[i].classList.add('v'); this.n = spans.length; if (UI.tipeo === this) UI.tipeo = null; }};
+  const paso_ = now => {
+    if (UI.tipeo !== T) return;
+    const n = Math.min(spans.length, Math.floor((now - t0) / 1000 * cps) + 1);
+    for (let i = T.n; i < n; i++) spans[i].classList.add('v');
+    T.n = n;
+    if (n >= spans.length) { UI.tipeo = null; return; }
+    requestAnimationFrame(paso_);
+  };
+  requestAnimationFrame(paso_);
+}
+/* tocar el diálogo: si el texto todavía corre, se completa; si no, sigue */
+function tocarDialogo() { if (UI.tipeo) { UI.tipeo.fin(); return; } soltar(); }
+/* el lado de la charla: Tito a la derecha, los demás a la izquierda */
+function lado(modo) { $('#linea').className = 'linea ' + modo; }
 function oida(key) { if (!S.oidas[key]) { S.oidas[key] = 1; } }
-/* alguien dice una línea en chino; o.clave: la traducción no se muestra sola */
+/* alguien dice una línea en chino; o.clave: la traducción no se muestra sola; o.emo: el gesto; o.pp: primer plano */
 async function di(quien, key, o) {
   o = o || {};
   const l = CL(key); if (!l) { console.error('falta la línea', key); return; }
   oida(typeof key === 'string' ? key : null);
   const a = act(quien); if (a) a.habla = Math.max(1.4, l.hz.length * 0.22);
   R.habla = quien;
-  pintarRetrato(retratoDe(quien, a));
+  const id = retratoDe(quien, a), emo = emoDe(quien, l, o);
+  if (o.pp) primerPlano(id, {emo, fondo:typeof o.pp === 'string' ? o.pp : null});
+  else if (R.pp && !R.pp.duelo && R.pp.quien === id) { if (emo) R.pp.emo = emo; }
+  else if (R.pp && !R.pp.duelo && !R.pp.fijo) sinPrimerPlano();
+  const dur = Math.max(900, l.hz.length * 240);
+  HABLA.quien = id;
+  pintarRetrato(enGrande(id) ? null : id, emo, dur);
+  if (id) HABLA.voz[id] = performance.now() + dur;
   const nom = nombreQuien(quien) || (quien === 'tito' ? 'Tito' : '');
   const sub = S.cfg.sub && l.es && !o.clave;
-  $('#dtexto').innerHTML = `<div class="quien">${rich(nom)}</div><div class="zh"><b class="py">${esc(l.py)}</b> <span class="hz" lang="zh-Hans">${esc(l.hz)}</span></div>
+  lado(quien === 'tito' ? 'der' : 'izq');
+  $('#dtexto').innerHTML = `<div class="quien">${rich(nom)}</div><div class="zh pop"><b class="py">${esc(l.py)}</b> <span class="hz" lang="zh-Hans">${esc(l.hz)}</span></div>
     ${sub ? `<div class="es">${esc(l.es)}</div>` : l.es ? `<button type="button" class="trad" data-act="traducir">Ver en castellano</button><div class="es" hidden>${esc(l.es)}</div>` : ''}`;
   $('#dbotones').innerHTML = `<button type="button" class="oir" data-say="${esc(l.hz)}" aria-label="Escuchar de nuevo">${ico('i-oreja')}</button><span class="seguir">Tocá para seguir</span>`;
   panel('dialogo'); $('#opciones').hidden = true; $('#linea').hidden = false;
@@ -2634,26 +3220,40 @@ async function di(quien, key, o) {
   await esperarToque();
 }
 /* alguien dice algo en castellano (Tito cuando piensa, Wènwen, los comentarios) */
-async function dice(quien, txt) {
+async function dice(quien, txt, emo) {
+  const [e0, t] = sacarEmo(txt); txt = t; emo = emo || e0;
   const a = act(quien); if (a) a.habla = Math.min(2.5, txt.length * 0.03);
   R.habla = quien;
-  pintarRetrato(retratoDe(quien, a));
+  const id = retratoDe(quien, a);
+  if (R.pp && !R.pp.duelo && R.pp.quien === id) { if (emo) R.pp.emo = emo; }
+  else if (R.pp && !R.pp.duelo && !R.pp.fijo) sinPrimerPlano();
+  HABLA.quien = id;
+  pintarRetrato(enGrande(id) ? null : id, emo, 0);
+  lado(quien === 'tito' ? 'der' : 'izq');
   $('#dtexto').innerHTML = `<div class="quien">${rich(nombreQuien(quien) || (quien === 'tito' ? 'Tito' : ''))}</div><div class="cast">${rich(txt)}</div>`;
   $('#dbotones').innerHTML = '<span class="seguir">Tocá para seguir</span>';
   panel('dialogo'); $('#opciones').hidden = true; $('#linea').hidden = false;
+  tipear($('#dtexto .cast'));
   await esperarToque();
 }
+/* ¿esa cara ya está en grande, en la escena? */
+const enGrande = id => !!(R.pp && id && (R.pp.duelo ? R.pp.izq === id || R.pp.der === id : R.pp.quien === id));
 async function narra(txt) {
+  HABLA.quien = null;
+  if (R.pp && !R.pp.duelo && !R.pp.fijo) sinPrimerPlano();
   pintarRetrato(null);
+  lado('narr');
   $('#dtexto').innerHTML = `<div class="narr">${rich(txt)}</div>`;
   $('#dbotones').innerHTML = '<span class="seguir">Tocá para seguir</span>';
   panel('dialogo'); $('#opciones').hidden = true; $('#linea').hidden = false;
+  tipear($('#dtexto .narr'));
   await esperarToque();
 }
 /* elegir qué decir: opciones en chino, sin traducción; si está mal, se explica y se vuelve a elegir */
 let elegido = null;
 function mostrarOpciones(ask, opts, castellano) {
   UI.ops = opts.map(o => ({key:o.key || null, ok:!!o.ok, txt:o.txt || null, fin:!!o.fin}));
+  if (UI.tipeo) UI.tipeo.fin();
   $('#linea').hidden = true; $('#opciones').hidden = false;
   $('#oask').textContent = ask || '¿Qué decís?';
   $('#olista').innerHTML = opts.map((o, i) => {
@@ -2672,7 +3272,7 @@ async function elige(ask, opts, o) {
   const malas = lista.filter(x => x.ok === false);
   if (malas.length > d.maxMal) { const quedan = new Set(shuffle(malas).slice(0, d.maxMal)); lista = lista.filter(x => x.ok !== false || quedan.has(x)); }
   for (;;) {
-    pintarRetrato('tito');
+    pintarRetrato('tito', 'duda');
     const i = await mostrarOpciones(ask, lista);
     const op = lista[i];
     if (op.txt) return op;
@@ -2683,7 +3283,7 @@ async function elige(ask, opts, o) {
     if (op.ok === false || op.why || CL(op.key).why) {
       SFX.mal();
       const l = CL(op.key);
-      if (o.reaccion) await di(o.quien, o.reaccion);
+      if (o.reaccion) await di(o.quien, o.reaccion, {emo:o.reaccion === 'haha' ? 'risa' : 'sorpresa'});
       await nota(op.why || l.why || 'Eso no va acá.');
       await sabiduria('saber');
       if (op.luego) await op.luego();
@@ -2696,12 +3296,14 @@ async function elige(ask, opts, o) {
 }
 /* una pregunta en castellano (cuánto pidió, a quién se refería…) */
 async function pregunta(ask, opts) {
-  pintarRetrato('tito');
+  pintarRetrato('tito', 'duda');
   const i = await mostrarOpciones(ask, opts, true);
   return opts[i];
 }
 async function nota(txt) {
+  HABLA.quien = null;
   pintarRetrato(null);
+  lado('nota');
   $('#dtexto').innerHTML = `<div class="ojo"><span class="lab">Ojo</span>${rich(txt)}</div>`;
   $('#dbotones').innerHTML = '<span class="seguir">Tocá para seguir</span>';
   panel('dialogo'); $('#opciones').hidden = true; $('#linea').hidden = false;
@@ -2714,6 +3316,8 @@ async function nota(txt) {
 function cortarGuion() {
   UI.gen++;
   avanzar = null; elegido = null;
+  if (UI.tipeo) UI.tipeo.fin();
+  clearTimeout(UI.reloj); sinPrimerPlano();
   if (capitulo.listo) { capitulo.listo = null; $('#capitulo').hidden = true; }
   if (momento.listo) { momento.listo = null; const m = $('#momento'); m.hidden = true; m.innerHTML = ''; }
   UI.ocupado = false; document.body.classList.remove('ocupado');
@@ -2728,6 +3332,7 @@ async function corre(fn) {
   finally {
     UI.ocupado = false; document.body.classList.remove('ocupado');
     UI.verbo = null; UI.item = null;
+    if (R.pp) sinPrimerPlano();
     if (UI.vista === 'juego') { panel('explorar'); renderVerbos(); renderInv(); frase(''); }
     touch();
   }
@@ -2758,7 +3363,7 @@ CV.addEventListener('pointerdown', ev => {
   ev.preventDefault();
   audio(); Musica.arranca();
   if (UI.vista !== 'juego') return;
-  if (avanzar) { soltar(); return; }
+  if (avanzar) { tocarDialogo(); return; }
   if (UI.ocupado) return;
   const [x, y] = aEscena(ev);
   const h = bajoDedo(x, y);
@@ -2786,13 +3391,13 @@ function hacer(h) {
     if (item) {
       const con = (h.con && h.con[item]) || (verbo === 'dar' && h.recibe && h.recibe[item]);
       if (con) { const r = await (typeof con === 'function' ? con() : con); if (typeof r === 'string') await dice('tito', r); return; }
-      await dice('tito', noSirve(verbo, item, h));
+      await dice('tito', noSirve(verbo, item, h), 'duda');
       return;
     }
     /* una función puede contar algo ella misma o devolver lo que dice Tito */
     if (typeof fn === 'function') { const r = await fn(); if (typeof r === 'string') await dice('tito', r); return; }
     if (typeof fn === 'string') { await dice('tito', fn); return; }
-    await dice('tito', noPuedo(verbo, h));
+    await dice('tito', noPuedo(verbo, h), 'duda');
   });
 }
 const NOPUEDO = {
@@ -2838,7 +3443,13 @@ async function vaA(id, entrada) {
   touch();
   await fundido(0);
   const e = R.esc;
+  cartelLugar(e);
   if (e.alEntrar) await e.alEntrar();
+}
+function cartelLugar(e) {
+  const c = $('#cartel'); if (!c) return;
+  c.innerHTML = `<b>${esc(e.nombre)}</b>${e.sub ? `<span>${rich(typeof e.sub === 'function' ? e.sub() : e.sub)}</span>` : ''}`;
+  c.classList.remove('on'); void c.offsetWidth; c.classList.add('on');
 }
 function ponEscena(id, entrada) {
   const e = ESC[id];
@@ -2876,124 +3487,191 @@ function marcarPuntos() {
 }
 
 /* ============================================================
-   Duelos de réplicas: esgrima de teteras.
-   Te atacan con una frase y contestás con la réplica justa.
-   Con los aprendices se aprende: cada ataque que te hacen, lo sabés;
-   cada réplica que te contestan, también. La Maestra y el Capitán
-   atacan con frases nuevas, pero las réplicas son las que ya sabés.
+   Duelos de réplicas: esgrima de teteras, cara a cara.
+   Te atacan con una frase y contestás con la réplica justa
+   antes de que se consuma el sahumerio. Arriba, dos chorros de
+   té empujan: cada acierto empuja el tuyo. Tres aciertos
+   seguidos: ¡golpe de té!, que empuja el doble.
+   Con los aprendices, además, atacás vos: si no saben qué
+   contestar, ganás el cruce; si lo saben, te llevás su réplica.
    ============================================================ */
 const PAR = Object.fromEntries(D.pares.map(p => [p.id, p]));
-const DUEL = {pos:0, meta:3, rival:null, modo:null, turnoTito:true, ult:null};
+const DUEL = {pos:0, meta:3, rival:null, modo:null, ult:null, combo:0};
 const sabeR = id => S.duelo.r.includes(id), sabeA = id => S.duelo.a.includes(id);
 function aprende(tipo, id) {
   const l = tipo === 'a' ? S.duelo.a : S.duelo.r;
   if (l.includes(id)) return false;
   l.push(id); touch(); return true;
 }
-function hudDuelo() {
-  const n = DUEL.meta, dots = [];
-  for (let k = -n; k <= n; k++) dots.push(`<span class="${k === DUEL.pos ? 'yo' : ''}${k === -n || k === n ? ' fin' : ''}"></span>`);
-  return `<div class="duelo"><div class="dnom"><b>Tito</b><span>${rich(DUEL.rival.nombre)}</span></div><div class="pista">${dots.join('')}</div></div>`;
+/* las caras del primer plano, los golpes y las chispas */
+function ppCara(lado, emo) { if (R.pp && R.pp.duelo) R.pp['emo_' + lado] = emo; }
+function golpe(lado, fuerte) {
+  if (!R.pp || !R.pp.duelo) return;
+  R.pp.golpe = {lado, t:R.t, fuerte:!!fuerte}; R.temblor = fuerte ? 9 : 4;
+  const x = lado === 'izq' ? 70 : 250;
+  chispas(x, 96, fuerte ? P.oro2 : P.blanco); if (fuerte) { chispas(x, 84, P.rojo2); chispas(160, 22, P.oro2); }
 }
-function posiciones(lunge) {
-  const t = act('tito'), r = act(DUEL.rival.actor), cx = DUEL.cx, off = DUEL.pos * 7;
-  t.x = cx - 18 + off + (lunge === 't' ? 8 : 0); r.x = cx + 18 + off - (lunge === 'r' ? 8 : 0);
-  t.dir = 1; r.dir = -1; t.ruta = null; r.ruta = null;
+function posiciones() {
+  const t = act('tito'), r = act(DUEL.rival.actor), cx = DUEL.cx;
+  t.x = cx - 18; r.x = cx + 18; t.dir = 1; r.dir = -1; t.ruta = null; r.ruta = null;
 }
-async function cruce(quien) {
-  posiciones(quien); SFX.choque(); chispas(DUEL.cx + DUEL.pos * 7, 128, P.oro2); R.temblor = 4;
-  await espera(260); posiciones(null);
+const comboHtml = () => `<i title="Golpe de té" aria-label="${DUEL.combo} de 3 para el golpe de té">${[0, 1, 2].map(k => `<b class="${k < DUEL.combo ? 'si' : ''}"></b>`).join('')}</i>`;
+function cabezaAtaque(R_, par, l, tiempo) {
+  return `<div class="combo"><span>${rich(R_.nombre)} ataca${par.gesto ? ` · ${esc(par.gesto)}` : ''}</span>${comboHtml()}</div>
+    <div class="ataque"><button type="button" class="oir" data-say="${esc(l.hz)}" aria-label="Escuchar de nuevo">${ico('i-oreja')}</button>${zh(l.py, l.hz)}</div>
+    ${tiempo && !window.__TEST__ ? `<div class="mecha" role="timer" aria-label="${tiempo} segundos para contestar"><i style="animation-duration:${tiempo}s"></i></div>` : ''}`;
 }
-/* el resultado de un cruce, con las dos frases traducidas */
-async function resumen(ataque, replica, gana, extra) {
-  const a = CL(ataque), r = CL(replica);
-  pintarRetrato(null);
-  const cls = gana === null ? 'par0' : gana ? 'bien' : 'mal', tit = gana === null ? 'Te la paró' : gana ? 'Ganaste el cruce' : 'Perdiste el cruce';
-  $('#dtexto').innerHTML = `${hudDuelo()}<div class="cruce ${cls}"><div class="lab">${tit}</div>
-    <div class="par"><div>${zh(a.py, a.hz)}<span class="es">${esc(a.es)}</span></div><div>${zh(r.py, r.hz)}<span class="es">${esc(r.es)}</span></div></div>${extra ? `<div class="aprende">${extra}</div>` : ''}</div>`;
-  $('#dbotones').innerHTML = '<span class="seguir">Tocá para seguir</span>';
-  panel('dialogo'); $('#opciones').hidden = true; $('#linea').hidden = false;
-  await esperarToque();
-}
-/* las réplicas para elegir: la buena (si la sabés), otras que sabés y alguna que no va.
-   Cuántas, depende de la dificultad: 3 en Fácil, 5 en Normal, 6 en Difícil. */
-function opcionesReplica(par) {
-  const max = DIF().replicas;
-  const lista = sabeR(par.id) ? [{key:par.r, pid:par.id, ok:true}] : [];
-  const otras = shuffle(S.duelo.r.filter(id => id !== par.id)).map(id => ({key:PAR[id].r, pid:id}));
-  lista.push(...otras.slice(0, Math.max(0, max - lista.length - 1)));
-  const malas = shuffle(D.malas);
-  while (lista.length < max && malas.length) lista.push({key:malas.pop(), mala:true});
-  return shuffle(lista);
-}
-async function ataqueRival() {
-  const R_ = DUEL.rival;
-  const pool = R_.ataques.filter(id => id !== DUEL.ult && (DUEL.modo === 'aprendiz' || PAR[id][DUEL.modo === 'maestra' ? 'v1' : 'v2']));
-  const id = pick(pool.length ? pool : R_.ataques); DUEL.ult = id;
-  const par = PAR[id], linea = DUEL.modo === 'aprendiz' ? par.a : par[DUEL.modo === 'maestra' ? 'v1' : 'v2'];
-  await cruce('r');
-  /* ataca: sin traducción, hay que entenderla */
-  const l = CL(linea);
-  act(R_.actor).habla = 1.4; if (S.cfg.voz) habla(l.hz);
-  pintarRetrato(R_.spec);
-  const ops = opcionesReplica(par);
-  $('#oask').innerHTML = '';
-  const i = await mostrarOpcionesDuelo(`${hudDuelo()}<div class="ataque"><div class="quien">${rich(R_.nombre)} te ataca${par.gesto ? ` · ${esc(par.gesto)}` : ''}</div>${zh(l.py, l.hz)}</div>`, ops);
-  const op = ops[i];
-  if (S.cfg.voz) habla(CL(op.key).hz);
-  let extra = '';
-  if (DUEL.modo === 'aprendiz' && aprende('a', id)) extra = `Aprendiste un ataque nuevo: ${zh(CL(par.a).py, CL(par.a).hz)}`;
-  if (op.ok) { DUEL.pos++; SFX.bien(); await cruce('t'); await resumen(linea, op.key, true, extra); }
-  else {
-    DUEL.pos--; SFX.mal(); await cruce('r');
-    const why = op.mala ? D.malas_why[op.key] : PAR[op.pid] && PAR[op.pid].why;
-    await resumen(linea, op.key, false, (why ? `<span class="ojo">${rich('Esa no va: ' + why)}</span>` : '') + (extra ? `<br>${extra}` : ''));
-  }
-}
-async function ataqueTito() {
-  const R_ = DUEL.rival;
-  const mios = shuffle(S.duelo.a).slice(0, 6);
-  const ops = mios.map(id => ({key:PAR[id].a, pid:id}));
-  const i = await mostrarOpcionesDuelo(`${hudDuelo()}<div class="ataque tuyo"><div class="quien">Te toca atacar</div><span class="es">Elegí con qué frase lo atacás.</span></div>`, ops);
-  const op = ops[i], par = PAR[op.pid];
-  if (S.cfg.voz) habla(CL(op.key).hz);
-  await cruce('t');
-  if (R_.sabe.includes(par.id)) {
-    /* la sabe: te la para y nadie suma, pero te llevás la réplica */
-    act(R_.actor).habla = 1.2; await espera(500); if (S.cfg.voz) habla(CL(par.r).hz);
-    SFX.choque();
-    const nueva = aprende('r', par.id);
-    await resumen(par.a, par.r, null, nueva ? `Aprendiste una réplica nueva: ${zh(CL(par.r).py, CL(par.r).hz)}` : 'Esa réplica ya la sabías. Probá con un ataque que no conozca.');
-  } else {
-    const mala = pick(['r_o', 'r_haha']);
-    act(R_.actor).habla = 1.2; await espera(500); if (S.cfg.voz) habla(CL(mala).hz);
-    DUEL.pos++; SFX.bien();
-    await resumen(par.a, mala, true, `No sabía qué contestar a ${zh(CL(par.a).py, CL(par.a).hz)}.`);
-  }
-}
-function mostrarOpcionesDuelo(cabeza, ops) {
+/* las opciones del duelo; con reloj, si se acaba, vuelve -1 */
+function opcionesDuelo(cabeza, ops, tiempo) {
   UI.ops = ops.map(o => ({key:o.key, ok:!!o.ok}));
+  if (UI.tipeo) UI.tipeo.fin();
   $('#linea').hidden = true; $('#opciones').hidden = false;
   $('#oask').innerHTML = cabeza;
   $('#olista').innerHTML = ops.map((o, i) => { const l = CL(o.key); return `<button type="button" class="op" data-op="${i}"><b class="py">${esc(l.py)}</b><span class="hz" lang="zh-Hans">${esc(l.hz)}</span></button>`; }).join('');
   panel('dialogo');
-  return new Promise(r => { elegido = r; });
+  return new Promise(r => {
+    elegido = r;
+    pararReloj();
+    if (tiempo && !window.__TEST__) {
+      const g = UI.gen;
+      UI.reloj = setTimeout(() => { if (elegido === r && UI.gen === g) { elegido = null; r(-1); } }, tiempo * 1000);
+      UI.apuro = setTimeout(() => { const m = $('#oask .mecha'); if (m && elegido === r) { m.classList.add('apuro'); SFX.apuro(); } }, Math.max(0, tiempo - 3) * 1000);
+    }
+  });
+}
+function pararReloj() {
+  clearTimeout(UI.reloj); clearTimeout(UI.apuro);
+  const m = $('#oask .mecha i'); if (m) m.style.animationPlayState = 'paused';
+}
+/* la elegida, en verde o en rojo; la buena, siempre en verde */
+function marcarOps(i, buena) {
+  $$('#olista .op').forEach((b, k) => { b.disabled = true; b.classList.add(k === buena ? 'bien' : k === i ? 'mal' : 'apagada'); });
+}
+/* un acierto: la traducción de los dos, un ratito, y sigue solo */
+async function rapido(ataque, replica, ok, extra) {
+  const a = CL(ataque), r = CL(replica);
+  const el = document.createElement('div'); el.className = 'res' + (ok ? '' : ' mal');
+  el.innerHTML = `<span>«${esc(a.es)}» → «${esc(r.es)}»</span>${extra ? `<span class="es">${extra}</span>` : ''}`;
+  $('#olista').appendChild(el);
+  await espera(extra ? 2300 : 1300);
+}
+/* un error (o algo nuevo): las dos frases traducidas y por qué; se sigue tocando */
+async function resumen(ataque, replica, gana, extra) {
+  const a = CL(ataque), r = CL(replica);
+  pintarRetrato(null); lado('cuadro');
+  const cls = gana === null ? 'par0' : gana ? 'bien' : 'mal', tit = gana === null ? 'Te la paró' : gana ? 'Ganaste el cruce' : 'Perdiste el cruce';
+  const [e1, e2] = gana === null ? ['Tu ataque', 'Su réplica'] : ['Te atacó', 'La réplica justa'];
+  $('#dtexto').innerHTML = `<div class="cruce ${cls}"><div class="lab">${tit}</div>
+    <div class="par"><div><small>${e1}</small>${zh(a.py, a.hz)}<span class="es">${esc(a.es)}</span></div><div><small>${e2}</small>${zh(r.py, r.hz)}<span class="es">${esc(r.es)}</span></div></div>${extra ? `<div class="aprende">${extra}</div>` : ''}</div>`;
+  $('#dbotones').innerHTML = `<button type="button" class="oir" data-say="${esc(r.hz)}" aria-label="Escuchar la réplica">${ico('i-oreja')}</button><span class="seguir">Tocá para seguir</span>`;
+  panel('dialogo'); $('#opciones').hidden = true; $('#linea').hidden = false;
+  await esperarToque();
+}
+/* las réplicas para elegir. En Fácil y Normal la buena está siempre; en Difícil, solo si ya la aprendiste.
+   Las otras: réplicas de verdad (primero las que sabés), así hay que entender, no descartar. */
+function opcionesReplica(par) {
+  const d = DIF(), max = d.replicas;
+  const lista = sabeR(par.id) || d.siempre ? [{key:par.r, pid:par.id, ok:true}] : [];
+  const sabidas = shuffle(S.duelo.r.filter(id => id !== par.id));
+  const otras = d.siempre ? sabidas.concat(shuffle(D.pares.map(p => p.id).filter(id => id !== par.id && !sabidas.includes(id)))) : sabidas;
+  lista.push(...otras.slice(0, Math.max(0, max - lista.length - 1)).map(id => ({key:PAR[id].r, pid:id})));
+  const malas = shuffle(D.malas);
+  while (lista.length < max && malas.length) lista.push({key:malas.pop(), mala:true});
+  return shuffle(lista);
+}
+function empuja(fuerte) {
+  DUEL.pos = Math.min(DUEL.meta, DUEL.pos + (fuerte ? 2 : 1));
+  if (fuerte) { SFX.golpe(); ppTexto('¡Golpe de té!', '', 1300); } else SFX.bien();
+  golpe('der', fuerte);
+}
+async function ataqueRival() {
+  const R_ = DUEL.rival, d = DIF();
+  const campo = DUEL.modo === 'aprendiz' ? 'a' : DUEL.modo === 'maestra' ? 'v1' : 'v2';
+  const validos = R_.ataques.filter(id => PAR[id][campo]), pool = validos.filter(id => id !== DUEL.ult);
+  const id = pick(pool.length ? pool : validos); DUEL.ult = id;
+  const par = PAR[id], linea = par[campo], l = CL(linea);
+  ppCara('der', 'picaro'); ppCara('izq', 'duda');
+  HABLA.voz[R_.spec] = performance.now() + Math.max(900, l.hz.length * 240);
+  const a = act(R_.actor); if (a) a.habla = 1.4;
+  if (S.cfg.voz) habla(l.hz);
+  const ops = opcionesReplica(par), buena = ops.findIndex(o => o.ok);
+  const i = await opcionesDuelo(cabezaAtaque(R_, par, l, d.tiempo), ops, d.tiempo);
+  pararReloj();
+  const op = i >= 0 ? ops[i] : null;
+  if (op) { HABLA.voz.tito = performance.now() + 900; if (S.cfg.voz) habla(CL(op.key).hz); }
+  const nuevoA = DUEL.modo === 'aprendiz' && aprende('a', id);
+  const extraA = nuevoA ? `Ataque nuevo para tu libreta: ${zh(CL(par.a).py, CL(par.a).hz)}` : '';
+  marcarOps(i, buena);
+  if (op && op.ok) {
+    DUEL.combo++;
+    const fuerte = DUEL.combo >= 3; if (fuerte) DUEL.combo = 0;
+    empuja(fuerte);
+    ppCara('izq', fuerte ? 'risa' : 'feliz'); ppCara('der', fuerte ? 'sorpresa' : 'enojado');
+    aprende('r', par.id);
+    await rapido(linea, op.key, true, extraA);
+    return;
+  }
+  DUEL.combo = 0; DUEL.pos = Math.max(-DUEL.meta, DUEL.pos - 1); SFX.mal();
+  golpe('izq'); ppCara('izq', op ? 'triste' : 'sorpresa'); ppCara('der', 'risa');
+  if (!op) ppTexto('¡Tiempo!', 'mal chico', 1200);
+  await espera(700);
+  /* la buena, aunque no estuviera entre las opciones: ahora la sabés */
+  const nueva = aprende('r', par.id);
+  const why = !op ? 'Se te terminó el tiempo.' : op.mala ? `Elegiste ${zh(CL(op.key).py, CL(op.key).hz)}: ${rich(D.malas_why[op.key])}` : PAR[op.pid] && PAR[op.pid].why ? `Elegiste ${zh(CL(op.key).py, CL(op.key).hz)}, pero ${rich(PAR[op.pid].why)}` : '';
+  await resumen(linea, par.r, false, (why ? `<span class="ojo">${why}</span>` : '')
+    + (nueva ? `<br>Réplica nueva para tu libreta: ${zh(CL(par.r).py, CL(par.r).hz)}` : '') + (extraA ? `<br>${extraA}` : ''));
+}
+async function ataqueTito() {
+  const R_ = DUEL.rival;
+  ppCara('izq', 'picaro'); ppCara('der', 'duda');
+  const mios = shuffle(S.duelo.a).slice(0, Math.max(3, DIF().replicas));
+  const ops = mios.map(id => ({key:PAR[id].a, pid:id}));
+  const i = await opcionesDuelo(`<div class="combo"><span>¡Te toca atacar!</span>${comboHtml()}</div>
+    <div class="ataque tuyo"><span class="es">Elegí con qué frase lo atacás. Si no sabe qué contestar, ganás el cruce; si la sabe, te la para… y te llevás su réplica.</span></div>`, ops, 0);
+  const op = ops[i], par = PAR[op.pid];
+  HABLA.voz.tito = performance.now() + 900; if (S.cfg.voz) habla(CL(op.key).hz);
+  $$('#olista .op').forEach((b, k) => { b.disabled = true; if (k !== i) b.classList.add('apagada'); });
+  await espera(600);
+  if (R_.sabe.includes(par.id)) {
+    /* la sabe: te la para y nadie suma, pero te llevás la réplica */
+    HABLA.voz[R_.spec] = performance.now() + 900; if (S.cfg.voz) habla(CL(par.r).hz);
+    SFX.choque(); ppTexto('¡Parada!', 'chico', 1100);
+    const nueva = aprende('r', par.id);
+    ppCara('der', 'picaro'); ppCara('izq', nueva ? 'sorpresa' : 'duda');
+    if (nueva) await resumen(par.a, par.r, null, `Réplica nueva para tu libreta: ${zh(CL(par.r).py, CL(par.r).hz)}`);
+    else await rapido(par.a, par.r, false, 'Esa réplica ya la sabías: probá con un ataque que no conozca.');
+    return;
+  }
+  const mala = pick(['r_o', 'r_haha']);
+  HABLA.voz[R_.spec] = performance.now() + 700; if (S.cfg.voz) habla(CL(mala).hz);
+  DUEL.combo++;
+  const fuerte = DUEL.combo >= 3; if (fuerte) DUEL.combo = 0;
+  empuja(fuerte);
+  ppCara('izq', 'risa'); ppCara('der', 'sorpresa');
+  $$('#olista .op')[i].classList.add('bien');
+  await rapido(par.a, mala, true, 'No supo qué contestar.');
 }
 /* el duelo entero; devuelve true si gana Tito */
 async function duelo(rival) {
   const r = act(rival.actor), t = act('tito');
-  DUEL.rival = rival; DUEL.modo = rival.modo; DUEL.meta = rival.meta || 3; DUEL.pos = 0; DUEL.ult = null;
+  Object.assign(DUEL, {rival, modo:rival.modo, meta:rival.meta || 3, pos:0, ult:null, combo:0});
   DUEL.cx = rival.cx || Math.round((t.x + r.x) / 2);
   const antes = {a:S.duelo.a.length, r:S.duelo.r.length};
   const tema = Musica.nombre; Musica.tema('duelo');
   await Promise.all([camina(DUEL.cx - 18, DUEL.y || r.y), camina(DUEL.cx + 18, DUEL.y || r.y, rival.actor)]);
-  posiciones(null);
+  posiciones();
+  /* cara a cara */
+  R.pp = {duelo:true, izq:'tito', der:rival.spec, emo_izq:'picaro', emo_der:'picaro', fondo:'duelo', t0:R.t, golpe:null, fijo:true};
+  $('#ppx').innerHTML = `<div class="ppn izq"><span class="py">Tito</span></div><div class="ppn der">${rich(rival.nombre)}</div>`;
+  SFX.zas(); SFX.gong(); ppTexto('VS', 'vs', 1300);
+  await espera(800);
   if (!S.f.duelo_reglas) {
     S.f.duelo_reglas = true;
-    await narra('¡Duelo de réplicas! Cuando te ataquen con una frase, contestá con la réplica justa: ganás el cruce. Cuando atacás vos, si el otro sabe la réplica, te la para; si no la sabe, ganás. Cada ataque que te hacen y cada réplica que te contestan quedan anotados en tu libreta.');
+    await narra('¡Duelo de réplicas! Te atacan con una frase y contestás con la réplica justa. Arriba, los dos chorros de té: cada acierto empuja el tuyo. Tres seguidos: ¡golpe de té!, que empuja el doble.');
   }
-  let turnoTito = DUEL.modo === 'aprendiz', cruces = 0;
-  const tope = 10 + DUEL.meta * 2;
+  await di(rival.actor, rival.reto || 'haha', {emo:'picaro'});
+  let turnoTito = false, cruces = 0;
+  const tope = 10 + DUEL.meta * 3;
   while (Math.abs(DUEL.pos) < DUEL.meta && cruces < tope) {
     if (DUEL.modo === 'aprendiz' && turnoTito) await ataqueTito();
     else await ataqueRival();
@@ -3001,12 +3679,17 @@ async function duelo(rival) {
     cruces++;
   }
   const gano = DUEL.pos >= DUEL.meta, empate = Math.abs(DUEL.pos) < DUEL.meta;
+  ppCara('izq', gano ? 'risa' : empate ? 'duda' : 'triste'); ppCara('der', gano ? 'triste' : empate ? 'duda' : 'risa');
+  ppTexto(gano ? '¡Ganaste!' : empate ? 'Empate' : 'Perdiste', gano ? '' : 'mal', 1900);
+  if (gano) { SFX.fanfarria(); golpe('der', true); } else SFX.pierde();
+  $('#olista').innerHTML = ''; $('#oask').innerHTML = '';
+  await espera(1500);
   Musica.tema(tema);
-  if (gano) { SFX.fanfarria(); chispas(r.x, r.y - 30, P.oro2); }
   const na = S.duelo.a.length - antes.a, nr = S.duelo.r.length - antes.r;
-  if (DUEL.modo === 'aprendiz') {
-    await narra(`${gano ? '¡Ganaste el duelo!' : empate ? 'Empate: los dos se quedaron sin frases.' : 'Perdiste el duelo.'} ${na || nr ? `Te llevás ${na ? `${na} ${na === 1 ? 'ataque nuevo' : 'ataques nuevos'}` : ''}${na && nr ? ' y ' : ''}${nr ? `${nr} ${nr === 1 ? 'réplica nueva' : 'réplicas nuevas'}` : ''}. Están en tu libreta.` : 'Esta vez no aprendiste nada nuevo.'}`);
+  if (DUEL.modo === 'aprendiz' || na || nr) {
+    await narra(`${gano ? '¡Ganaste el duelo!' : empate ? 'Empate: los dos se quedaron sin frases.' : 'Perdiste el duelo. Se vuelve a intentar cuando quieras.'} ${na || nr ? `Te llevás ${na ? `${na} ${na === 1 ? 'ataque nuevo' : 'ataques nuevos'}` : ''}${na && nr ? ' y ' : ''}${nr ? `${nr} ${nr === 1 ? 'réplica nueva' : 'réplicas nuevas'}` : ''}: están en tu libreta.` : ''}`);
   }
+  sinPrimerPlano();
   touch();
   return gano;
 }
@@ -3091,7 +3774,19 @@ const porQueHora = h => h.id === 'wanshang'
   ? `Son las ${hhmm(S.min)}: de noche va {wǎnshang hǎo|晚上好}.`
   : `Son las ${hhmm(S.min)}: a esta hora va {${h.py}|${h.hz}}.`;
 const conoce = id => !!(S.gente[id] && S.gente[id].conoce);
-function presenta(id) { S.gente[id] = Object.assign(S.gente[id] || {}, {conoce:true}); touch(); }
+const OTROS_NOMBRES = {mali:['Mǎlì', '玛丽', 'la chica del bubble tea'], dawei:['Dàwěi', '大伟', 'el mozo de la casa de té'], vendedora:['yíngyèyuán', '营业员', 'la vendedora del mercado']};
+const FONDO_DE = {wang_xs:'cielo', wang_tt:'calido', wang_xj:'rosa', wang_ls:'jade', li_ms:'cielo', wu_bs:'jade', li_tt:'calido', chen_xs:'sol', lin_ns:'calido', mali:'rosa', dawei:'calido', vendedora:'sol'};
+function nombreCarta(id) {
+  const p = D.personas[id], o = OTROS_NOMBRES[id];
+  const [py, hz, q] = p ? [`${p.sp} ${p.tp}`, p.sh + p.th, p.quien] : o || [];
+  return py ? `<span class="py">${esc(py)}</span><span class="hz" lang="zh-Hans">${esc(hz)}</span><span>${esc(cap(q))}</span>` : '';
+}
+/* conocer a alguien: la primera vez, su cara de cerca con el nombre, un ratito */
+function presenta(id, sinCarta) {
+  const nuevo = !conoce(id);
+  S.gente[id] = Object.assign(S.gente[id] || {}, {conoce:true}); touch();
+  if (nuevo && !sinCarta && SPEC[id]) primerPlano(id, {fondo:FONDO_DE[id] || 'sol', fijo:true, hasta:3.4, nombre:nombreCarta(id)});
+}
 const debeSaludar = id => !S.gente[id] || S.gente[id].h !== hNow().id;
 
 /* saludar según la hora; pid: si Tito ya sabe cómo se llama */
@@ -3177,7 +3872,7 @@ function importantes() {
       } else gente.add('chen_xs');
     }
     if (!F('p3')) { gente.add('wang_ls'); if (!F('pista_alta') && !F('pista_te')) gente.add('li_ms'); }
-    if (!F('p1')) { const faltan = D.aprendices.filter(a => !S.duelo.ganados[a.id]).map(a => a.id); if (faltan.length) faltan.forEach(id => gente.add(id)); else gente.add('lin_ns'); }
+    if (!F('p1')) { const ganados = D.aprendices.filter(a => S.duelo.ganados[a.id]).length; if (ganados < DIF().aprendices) D.aprendices.filter(a => !S.duelo.ganados[a.id]).forEach(a => gente.add(a.id)); else gente.add('lin_ns'); }
     if (['p1', 'p2', 'p3'].every(F)) MAESTROS.forEach(m => gente.add(m));
   }
   if (cap === 3) {
@@ -3188,35 +3883,60 @@ function importantes() {
   if (cap === 4 && !F('mono_libre')) { meta.push('barco:jaula'); gente.add('capitan'); }
   return {meta, paso, gente};
 }
-/* lo que hay que hacer, con más o menos detalle según la dificultad */
+/* lo que hay que hacer, con más o menos detalle según la dificultad.
+   Cada paso tiene un texto largo (libreta) y uno corto (la tira de «Ahora»). */
 function objetivos() {
   const d = S.cfg.dif, f = d === 'facil', vago = d === 'dificil', cap = S.cap;
   if (S.fin || F('fin')) return {titulo:'Fin', items:[{txt:'Terminaste la aventura. Tito Bombilla ya es Maestro del Té.', hecho:true}]};
   if (cap === 1) return {titulo:'Capítulo 1 · Un mate en la Isla Verde', items:[
-    {txt:f ? 'Llegá a la casa de té: está en la plaza, del otro lado del portal rojo del muelle.' : vago ? 'Buscá a los Maestros del Té.' : 'Buscá la casa de té.', hecho:false},
-    vago ? null : {txt:'Hablá con los Maestros del Té.', hecho:F('maestros')},
-  ].filter(Boolean)};
+    {txt:vago ? 'Buscá a los Maestros del Té.' : 'Buscá la casa de té: está en la plaza, pasando el portal rojo del muelle.', corto:vago ? 'Buscá a los Maestros del Té.' : 'Buscá la casa de té, en la plaza (pasando el portal rojo).', hecho:F('maestros') || S.esc === 'casa'},
+    {txt:'Hablá con los Maestros del Té: son los tres de la mesa.', corto:'Hablá con los Maestros del Té.', hecho:F('maestros')},
+  ]};
   if (cap === 2) {
-    const faltan = D.aprendices.filter(a => !S.duelo.ganados[a.id]).length;
+    const pide = DIF().aprendices, ganados = D.aprendices.filter(a => S.duelo.ganados[a.id]).length;
+    let te, teC;
+    if (tiene('te_caro')) { te = 'llevale la lata dorada a los maestros, en la casa de té.'; teC = te; }
+    else if (!F('vio_te_caro')) { te = vago ? 'el té más caro de la isla.' : 'buscá el té más caro de la isla. En el mercado (el callejón de la plaza) seguro saben.'; teC = vago ? te : 'buscá el té más caro, en el mercado.'; }
+    else if (!F('quiere_agtcha')) { te = vago ? 'la lata dorada cuesta 99 kuài.' : `con ${S.plata} kuài no alcanza para la lata dorada. Charlá con la vendedora: algo le tiene que interesar.`; teC = vago ? te : 'no te alcanza la plata. Charlá más con la vendedora.'; }
+    else if (!tiene('mate_listo')) { te = vago ? 'la vendedora quiere probar té argentino.' : f ? 'la vendedora se muere por probar té argentino. Cebá un mate: yerba, agua caliente (David te llena el termo, en la casa de té) y algo para tomarlo… ¿un sorbete bien gordo?' : 'la vendedora se muere por probar té argentino. Prepará un mate como la gente.'; teC = vago ? te : f ? 'cebá un mate para la vendedora (yerba, agua caliente y algo para tomarlo).' : 'prepará un mate para la vendedora.'; }
+    else { te = 'dale el mate a la vendedora.'; teC = te; }
+    const nom = vago ? 'la caja es para {Wáng lǎoshī|王老师}.' : f ? 'entregale la caja a {Wáng lǎoshī|王老师}, en persona. En la escuela, la secretaria te cuenta cómo es; en la plaza hay varios Wang.' : 'entregale la caja a {Wáng lǎoshī|王老师}, en persona. En la escuela te pueden contar cómo es.';
+    const nomC = vago ? nom : 'la caja, para {Wáng lǎoshī|王老师} (preguntá en la escuela cómo es).';
+    const falta = pide - ganados;
+    const rep = falta > 0 ? (vago ? 'ganale a la Maestra de las Réplicas (antes, a sus aprendices).' : `en el bosque de bambú, ganale a ${falta === 1 ? (ganados ? 'un aprendiz más' : 'un aprendiz') : `${falta} aprendices`} (${ganados} de ${pide}); después, a la Maestra Lin.`) : 'ya podés desafiar a la Maestra Lin, en el bosque de bambú.';
+    const repC = falta > 0 && !vago ? `ganale a ${falta === 1 ? (ganados ? 'un aprendiz más' : 'un aprendiz') : `${falta} aprendices`} en el bosque.` : rep;
     const items = [
-      {txt:'Prueba de las réplicas: ' + (f ? `en el bosque de bambú, ganale a los tres aprendices (${3 - faltan} de 3) y después a la Maestra.` : vago ? 'ganale a la Maestra de las Réplicas.' : 'ganale un duelo a la Maestra de las Réplicas, en el bosque de bambú.'), hecho:F('p1')},
-      {txt:'Prueba del té: ' + (f ? (tiene('te_caro') ? 'ya tenés la lata dorada: llevásela a los maestros.' : 'conseguí la lata dorada del mercado y llevásela a los maestros.') : 'llevales a los maestros el té más caro de la isla.'), hecho:F('p2')},
-      {txt:'Prueba del nombre: ' + (f ? 'entregale la caja de té a {Wáng lǎoshī|王老师}, en persona. En la escuela te pueden contar cómo es.' : 'entregale la caja de té a {Wáng lǎoshī|王老师}, en persona.'), hecho:F('p3')},
+      {txt:'Prueba del té: ' + te, corto:'Prueba del té: ' + teC, hecho:F('p2'), prioridad:F('vio_te_caro') || tiene('te_caro')},
+      {txt:'Prueba del nombre: ' + nom, corto:'Prueba del nombre: ' + nomC, hecho:F('p3'), prioridad:F('pista_alta') || F('pista_te') || conoce('wang_ls')},
+      {txt:'Prueba de las réplicas: ' + rep, corto:'Réplicas: ' + repC, hecho:F('p1'), prioridad:ganados > 0},
     ];
-    if (['p1', 'p2', 'p3'].every(F)) items.push({txt:'Volvé a la casa de té: los maestros te esperan.', hecho:false});
-    return {titulo:'Capítulo 2 · Las tres pruebas', items};
+    const hechas = items.filter(i => i.hecho).length;
+    if (hechas === 3) items.push({txt:'Volvé a la casa de té: esta noche es la Ceremonia de la Hoja.', corto:'Volvé a la casa de té: es la ceremonia.', hecho:false});
+    return {titulo:'Capítulo 2 · Las tres pruebas', prog:hechas < 3 ? `${hechas}/3` : '', items};
   }
-  if (cap === 3) return {titulo:'Capítulo 3 · El té tibio', items:f ? [
-    {txt:'Poné el último té del mono en tu mate.', hecho:tiene('mate_te')},
-    {txt:'Llená el termo con agua caliente.', hecho:tiene('termo_lleno')},
-    {txt:'Conseguí un bote para llegar al barco.', hecho:F('bote_prestado')},
-    {txt:'Remá hasta el barco del Capitán Tibio.', hecho:false},
-  ] : [{txt:vago ? 'Rompé la maldición del Capitán Tibio.' : 'Llegá al barco del Capitán Tibio con un té del mono bien caliente.', hecho:false}]};
-  if (cap === 4) return {titulo:'Capítulo 4 · El barco del Capitán Tibio', items:f ? [
-    {txt:'Ganale el duelo de réplicas al Capitán.', hecho:F('capitan_vencido')},
-    {txt:'Prepará el té del mono acá, frente a él, y dáselo.', hecho:F('curado')},
-  ] : [{txt:vago ? 'Rompé la maldición del Capitán Tibio.' : 'Ganale el duelo al Capitán y servile el té del mono bien caliente.', hecho:F('curado')}]};
+  if (cap === 3) {
+    const caliente = tiene('mate_caliente'), conTe = tiene('mate_te') || caliente, agua = tiene('termo_lleno') || caliente;
+    if (vago) return {titulo:'Capítulo 3 · El té tibio', items:[{txt:'Llegá al barco del Capitán Tibio con un té del mono bien caliente.', hecho:false}]};
+    return {titulo:'Capítulo 3 · El té tibio', items:[
+      {txt:'Poné el último té del mono (la lata dorada) en tu mate.', corto:'Poné el té del mono en tu mate.', hecho:conTe},
+      {txt:'Llená el termo con agua caliente: David, en la casa de té.', corto:'Llená el termo: David, en la casa de té.', hecho:agua},
+      {txt:F('bote_prestado') ? 'Conseguí un bote: listo.' : F('quiere_cerveza') ? `Conseguí un bote: el pescador del muelle quiere cerveza${tiene('cerveza') ? ', y ya la tenés.' : f ? '. En el mercado venden.' : '.'}` : 'Conseguí un bote para llegar al barco: en el muelle hay uno.', corto:F('quiere_cerveza') ? (tiene('cerveza') ? 'Dale la cerveza al pescador.' : 'El pescador quiere cerveza.') : 'Conseguí un bote, en el muelle.', hecho:F('bote_prestado')},
+      {txt:'Remá hasta el barco del Capitán Tibio.', corto:'Remá hasta el barco: usá el bote.', hecho:false},
+    ]};
+  }
+  if (cap === 4) return {titulo:'Capítulo 4 · El barco del Capitán Tibio', items:vago ? [{txt:'Rompé la maldición del Capitán Tibio.', hecho:F('curado')}] : [
+    {txt:'Ganale el duelo de réplicas al Capitán.', corto:'Ganale el duelo al Capitán.', hecho:F('capitan_vencido')},
+    {txt:'Prepará el mate con el té del mono acá, frente a él, y convidale.', corto:'Prepará el mate acá y convidale.', hecho:F('curado')},
+  ]};
   return {titulo:'', items:[]};
+}
+/* lo próximo, para la tira de «Ahora» */
+function metaActual() {
+  if (!S.cap || S.fin) return null;
+  const o = objetivos(), pend = o.items.filter(i => !i.hecho);
+  if (!pend.length) return null;
+  const it = pend.find(i => i.prioridad) || pend[0];
+  return {prog:o.prog || '', txt:it.corto || it.txt};
 }
 
 /* ============================================================
@@ -3318,6 +4038,20 @@ async function cajaA(pid, quien) {
   await dar('recibo'); flag('p3');
   await pruebaLista(3, 'Encontraste a {Wáng lǎoshī|王老师} entre todos los Wang de la isla.');
   await sabiduria('nombres');
+  await leyenda();
+}
+/* la profesora Wang cuenta la leyenda del Capitán: ahí está la clave del final */
+async function leyenda() {
+  flag('leyenda');
+  primerPlano('wang_ls', {fondo:'jade', emo:'neutral', fijo:true});
+  await narra('Antes de que te vayas, la profesora Wang abre su libro en una página con un dibujo viejo: un barco, un mono y una taza que humea.');
+  await narra('Con el dedo sobre el dibujo y palabras sueltas, te cuenta la leyenda. El Capitán Tibio era un marinero que siempre tomaba el té solo. Nunca convidó una taza. Nunca aceptó una.');
+  primerPlano('wang_ls', {fondo:'noche', emo:'triste', fijo:true});
+  await narra('Una noche de invierno, en alta mar, se le enfrió el té. Y como nadie le sirvió otro, se le enfrió también el corazón.');
+  await narra('Dice el libro que solo lo puede curar un té bien caliente… que alguien comparta con él.');
+  primerPlano('tito', {fondo:'sol', emo:'duda', fijo:true});
+  await dice('tito', 'Un té compartido… De eso sé un montón. Soy argentino: el mate no se toma solo, se pasa de mano en mano.');
+  sinPrimerPlano();
 }
 const WANG_TT = {
   nombre:() => QUIEN.wang_tt(), persona:true, ir:[226, 152], mira:1,
@@ -3467,19 +4201,36 @@ async function presentacionMaestros(quien) {
   await elige('Contestale', [{key:'wohe:cha', ok:true}, {key:'wohe:kafei', ok:false, why:'Pedir café en una casa de té es como pedir ensalada en una parrilla. Se puede, pero te miran.'},
     {key:'wohe:kele', ok:false, why:'¿Cola? ¿En una casa de té? El señor Chen casi se despierta del todo.'}], {reintentar:true, quien:'chen_xs', reaccion:'o'});
   if (ch) ch.despierto = false;
-  flag('maestros'); MAESTROS.forEach(presenta);
-  await narra('Se presentan: el doctor Wu ({Wú bóshì|吴博士}), la señora Li ({Lǐ tàitai|李太太}) y el señor Chen ({Chén xiānsheng|陈先生}), que se vuelve a dormir enseguida.');
-  await narra('Cada uno tiene su escuela: el doctor Wu cita a Confucio; la señora Li leyó tres veces El arte de la guerra; el señor Chen dice que es taoísta, y por eso no hace nada. Muy bien.');
-  await narra('El doctor Wu te explica, con muchos gestos y alguna palabra que entendés, que para ser Maestro del Té hay que pasar tres pruebas.');
-  await narra('La prueba de las réplicas: ganarle un duelo a la Maestra de las Réplicas, la señora Lin, que vive en el bosque de bambú.');
+  flag('maestros'); MAESTROS.forEach(m => presenta(m, true));
+  /* los tres, de cerca */
+  primerPlano('wu_bs', {fondo:'jade', fijo:true, nombre:nombreCarta('wu_bs')});
+  await narra('El doctor Wu ({Wú bóshì|吴博士}): cita a Confucio hasta cuando pide azúcar.');
+  primerPlano('li_tt', {fondo:'calido', fijo:true, nombre:nombreCarta('li_tt')});
+  await narra('La señora Li ({Lǐ tàitai|李太太}): leyó tres veces El arte de la guerra. Nadie le gana una discusión.');
+  primerPlano('chen_xs', {fondo:'sol', fijo:true, nombre:nombreCarta('chen_xs')});
+  await narra('Y el señor Chen ({Chén xiānsheng|陈先生}), taoísta: no hace nada, y todo le sale bien. Ya se volvió a dormir.');
+  /* lo que está en juego */
+  primerPlano('wu_bs', {fondo:'noche', emo:'triste', fijo:true});
+  await narra('El doctor Wu te explica, con gestos y alguna palabra que entendés: el té de la isla se está enfriando. Cada noche, el barco del Capitán Tibio se acerca un poco más.');
+  primerPlano('wu_bs', {fondo:'jade', emo:'neutral', fijo:true});
+  await narra('Esta noche hay luna llena: la noche de la Ceremonia de la Hoja. El mono baja de la colina con la mejor hoja del año y un Maestro del Té nuevo la prepara. Mientras haya ceremonia, el frío no entra a la isla.');
+  primerPlano('wu_bs', {fondo:'jade', emo:'triste', fijo:true});
+  await narra('Pero no hay Maestro nuevo. Hace años que nadie pasa las tres pruebas.');
+  primerPlano('tito', {fondo:'sol', emo:'picaro', fijo:true});
+  await dice('tito', 'Bueno… Justo pasaba por acá. Con un mate.');
+  primerPlano('li_tt', {fondo:'calido', emo:'risa', fijo:true});
+  await di('li_tt', 'haha');
+  sinPrimerPlano();
+  await narra('La prueba de las réplicas: ganarle un duelo a la Maestra de las Réplicas, la señora Lin, que entrena aprendices en el bosque de bambú.');
   await narra('La prueba del té: traerles el té más caro de la isla.');
-  await narra('La prueba del nombre: entregar una caja de té a {Wáng lǎoshī|王老师}, en persona. Los profes de la isla trabajan en la escuela.');
+  await narra('La prueba del nombre: entregar esta caja de té a {Wáng lǎoshī|王老师}, en persona. Los profes de la isla trabajan en la escuela.');
   await dar('caja');
-  await narra('Después señala el reloj y hace como que come: las pruebas empiezan al mediodía.');
+  await narra('Después señala el reloj y hace como que come: las pruebas empiezan al mediodía. La ceremonia, esta noche.');
   S.min = 12 * 60 + 30; touch();
-  await capitulo(2, 'Las tres pruebas', 'Las réplicas, el té más caro y el nombre correcto.');
+  await capitulo(2, 'Las tres pruebas', 'Las réplicas, el té más caro y el nombre correcto. Antes de la luna llena.');
   renderHora();
   await narra('Comiste un {chǎofàn|炒饭} en la casa de té. Son las 12:30: ya abrieron el mercado y la escuela.');
+  await dice('tito', '[picaro]Tres pruebas. Las réplicas, en el bosque; el té más caro, seguro que en el mercado; y la caja, para {Wáng lǎoshī|王老师}. ¿Por dónde arranco?');
 }
 function maestro(id, mirar) {
   return {
@@ -3516,39 +4267,53 @@ function maestro(id, mirar) {
 }
 async function ceremonia() {
   flag('ceremonia');
-  await narra('Los tres maestros se ponen de pie. El doctor Wu toma aire para el discurso.');
+  S.min = Math.max(S.min, 19 * 60 + 30); renderHora();
+  await narra('Cae la noche. Sale la luna llena sobre el mar. Los tres maestros se ponen de pie: es la hora de la Ceremonia de la Hoja.');
+  primerPlano('wu_bs', {fondo:'jade', emo:'feliz', fijo:true});
   await di('wu_bs', 'ni_hen_hao_xs');
   await elige('Te elogia', [{key:'xiexie', ok:true}, {key:'bukeqi', ok:false, why:'{bú kèqi|不客气} contesta a un {xièxie|谢谢}. Te elogiaron: se agradece, {xièxie|谢谢}.'}, {key:'wo_bugao', ok:false, why:'No te dijo alto: te dijo buen estudiante. Se agradece: {xièxie|谢谢}.'}], {reintentar:true, quien:'wu_bs', reaccion:'o'});
+  sinPrimerPlano();
   const mono = actor('mono', null, -10, 166, 1, {dib:(t) => monoPx(t, Math.floor(t * 3) % 4 === 0), alto:18, vel:60});
   R.actores.push(mono);
-  await narra('Entra el mono de la colina del té, con una hoja en la cabeza. Es tradición: el mono trae la mejor hoja para el nuevo Maestro.');
+  await narra('Por la puerta entra el mono de la colina del té, con una hoja en la cabeza: la mejor hoja del año, para el Maestro nuevo.');
   await camina(118, 166, 'mono');
   SFX.mono();
-  await espera(500);
+  primerPlano('mono', {fondo:'sol', emo:'risa', fijo:true});
+  await espera(1200);
+  sinPrimerPlano();
   /* se enfría todo */
   R.esc.paleta = 'noche'; R.sinLuz = true; SFX.fantasma(); R.temblor = 6;
-  await narra('De golpe, se apagan los farolitos. Entra un viento helado por la puerta.');
+  await narra('De golpe se apagan los farolitos. Entra un viento helado por la puerta. Y una luz verde.');
   const cap = actor('capitan', 'capitan', 14, 160, 1);
   R.actores.push(cap);
   await camina(70, 166, 'capitan');
+  primerPlano('capitan', {fondo:'frio', emo:'risa', fijo:true});
   await di('capitan', 'haha');
   await di('capitan', 'cap_cha_bu');
+  sinPrimerPlano();
   await camina(108, 166, 'capitan');
   mono.visible = false; SFX.mono();
-  await narra('El Capitán Tibio agarra al mono de la cola y se lo lleva. Así, sin pedir permiso.');
+  await narra('El Capitán Tibio agarra al mono de la cola y se lo lleva, hoja y todo. Sin mono no hay hoja, y sin hoja no hay ceremonia.');
   await camina(-20, 166, 'capitan');
   R.actores = R.actores.filter(a => a.id !== 'capitan' && a.id !== 'mono');
   R.esc.paleta = null; R.sinLuz = false;
+  primerPlano('li_tt', {fondo:'noche', emo:'triste', fijo:true});
   await di('li_tt', 'cha_bu_haohe');
+  sinPrimerPlano();
   await narra('Todas las tazas de la casa de té se enfriaron de golpe. Té tibio. Qué tristeza.');
-  await narra('El doctor Wu te explica: el Capitán Tibio es un fantasma que odia el té caliente. Sin el mono no hay más té del mono, y su maldición enfría todo el té de la isla.');
-  await narra('Solo un té del mono bien caliente, servido frente a él, puede romper la maldición. El barco del Capitán está anclado frente al muelle.');
+  await narra('El barco del Capitán quedó anclado frente al muelle. Mientras tenga al mono, el té de la isla no va a volver a calentar.');
+  primerPlano('tito', {fondo:'calido', emo:'enojado', fijo:true});
+  await dice('tito', 'Eso sí que no. Me lo contó la profesora Wang: al Capitán lo cura un té bien caliente, compartido. Y yo tengo un mate.');
+  const ch = act('chen_xs'); if (ch) ch.despierto = true;
+  primerPlano('chen_xs', {fondo:'sol', emo:'sorpresa', fijo:true});
   await di('chen_xs', 'zui_gui_cha');
-  await narra('El señor Chen te devuelve la lata dorada: es el último té del mono que queda.');
+  sinPrimerPlano(); if (ch) ch.despierto = false;
+  await narra('El señor Chen te da la lata dorada: es el último té del mono que queda en la isla.');
   await dar('te_caro');
   S.min = 21 * 60; touch();
-  await capitulo(3, 'El té tibio', 'Hay que llegar al barco del Capitán con un té del mono bien caliente.');
+  await capitulo(3, 'El té tibio', 'Un mate de té del mono, bien caliente, para compartir con el Capitán.');
   renderHora();
+  await dice('tito', '[picaro]Plan: el último té del mono en el mate, agua caliente en el termo y un bote para llegar al barco. Y que no se me enfríe en el camino.');
 }
 const DAWEI = {
   nombre:() => QUIEN.dawei(), persona:true, ir:[244, 164], mira:1,
@@ -3610,7 +4375,7 @@ const WENWEN = {
   },
 };
 ESC.casa = {
-  id:'casa', nombre:'La casa de té', arte:'casa', musica:'casa', piso:[40, 156, 300, 176], inicio:[60, 166, 1],
+  id:'casa', nombre:'La casa de té', arte:'casa', musica:'casa', interior:true, piso:[40, 156, 300, 176], inicio:[60, 166, 1],
   entradas:{plaza:[42, 166, 1]},
   gente() {
     const g = [
@@ -3651,6 +4416,7 @@ ESC.casa = {
     const c = act('chen_xs');
     if (c && !c.despierto && ((S.cap < 3 && !F('ceremonia')) || F('fin'))) zzz(B, c.x + 5, c.y - 48, t);
     const m = MARIPOSA.casa(t); if (m && !T3.ok) mariposa2D(B, m[0], m[1], t, P.naranja);
+    if (F('mono_libre') && R.tito && R.tito.visible) B.blit(monoPx(t, false), Math.round(R.tito.x) - 9, Math.round(R.tito.y) - 64);
   },
   async alEntrar() {
     if (S.cap === 2 && ['p1', 'p2', 'p3'].every(F) && !F('ceremonia')) { await camina(150, 166); await ceremonia(); }
@@ -3711,7 +4477,7 @@ const VENDEDORA = {
       await di('vendedora', 'zhe_agtcha');
       await narra('Se toma el mate entero, despacito. Te lo devuelve limpito y, a cambio de la receta, te da la lata dorada. Encima, te suma 10 {kuài|块}.');
       flag('te_conseguido'); await dar('te_caro'); plata(10);
-      await dice('tito', 'El té más caro de la isla, por un mate. Si se entera mi abuela, le da algo.');
+      await dice('tito', '[risa]Le convidé un mate y me gané el té más caro de la isla. Si se entera mi abuela, le da algo.');
     },
     async caja() { await dice('tito', 'La caja es para {Wáng lǎoshī|王老师}.'); },
   },
@@ -3727,14 +4493,14 @@ async function comprarCerveza() {
   await dar('cerveza');
 }
 ESC.mercado = {
-  id:'mercado', nombre:'El mercado', arte:'mercado', musica:'mercado', piso:[10, 148, 312, 176], inicio:[24, 164, 1],
+  id:'mercado', nombre:'El mercado', arte:'mercado', musica:'mercado', interior:true, piso:[10, 148, 312, 176], inicio:[24, 164, 1],
   entradas:{plaza:[20, 164, 1]},
   gente() { return [actor('vendedora', 'vendedora', 168, 130, 1, {h:VENDEDORA})]; },
   fondo(B, t) {
     if (F('te_conseguido')) return;
     /* la lata dorada gira sola sobre su pedestal */
     const pz = T3.pieza('lata', t);
-    if (pz) B.blit(pz.px, 203 - pz.ax, 87 - pz.ay); else lata2D(B);
+    if (pz) { B.blit(pz.px, 203 - pz.ax, 87 - pz.ay); marcar(pz.px, 203 - pz.ax, 87 - pz.ay, false, 1); } else lata2D(B);
   },
   puntos:[
     {id:'salida', nombre:'Volver a la plaza', zona:[0, 136, 16, 44], salida:'plaza', entrada:'mercado', ir:[12, 164]},
@@ -3771,7 +4537,7 @@ const SECRE = {
   recibe:{caja:async () => { await di('li_ms', 'wobushi:wang_ls'); await di('li_ms', 'woshi:li_ms'); presenta('li_ms'); }},
 };
 ESC.escuela = {
-  id:'escuela', nombre:'La escuela', arte:'escuela', musica:'escuela', piso:[34, 152, 300, 176], inicio:[40, 166, 1],
+  id:'escuela', nombre:'La escuela', arte:'escuela', musica:'escuela', interior:true, piso:[34, 152, 300, 176], inicio:[40, 166, 1],
   entradas:{plaza:[36, 166, 1]},
   gente() { return [actor('li_ms', 'li_ms', 98, 146, 1, {h:SECRE})]; },
   puntos:[
@@ -3798,7 +4564,7 @@ function aprendiz(id, x) {
       await narra('Te apunta con la tetera: es un desafío.');
       const r = await pregunta('¿Aceptás el duelo?', [{txt:'¡Duelo de réplicas!', si:true}, {txt:'Mejor otro día.'}]);
       if (!r.si) { await di(id, 'haha'); return; }
-      const gano = await duelo({actor:id, spec:id, nombre:QUIEN[id], ataques:a.ataques, sabe:a.sabe, modo:'aprendiz', meta:metaDuelo('aprendiz'), cx:150, y:166});
+      const gano = await duelo({actor:id, spec:id, nombre:QUIEN[id], ataques:a.ataques, sabe:a.sabe, modo:'aprendiz', meta:metaDuelo('aprendiz'), cx:150, y:166, reto:'haha'});
       if (gano) { S.duelo.ganados[id] = (S.duelo.ganados[id] || 0) + 1; touch(); await di(id, 'hen_haowan'); }
       else await di(id, 'haha');
       const t = act(id); if (t) { await camina(x, 164, id); t.dir = 1; }
@@ -3818,12 +4584,12 @@ const MAESTRA = {
     await di('lin_ns', 'nihao');
     await di('lin_ns', 'ni_xuesheng_q');
     await elige('Contestale', [{key:'shide_xuesheng', ok:true}, {key:'bushi_laoshi', ok:false, why:'Vos venís a aprender: {shì de, wǒ shì xuésheng|是的，我是学生}.'}, {key:'wo_xuesheng_sin', ok:false}], {reintentar:true, quien:'lin_ns', reaccion:'haha'});
-    const faltan = D.aprendices.filter(a => !S.duelo.ganados[a.id]);
-    if (faltan.length) { await narra(`La Maestra mira a sus aprendices y después te mira a vos. Con la tetera señala el camino: primero, ganale a ${faltan.length === 1 ? 'la aprendiz que falta' : `los ${faltan.length} aprendices que faltan`}.`); return; }
+    const pide = DIF().aprendices, ganados = D.aprendices.filter(a => S.duelo.ganados[a.id]).length, falta = pide - ganados;
+    if (falta > 0) { await narra(`La Maestra mira a sus aprendices y después te mira a vos. Con la tetera señala el camino: primero, ganale a ${falta === 1 ? (ganados ? 'un aprendiz más' : 'uno de sus aprendices') : `${falta} de sus aprendices`}.`); return; }
     await narra('La Maestra levanta la tetera. Sus ataques son otros: frases que no escuchaste nunca. Pero las réplicas, si las pensás bien, ya las sabés.');
     const r = await pregunta('¿Duelo con la Maestra?', [{txt:'¡Duelo!', si:true}, {txt:'Todavía no.'}]);
     if (!r.si) return;
-    const gano = await duelo({actor:'lin_ns', spec:'lin_ns', nombre:QUIEN.lin_ns(), ataques:D.pares.map(p => p.id), modo:'maestra', meta:metaDuelo('maestra'), cx:244, y:162});
+    const gano = await duelo({actor:'lin_ns', spec:'lin_ns', nombre:QUIEN.lin_ns(), ataques:D.pares.map(p => p.id), modo:'maestra', meta:metaDuelo('maestra'), cx:244, y:162, reto:'haha'});
     if (gano) {
       await di('lin_ns', 'ni_hen_hao_xs');
       await narra('La Maestra guarda la tetera, te hace una reverencia y te da su sello.');
@@ -3884,8 +4650,11 @@ const CAPITAN = {
     if (F('curado')) { await di('capitan', 'xiexie'); return; }
     if (F('capitan_vencido')) { await di('capitan', 'cap_wohe_shui'); await dice('tito', 'Perdió el duelo, pero sigue enojado con el té.'); return; }
     if (!F('cap_saludo')) {
+      primerPlano('capitan', {fondo:'frio', emo:'enojado', fijo:true});
+      await narra('El Capitán Tibio te mira de arriba abajo. Le cuelgan carámbanos del sombrero. Su taza echa humo… de frío.');
+      sinPrimerPlano();
       await saludar('capitan', {mudo:true});
-      await di('capitan', 'haha');
+      await di('capitan', 'haha', {pp:'frio'});
       await di('capitan', 'ni_wgr_q');
       await elige('Contestale', [{key:'shi_wgr', ok:true}, {key:'wo_waiguo', ok:false}, {key:'wo_wgr_sin', ok:false}], {reintentar:true, quien:'capitan', reaccion:'haha'});
       await di('capitan', 'haha_laowai');
@@ -3895,11 +4664,12 @@ const CAPITAN = {
     await narra('El Capitán desenvaina una tetera congelada. Quiere un duelo de réplicas. Sus ataques son nuevos; las réplicas, las de siempre.');
     const r = await pregunta('¿Duelo con el Capitán?', [{txt:'¡Duelo!', si:true}, {txt:'Todavía no.'}]);
     if (!r.si) return;
-    const gano = await duelo({actor:'capitan', spec:'capitan', nombre:'Capitán Tibio', ataques:D.pares.filter(p => p.v2).map(p => p.id), modo:'capitan', meta:metaDuelo('capitan'), cx:200, y:168});
+    const gano = await duelo({actor:'capitan', spec:'capitan', nombre:'Capitán Tibio', ataques:D.pares.filter(p => p.v2).map(p => p.id), modo:'capitan', meta:metaDuelo('capitan'), cx:200, y:168, reto:'cap_cha_bu'});
     if (gano) {
       flag('capitan_vencido');
       await di('capitan', 'cap_wohe_shui');
-      await narra('Perdió, pero no afloja: dice que toma agua. Que el té, ni loco. Ahora es el momento del té del mono.');
+      await narra('Perdió, pero no afloja: dice que toma agua. Que el té, ni loco.');
+      await dice('tito', '[picaro]Ahora es el momento del mate. Té del mono, agua bien caliente… y una ronda.');
     } else {
       await di('capitan', 'haha');
       await narra('El Capitán se ríe con una risa helada. Podés volver a intentarlo.');
@@ -3912,8 +4682,11 @@ const CAPITAN = {
       await di('capitan', 'zhe_cha_q');
       await elige('Contestale', [{key:'shide_cha', ok:true}, {key:'bushi', ok:false, why:'No le mientas: es té. {shì de, zhè shì chá|是的，这是茶}.'}, {key:'meiyou', ok:false, why:'{méiyǒu|没有} es «no hay». Te preguntó si es té: {shì de, zhè shì chá|是的，这是茶}.'}], {reintentar:true, quien:'capitan', reaccion:'o'});
       quitar('mate_caliente');
-      await narra('El Capitán agarra el mate con desconfianza. Sopla. Prueba por el sorbete. Se queda quieto.');
-      await di('capitan', 'o_taihaohe');
+      await narra('Le explicás, como podés, cómo es la cosa: el mate no se toma solo. Primero toma el que ceba, después se pasa. Es una ronda.');
+      await narra('Tomás vos primero: el primer mate, el más amargo, le toca al que ceba. Cebás otro, con agua bien caliente, y se lo pasás.');
+      primerPlano('capitan', {fondo:'frio', emo:'sorpresa', fijo:true});
+      await narra('El Capitán mira el mate. Hace siglos que nadie le convida nada. Lo agarra con las dos manos, prueba por el sorbete y se queda quieto.');
+      await di('capitan', 'o_taihaohe', {emo:'sorpresa'});
       await curar();
     },
     async mate_te() { await di('capitan', 'cap_cha_bu'); await dice('tito', 'Así está frío. Le falta el agua caliente.'); },
@@ -3922,15 +4695,26 @@ const CAPITAN = {
 };
 async function curar() {
   SFX.fanfarria(); R.temblor = 8;
-  const c = act('capitan'); c.spec = 'capitan_vivo';
+  const c = act('capitan');
+  primerPlano('capitan', {fondo:'calido', emo:'sorpresa', fijo:true}); R.pp.cambio = R.t;
+  await espera(450);
+  c.spec = 'capitan_vivo';
+  primerPlano('capitan_vivo', {fondo:'calido', emo:'sorpresa', fijo:true}); R.pp.cambio = R.t;
   flag('curado'); R.esc.paleta = null;
   await narra('Un calorcito le sube desde los pies. El verde se le va. Se le derriten los carámbanos y se le pone la nariz colorada. ¡Ya no es un fantasma!');
+  primerPlano('capitan_vivo', {fondo:'calido', emo:'feliz', fijo:true});
   await sabiduria('yinyang');
-  await di('capitan', 'duibuqi');
+  await di('capitan', 'duibuqi', {emo:'triste'});
   await elige('Te pide perdón', [{key:'meiguanxi', ok:true}, {key:'bukeqi', ok:false, why:'{bú kèqi|不客气} es para un {xièxie|谢谢}. A {duìbuqǐ|对不起}: {méi guānxi|没关系}.'}, {key:'duibuqi', ok:false, why:'El que pidió perdón es él. Vos: {méi guānxi|没关系}.'}], {reintentar:true, quien:'capitan', reaccion:'o'});
+  primerPlano('capitan_vivo', {fondo:'calido', emo:'risa', fijo:true});
+  await narra('Te devuelve el mate y espera, como se espera en una ronda. Le cebás otro. Y otro. Afuera, la niebla se levanta.');
+  sinPrimerPlano();
   flag('mono_libre');
-  await narra('El Capitán abre la jaula. El mono salta, te da un abrazo en la cabeza y se queda ahí, como un sombrero.');
+  await narra('El Capitán abre la jaula. El mono salta, te da un abrazo en la cabeza y se queda ahí, como un sombrero. Con la hoja todavía puesta.');
   SFX.mono();
+  primerPlano('mono', {fondo:'sol', emo:'risa', fijo:true});
+  await espera(1100);
+  sinPrimerPlano();
   await final();
 }
 ESC.barco = {
@@ -4017,13 +4801,17 @@ async function empezar(dif) {
   touch();
   entrarAlJuego('muelle', null);
   R.tito.visible = false;
-  await narra('Tito Bombilla llegó a la Isla Verde con un mate, un termo y un sueño: ser Maestro del Té.');
-  await narra('Dicen que acá se toma el mejor té del mundo, el té del mono: lo cosecha un mono, en la colina del té.');
-  await narra('Lo que Tito no sabe es que en estas aguas navega un fantasma que odia el té caliente.');
+  await narra('Isla Verde. Dicen que acá se toma el mejor té del mundo: el té del mono, que cosecha un mono en la colina del té.');
+  primerPlano('capitan', {fondo:'frio', emo:'enojado', fijo:true});
+  await narra('Pero desde hace unas noches, el té se enfría solo en las tazas. Los pescadores hablan de un barco con luz verde y de su capitán, un fantasma que odia el té caliente: el Capitán Tibio.');
+  sinPrimerPlano();
+  await narra('Y justo hoy llega Tito Bombilla, con un mate, un termo y un sueño: ser Maestro del Té.');
   await capitulo(1, 'Un mate en la Isla Verde', 'Buscá la casa de té y a los Maestros del Té.');
   R.tito.visible = true; R.tito.x = 40; R.tito.y = 166;
   await camina(110, 166);
-  await dice('tito', 'Llegué. Ahora, a buscar a los Maestros del Té. Y mi bombilla. ¿Dónde está mi bombilla? Me llamo Bombilla y no tengo bombilla.');
+  primerPlano('tito', {fondo:'sol', emo:'risa', fijo:true});
+  await dice('tito', '¡Llegué! Ahora, a buscar a los Maestros del Té. Y mi bombilla. ¿Dónde está mi bombilla? Me llamo Bombilla y no tengo bombilla.');
+  sinPrimerPlano();
 }
 async function final() {
   await espera(400);
@@ -4033,10 +4821,16 @@ async function final() {
   R.tito.x = 150; R.tito.y = 166;
   R.actores.push(actor('capitan', 'capitan_vivo', 214, 160, 1));
   await fundido(0);
-  await narra('A la mañana siguiente, el té de la isla vuelve a humear. El mono volvió a la colina, y el Capitán Tibio, ya sin maldición, es el primer cliente de la casa de té.');
+  await narra('A la mañana siguiente, el té de la isla vuelve a humear. Y la Ceremonia de la Hoja se hace, con un día de atraso: el mono trae la mejor hoja y la prepara el Maestro nuevo.');
+  primerPlano('wu_bs', {fondo:'jade', emo:'feliz', fijo:true});
   await saludar('wu_bs', {pid:'wu_bs', ask:'Saludá al doctor Wu', mudo:true});
   await di('wu_bs', 'zao_hao_xs');
   await elige('Te elogia', [{key:'xiexie', ok:true}, {key:'bukeqi', ok:false, why:'{bú kèqi|不客气} contesta a un {xièxie|谢谢}. Te elogiaron: se agradece, {xièxie|谢谢}.'}, {key:'meiguanxi', ok:false, why:'{méi guānxi|没关系} es para un {duìbuqǐ|对不起}. Te elogiaron: {xièxie|谢谢}.'}], {reintentar:true, quien:'wu_bs', reaccion:'o'});
+  sinPrimerPlano();
+  await narra('Al primero que sirven es al Capitán, que ya es el cliente más fiel de la casa de té. Después, tu mate pasa de mano en mano. Hasta el señor Chen se despierta para la ronda.');
+  primerPlano('tito', {fondo:'sol', emo:'risa', fijo:true});
+  await dice('tito', 'Tito Bombilla, Maestro del Té. Con un mono de sombrero. Y sigo sin bombilla.');
+  sinPrimerPlano();
   await dice('wenwen', 'Felicitaciones, Maestro. Yo sigo siendo una cabeza en un estante, pero estoy orgulloso. Creo. No sé bien qué es el orgullo.');
   S.fin = true; touch();
   pantallaFin();
@@ -4105,8 +4899,10 @@ function abrirAjustes() {
 function abrirComo() {
   capa('como', `<h2>Cómo se juega</h2>
     <p>Tocá la escena para caminar. Tocá a alguien para hablarle y tocá las cosas para mirarlas o usarlas.</p>
+    <p>Debajo de la escena, la tira <b>Ahora</b> te dice qué hacer después. Si la tocás, se abre la libreta con todo lo que falta.</p>
     <p>Abajo están los verbos: <b>Mirar</b>, <b>Agarrar</b>, <b>Usar</b>, <b>Hablar</b> y <b>Dar</b>. Elegí uno y después tocá algo. Para usar o dar algo que tenés, tocá el objeto y después a quién o con qué.</p>
     <p>Cuando hablás, elegís qué decir en chino. Si te equivocás, te explico por qué y probás de nuevo.</p>
+    <p>En los <b>duelos de réplicas</b> te atacan con una frase y contestás con la réplica justa antes de que se consuma el sahumerio. Tres seguidas: ¡golpe de té!</p>
     <p>Lo importante brilla. Cuando conseguís algo importante, lo ves de cerca; en el inventario queda con borde dorado.</p>
     <p>La dificultad cambia cuánto te ayuda la isla. En <b>Fácil</b>, menos opciones y marcas sobre lo importante y sobre quién te puede ayudar. En <b>Normal</b>, marcas solo sobre los objetos importantes. En <b>Difícil</b>, sin marcas, el castellano solo si lo pedís y duelos más largos. Se cambia en Ajustes.</p>
     <p>En la isla hay sabiduría china escondida: algunas frases llegan solas y otras aparecen si mirás las cosas con calma.</p>
@@ -4146,7 +4942,7 @@ function abrirLibreta(tab) {
 function pantallaFin() {
   const ganados = Object.values(S.duelo.ganados).reduce((a, b) => a + b, 0);
   capa('fin', `<div class="fin"><canvas class="yyfin" width="96" height="96" aria-hidden="true"></canvas><div class="lab">Fin</div><h2>Tito Bombilla, Maestro del Té</h2>
-    <p>La maldición se rompió con un mate de té del mono. Lo frío y lo caliente volvieron a estar en equilibrio: la isla toma té caliente y el Capitán Tibio, ahora, pide su té bien caliente.</p>
+    <p>La maldición se rompió con un mate compartido. Lo frío y lo caliente volvieron a estar en equilibrio: la isla toma té caliente, el mono volvió a la colina y el Capitán Tibio, ahora, nunca toma solo.</p>
     <div class="stats"><div><b>${Object.keys(S.oidas).length}</b><span>frases escuchadas</span></div><div><b>${S.duelo.r.length}</b><span>réplicas aprendidas</span></div><div><b>${ganados + 2}</b><span>duelos ganados</span></div><div><b>${(S.sab || []).length}/${SABIDURIA.length}</b><span>sabidurías</span></div></div>
     <p class="mute">Jugaste en ${esc(DIF().nombre)} · ${esc(DIF().te)}.</p>
     <div class="fila"><button type="button" class="btn" data-act="libreta">Ver la libreta</button><button type="button" class="btn sec" data-act="titulo">Volver al título</button></div></div>`);
@@ -4187,13 +4983,13 @@ document.addEventListener('click', ev => {
   if (act === 'marcas') { marcarPuntos(); return; }
   if (act === 'cancelar') { UI.verbo = null; UI.item = null; renderVerbos(); renderInv(); frase(''); return; }
   /* tocar el diálogo, o cualquier lugar libre de la pantalla de juego, hace avanzar (la escena avanza sola, con el dedo) */
-  if (avanzar && ev.target.closest('#juego') && !ev.target.closest('#cv') && !b) { soltar(); }
+  if (avanzar && ev.target.closest('#juego') && !ev.target.closest('#cv') && !b) { tocarDialogo(); }
 });
 $('#capa').addEventListener('click', ev => { if (ev.target.id === 'capa') cerrarCapa(); });
 document.addEventListener('keydown', ev => {
   if (momento.listo && (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Escape')) { ev.preventDefault(); momento.listo(); return; }
   if (ev.key === 'Escape' && !$('#capa').hidden) { cerrarCapa(); return; }
-  if ((ev.key === 'Enter' || ev.key === ' ') && avanzar && !ev.target.closest('button')) { ev.preventDefault(); soltar(); return; }
+  if ((ev.key === 'Enter' || ev.key === ' ') && avanzar && !ev.target.closest('button')) { ev.preventDefault(); tocarDialogo(); return; }
   if (/^[1-6]$/.test(ev.key) && elegido) { const b = $(`#olista [data-op="${+ev.key - 1}"]`); if (b) b.click(); }
 });
 
