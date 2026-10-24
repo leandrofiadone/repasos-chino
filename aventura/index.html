@@ -4232,9 +4232,13 @@ async function comprarZhenzhu() {
   await di('mali', 'shier_kuai');
   const r = await pregunta('¿Cuánto te pidió?', [{txt:'12 kuài', n:12, ok:true}, {txt:'2 kuài', n:2}, {txt:'20 kuài', n:20}]);
   if (r.n !== 12) { SFX.mal(); await di('mali', 'haha'); await nota('{shí\'èr|十二} es 10 + 2 = 12. El {èr|二} va al final.'); await di('mali', 'shier_kuai'); }
-  if (S.plata < 12) { await dice('tito', `No me alcanza: tengo ${S.plata} {kuài|块}.`); return; }
-  plata(-12); flag('compro_zhenzhu');
-  await narra('Le das 12 {kuài|块}. Mǎlì te da un vaso enorme con perlitas negras y un sorbete gordo como un dedo.');
+  if (S.plata < 12) {
+    await dice('tito', `[duda]Uy… tengo ${S.plata} {kuài|块}.`);
+    await narra(`Le mostrás lo que tenés. Mǎlì mira la plata, te mira a vos y se ríe: te lo deja ${S.plata ? `a ${S.plata} {kuài|块}` : 'gratis'}.`);
+    plata(-S.plata);
+  } else plata(-12);
+  flag('compro_zhenzhu');
+  await narra('Mǎlì te da un vaso enorme con perlitas negras y un sorbete gordo como un dedo.');
   await dar('zhenzhu');
   await di('mali', 'xiexie');
   await elige('Te agradece', [{key:'bukeqi', ok:true}, {key:'meiguanxi', ok:false, why:'{méi guānxi|没关系} es para un {duìbuqǐ|对不起}. A {xièxie|谢谢}: {bú kèqi|不客气}.'}, {key:'nihao', ok:false, why:'Eso es «hola». Te agradeció: {bú kèqi|不客气}.'}], {reintentar:true, quien:'mali', reaccion:'o'});
@@ -4586,6 +4590,7 @@ async function comprarCerveza() {
   const r = await pregunta('¿Cuánto cuesta?', [{txt:'9 kuài', n:9, ok:true}, {txt:'90 kuài', n:90}, {txt:'19 kuài', n:19}]);
   if (r.n !== 9) { SFX.mal(); await nota('{jiǔ kuài qián|九块钱}: solo el 9, sin decenas.'); }
   if (tiene('cerveza')) { await dice('tito', 'Ya tengo una. Con una alcanza.'); return; }
+  if (!F('quiere_cerveza') && !F('compro_zhenzhu')) { await dice('tito', '[picaro]Por ahora no necesito cerveza. Me guardo la plata, que en esta isla todo cuesta algo.'); return; }
   if (S.plata < 9) { await dice('tito', `No me alcanza: tengo ${S.plata} {kuài|块}.`); return; }
   plata(-9);
   await narra('Le das 9 {kuài|块} y te da una botella verde, bien fría.');
@@ -4939,7 +4944,13 @@ async function final() {
    Pantallas: título, dificultad, ajustes, cómo se juega, libreta
    y final. Y todos los toques de la interfaz.
    ============================================================ */
+/* arreglos para partidas guardadas con versiones anteriores */
+function rescates() {
+  /* la cerveza comprada antes de que el pescador la pida te dejaba sin plata para el bubble tea */
+  if (S.cap <= 2 && S.inv.includes('cerveza') && !S.f.quiere_cerveza && !S.f.compro_zhenzhu) { S.inv = S.inv.filter(x => x !== 'cerveza'); S.plata += 9; touch(); }
+}
 function entrarAlJuego(esc, entrada) {
+  rescates();
   UI.vista = 'juego';
   $('#titulo').hidden = true; $('#juego').hidden = false;
   T3.parar();
