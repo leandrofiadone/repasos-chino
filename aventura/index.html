@@ -3405,18 +3405,42 @@ async function corre(fn) {
 }
 
 /* ---------- tocar la escena ---------- */
+/* ¿qué hay bajo el dedo? Primero la gente, píxel a píxel (con un margen para el dedo) y sin contar
+   lo que tapa algo de adelante (el mostrador de un puesto); después, las zonas de la escena. */
+function tapadoPor(A, x, y, yActor) {
+  for (const l of A.fg) if (l.y > yActor && l.px.get(x, y)) return true;
+  return false;
+}
+function personaEn(x, y) {
+  const A = arte(R.esc.arte || R.esc.id);
+  const gente = R.actores.filter(a => a.visible && (!a.si || a.si()) && a.h).sort((p, q) => q.y - p.y);
+  for (const margen of [0, 2, 4]) {
+    for (const a of gente) {
+      const f = frameDe(a), x0 = Math.round(a.x) - 20, y0 = Math.round(a.y) - f.h + 2, flip = a.dir < 0;
+      for (let dy = -margen; dy <= margen; dy++) for (let dx = -margen; dx <= margen; dx++) {
+        const X = Math.round(x) + dx, Y = Math.round(y) + dy, fx = X - x0, fy = Y - y0;
+        if (fx < 0 || fy < 0 || fx >= f.w || fy >= f.h) continue;
+        if (!f.d[fy * f.w + (flip ? f.w - 1 - fx : fx)]) continue;
+        if (tapadoPor(A, X, Y, a.y)) continue;
+        return a.h;
+      }
+    }
+  }
+  return null;
+}
 function bajoDedo(x, y) {
   const esc = R.esc;
+  const p = personaEn(x, y); if (p) return p;
   const hs = [];
-  for (const a of R.actores) {
-    if (!a.visible || (a.si && !a.si()) || !a.h) continue;
-    const top = a.y - altoDe(a) - 2;
-    if (x >= a.x - 9 && x <= a.x + 10 && y >= top && y <= a.y + 2) hs.push({h:a.h, y:a.y});
-  }
   for (const h of esc.puntos) {
     if (h.si && !h.si()) continue;
     const [zx, zy, zw, zh] = h.zona;
     if (x >= zx && x < zx + zw && y >= zy && y < zy + zh) hs.push({h, y:zy + zh - (h.capa || 0)});
+  }
+  for (const a of R.actores) {
+    if (!a.visible || (a.si && !a.si()) || !a.h) continue;
+    const top = a.y - altoDe(a) - 2;
+    if (x >= a.x - 9 && x <= a.x + 10 && y >= top && y <= a.y + 2) hs.push({h:a.h, y:a.y + 20});
   }
   hs.sort((a, b) => b.y - a.y);
   return hs.length ? hs[0].h : null;
@@ -4236,7 +4260,10 @@ ESC.plaza = {
       mirar:'Un callejón con toldos de rayas y farolitos. Por ahí se llega al mercado.', entrar:() => entrarMercado(), usar:() => entrarMercado()},
     {id:'bambu', nombre:'Camino de bambú', zona:[106, 20, 46, 96], ir:[128, 140], capa:-30, def:'ir', puerta:true, lleva:'bosque', flecha:[129, 84, 'arriba'], cerrada:() => S.cap < 2,
       mirar:'Un camino que se mete entre los bambúes. Se escuchan pájaros. Y algo que podría ser un gong.', entrar:() => entrarBosque(), usar:() => entrarBosque()},
-    {id:'puesto', nombre:'Puesto de bubble tea', zona:[104, 94, 50, 54], capa:-12, marca:[129, 96], mirar:'Un puesto de bubble tea. Los vasitos tienen perlitas negras en el fondo. Parecen ojitos.'},
+    /* tocar el puesto es como hablarle a Mǎlì: ahí se pide el bubble tea */
+    {id:'puesto', nombre:'Puesto de bubble tea', zona:[104, 94, 50, 54], capa:-12, marca:[129, 96], ir:[130, 154], mira:-1, def:'hablar',
+      mirar:'Un puesto de bubble tea. Los vasitos tienen perlitas negras en el fondo. Parecen ojitos.',
+      hablar:() => MALI.hablar(), usar:() => MALI.hablar(), agarrar:() => MALI.hablar()},
     {id:'banco', nombre:'Banco', zona:[194, 124, 38, 20], ir:[214, 150], mirar:'Un banco de madera.', usar:'Me siento un ratito… Listo. Ya descansé.'},
     {id:'arbol', nombre:'Árbol', zona:[244, 76, 40, 50], capa:-20,
       async mirar() { await dice('tito', 'Un árbol enorme y torcido. Con esa madera no se hace ni una silla: por eso nadie lo cortó, y lleva siglos acá. Y hace sombra de la buena.'); await sabiduria('arbol'); },
