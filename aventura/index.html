@@ -1889,16 +1889,34 @@ function timon2D(B, frio) {
 /* ============================================================
    Sonido: voz en chino del dispositivo, efectos y música chiptune
    ============================================================ */
-const TTS = {ok:false, voice:null, checked:false};
+/* ============================================================
+   Voces. Cada personaje tiene la suya: frases grabadas con voces
+   neuronales (Kokoro), en un archivo aparte (voces.mp3) que se
+   baja una vez. Si no llega, habla la voz del dispositivo, con
+   el tono y la velocidad de cada personaje (y voz de hombre para
+   los hombres, si el dispositivo tiene una).
+   ============================================================ */
+const VOZ_IDX = (() => { try { const el = document.getElementById('voces'); return el ? JSON.parse(el.textContent) : null; } catch (e) { return null; } })();
+const VOCES = {buf:null, estado:'nada', cache:new Map(), src:null, gain:null, gen:0};
+/* la voz del dispositivo, de respaldo: g = m/f, p = tono (0 a 2), r = velocidad */
+const PERFIL_VOZ = {
+  tito:{g:'m', p:1.05, r:0.9}, wang_xs:{g:'m', p:0.85, r:0.78}, wu_bs:{g:'m', p:0.7, r:0.72}, chen_xs:{g:'m', p:0.75, r:0.7}, dawei:{g:'m', p:0.95, r:0.86},
+  li_xs:{g:'m', p:1.15, r:0.95}, capitan:{g:'m', p:0.55, r:0.75}, capitan_vivo:{g:'m', p:0.8, r:0.82}, wenwen:{g:'m', p:1.5, r:0.95},
+  wang_tt:{g:'f', p:0.92, r:0.8}, wang_xj:{g:'f', p:1.15, r:0.88}, wang_ls:{g:'f', p:1.0, r:0.8}, li_ms:{g:'f', p:1.1, r:1.0}, li_tt:{g:'f', p:0.8, r:0.8},
+  lin_ns:{g:'f', p:0.95, r:0.84}, chen_xj:{g:'f', p:1.3, r:0.92}, wu_ns:{g:'f', p:1.0, r:0.84}, mali:{g:'f', p:1.25, r:0.92}, vendedora:{g:'f', p:0.9, r:0.95},
+  nene:{g:'f', p:1.6, r:0.95},
+};
+const TTS = {ok:false, voice:null, hombre:null, mujer:null, checked:false};
+const ES_HOMBRE = /kangkang|yunxi|yunyang|yunjian|yunxia|yunye|yunze|yunhao|yunfeng|yunfan|li-?mu|\bmale\b|\u7537/i;
 function cargaVoces() {
   if (!('speechSynthesis' in window)) { TTS.checked = true; return; }
   let vs = [];
   try { vs = window.speechSynthesis.getVoices() || []; } catch (e) { return; }
-  const zhv = vs.filter(v => /^(zh|cmn)/i.test(v.lang || ''));
-  const v = zhv.find(x => /CN|Hans|cmn/i.test(x.lang) && !/HK|yue|TW|Hant/i.test(x.lang) && x.localService)
-    || zhv.find(x => /CN|Hans|cmn/i.test(x.lang) && !/HK|yue|TW|Hant/i.test(x.lang))
-    || zhv.find(x => !/HK|yue/i.test(x.lang));
+  const zhv = vs.filter(v => /^(zh|cmn)/i.test(v.lang || '') && !/HK|yue|TW|Hant/i.test(v.lang || ''));
+  const v = zhv.find(x => /CN|Hans|cmn/i.test(x.lang) && x.localService) || zhv.find(x => /CN|Hans|cmn/i.test(x.lang)) || zhv[0];
   if (v) { TTS.voice = v; TTS.ok = true; }
+  TTS.hombre = zhv.find(x => ES_HOMBRE.test(x.name)) || null;
+  TTS.mujer = zhv.find(x => !ES_HOMBRE.test(x.name)) || null;
   renderVoz();
 }
 function initTTS() {
@@ -1910,19 +1928,68 @@ function initTTS() {
 }
 function renderVoz() {
   const t = $('#vozTxt'); if (!t) return;
-  t.textContent = TTS.ok ? 'Voz en chino lista.' : (TTS.checked ? 'Este dispositivo no tiene voz en chino: las frases se leen. Para escucharlas, instalá una voz de chino (China continental) en los ajustes de texto a voz.' : 'Buscando la voz en chino…');
+  if (VOCES.estado === 'lista') { t.textContent = 'Voces de los personajes listas: cada uno habla con la suya.'; return; }
+  if (VOCES.estado === 'cargando') { t.textContent = 'Bajando las voces de los personajes…'; return; }
+  t.textContent = TTS.ok ? 'Se usa la voz en chino del dispositivo, con un tono distinto para cada personaje.' : (TTS.checked ? 'Este dispositivo no tiene voz en chino: las frases se leen. Para escucharlas, instalá una voz de chino (China continental) en los ajustes de texto a voz.' : 'Buscando la voz en chino…');
 }
-function habla(text, rate) {
+/* la voz del dispositivo (con el perfil del personaje, si hay) */
+function habla(text, perfil) {
   if (!TTS.ok || !text) return;
   try {
-    const ss = window.speechSynthesis;
+    const ss = window.speechSynthesis, pf = perfil || {p:1, r:0.82};
     const u = new SpeechSynthesisUtterance(text.replace(/[A-Za-z]+/g, ''));
-    u.voice = TTS.voice; u.lang = TTS.voice.lang; u.rate = rate || 0.82;
+    const voz = (pf.g === 'm' ? TTS.hombre : pf.g === 'f' ? TTS.mujer : null) || TTS.voice;
+    u.voice = voz; u.lang = voz.lang; u.rate = pf.r || 0.82;
+    /* si un hombre tiene que hablar con voz de mujer, se le baja bastante el tono */
+    u.pitch = Math.max(0.1, Math.min(2, (pf.p || 1) * (pf.g === 'm' && !TTS.hombre ? 0.72 : 1)));
     if (ss.speaking || ss.pending) ss.cancel();
     setTimeout(() => { try { ss.speak(u); } catch (e) {} }, 40);
   } catch (e) {}
 }
-function calla() { try { const ss = window.speechSynthesis; if (ss && (ss.speaking || ss.pending)) ss.cancel(); } catch (e) {} }
+function calla() { try { const ss = window.speechSynthesis; if (ss && (ss.speaking || ss.pending)) ss.cancel(); } catch (e) {} pararVoz(); }
+/* las voces grabadas: se bajan en segundo plano después del primer toque */
+function cargarVoces() {
+  if (VOCES.estado !== 'nada' || !VOZ_IDX || !window.fetch) return;
+  VOCES.estado = 'cargando'; renderVoz();
+  fetch(VOZ_IDX.archivo).then(r => (r.ok ? r.arrayBuffer() : Promise.reject(new Error('sin voces'))))
+    .then(b => { VOCES.buf = b; VOCES.estado = 'lista'; renderVoz(); })
+    .catch(() => { VOCES.estado = 'falla'; renderVoz(); });
+}
+function pararVoz() {
+  VOCES.gen++;
+  const s = VOCES.src; VOCES.src = null;
+  if (s) { try { s.onended = null; s.stop(); } catch (e) {} }
+  musicaSube();
+}
+/* mientras alguien habla, la música baja */
+function musicaBaja() { if (AU.ctx && AU.mus) AU.mus.gain.setTargetAtTime(0.05, AU.ctx.currentTime, 0.06); }
+function musicaSube() { if (AU.ctx && AU.mus) AU.mus.gain.setTargetAtTime(0.16, AU.ctx.currentTime, 0.25); }
+/* decir una línea con la voz de quien la dice; devuelve cuánto dura (ms), o 0 si no se sabe */
+async function hablaLinea(spec, key, hz) {
+  if (window.__TEST__) (window.__habladas = window.__habladas || new Set()).add(`${spec}|${key}`);
+  if (!S.cfg.voz || !hz) return 0;
+  calla();
+  const e = VOZ_IDX && VOZ_IDX.c[`${spec}|${key}`], c = AU.ctx;
+  if (e && VOCES.estado === 'lista' && c) {
+    const g = VOCES.gen, k = `${spec}|${key}`;
+    try {
+      let ab = VOCES.cache.get(k);
+      if (!ab) {
+        ab = await c.decodeAudioData(VOCES.buf.slice(e[0], e[0] + e[1]));
+        VOCES.cache.set(k, ab);
+        if (VOCES.cache.size > 60) VOCES.cache.delete(VOCES.cache.keys().next().value);
+      }
+      if (g !== VOCES.gen) return 0;
+      if (!VOCES.gain) { VOCES.gain = c.createGain(); VOCES.gain.gain.value = 1.0; VOCES.gain.connect(c.destination); }
+      const s = c.createBufferSource(); s.buffer = ab; s.connect(VOCES.gain);
+      s.onended = () => { if (VOCES.src === s) { VOCES.src = null; musicaSube(); } };
+      s.start(); VOCES.src = s; musicaBaja();
+      return ab.duration * 1000;
+    } catch (err) { /* si algo falla, habla el dispositivo */ }
+  }
+  habla(hz, PERFIL_VOZ[spec]);
+  return 0;
+}
 
 /* ---------- efectos ---------- */
 const AU = {ctx:null, out:null, mus:null, noise:null};
@@ -1940,6 +2007,7 @@ function audio() {
       AU.noise = buf;
     }
     if (AU.ctx.state === 'suspended') AU.ctx.resume();
+    cargarVoces();
     return AU.ctx;
   } catch (e) { return null; }
 }
@@ -3280,9 +3348,10 @@ async function di(quien, key, o) {
   lado(quien === 'tito' ? 'der' : 'izq');
   $('#dtexto').innerHTML = `<div class="quien">${rich(nom)}</div><div class="zh pop"><b class="py">${esc(l.py)}</b> <span class="hz" lang="zh-Hans">${esc(l.hz)}</span></div>
     ${sub ? `<div class="es">${esc(l.es)}</div>` : l.es ? `<button type="button" class="trad" data-act="traducir">Ver en castellano</button><div class="es" hidden>${esc(l.es)}</div>` : ''}`;
-  $('#dbotones').innerHTML = `<button type="button" class="oir" data-say="${esc(l.hz)}" aria-label="Escuchar de nuevo">${ico('i-oreja')}</button><span class="seguir">Tocá para seguir</span>`;
+  const quienVoz = id || quien, claveVoz = typeof key === 'string' ? key : '';
+  $('#dbotones').innerHTML = `<button type="button" class="oir" data-say="${esc(l.hz)}" data-quien="${esc(quienVoz)}" data-key="${esc(claveVoz)}" aria-label="Escuchar de nuevo">${ico('i-oreja')}</button><span class="seguir">Tocá para seguir</span>`;
   panel('dialogo'); $('#opciones').hidden = true; $('#linea').hidden = false;
-  if (S.cfg.voz) habla(l.hz);
+  hablaLinea(quienVoz, claveVoz, l.hz).then(ms => { if (ms && id) HABLA.voz[id] = performance.now() + ms; });
   await esperarToque();
 }
 /* alguien dice algo en castellano (Tito cuando piensa, Wènwen, los comentarios) */
@@ -3479,7 +3548,8 @@ function hacer(h) {
     if (verbo === 'ir') { if (h.salida) await vaA(h.salida, h.entrada); else if (h.entrar) await h.entrar(); return; }
     const fn = h[verbo];
     if (item) {
-      const con = (h.con && h.con[item]) || (verbo === 'dar' && h.recibe && h.recibe[item]);
+      /* usar algo con una persona que lo recibe es dárselo (tocar el objeto y después a la persona) */
+      const con = (h.con && h.con[item]) || ((verbo === 'dar' || h.persona) && h.recibe && h.recibe[item]);
       if (con) { const r = await (typeof con === 'function' ? con() : con); if (typeof r === 'string') await dice('tito', r); return; }
       await dice('tito', noSirve(verbo, item, h), 'duda');
       return;
@@ -3607,9 +3677,9 @@ function posiciones() {
   t.x = cx - 18; r.x = cx + 18; t.dir = 1; r.dir = -1; t.ruta = null; r.ruta = null;
 }
 const comboHtml = () => `<i title="Golpe de té" aria-label="${DUEL.combo} de 3 para el golpe de té">${[0, 1, 2].map(k => `<b class="${k < DUEL.combo ? 'si' : ''}"></b>`).join('')}</i>`;
-function cabezaAtaque(R_, par, l, tiempo) {
+function cabezaAtaque(R_, par, l, tiempo, linea) {
   return `<div class="combo"><span>${rich(R_.nombre)} ataca${par.gesto ? ` · ${esc(par.gesto)}` : ''}</span>${comboHtml()}</div>
-    <div class="ataque"><button type="button" class="oir" data-say="${esc(l.hz)}" aria-label="Escuchar de nuevo">${ico('i-oreja')}</button>${zh(l.py, l.hz)}</div>
+    <div class="ataque"><button type="button" class="oir" data-say="${esc(l.hz)}" data-quien="${esc(R_.spec)}" data-key="${esc(linea)}" aria-label="Escuchar de nuevo">${ico('i-oreja')}</button>${zh(l.py, l.hz)}</div>
     ${tiempo && !window.__TEST__ ? `<div class="mecha" role="timer" aria-label="${tiempo} segundos para contestar"><i style="animation-duration:${tiempo}s"></i></div>` : ''}`;
 }
 /* las opciones del duelo; con reloj, si se acaba, vuelve -1 */
@@ -3654,7 +3724,7 @@ async function resumen(ataque, replica, gana, extra) {
   const [e1, e2] = gana === null ? ['Tu ataque', 'Su réplica'] : ['Te atacó', 'La réplica justa'];
   $('#dtexto').innerHTML = `<div class="cruce ${cls}"><div class="lab">${tit}</div>
     <div class="par"><div><small>${e1}</small>${zh(a.py, a.hz)}<span class="es">${esc(a.es)}</span></div><div><small>${e2}</small>${zh(r.py, r.hz)}<span class="es">${esc(r.es)}</span></div></div>${extra ? `<div class="aprende">${extra}</div>` : ''}</div>`;
-  $('#dbotones').innerHTML = `<button type="button" class="oir" data-say="${esc(r.hz)}" aria-label="Escuchar la réplica">${ico('i-oreja')}</button><span class="seguir">Tocá para seguir</span>`;
+  $('#dbotones').innerHTML = `<button type="button" class="oir" data-say="${esc(r.hz)}" data-quien="tito" data-key="${esc(replica)}" aria-label="Escuchar la réplica">${ico('i-oreja')}</button><span class="seguir">Tocá para seguir</span>`;
   panel('dialogo'); $('#opciones').hidden = true; $('#linea').hidden = false;
   await esperarToque();
 }
@@ -3684,12 +3754,12 @@ async function ataqueRival() {
   ppCara('der', 'picaro'); ppCara('izq', 'duda');
   HABLA.voz[R_.spec] = performance.now() + Math.max(900, l.hz.length * 240);
   const a = act(R_.actor); if (a) a.habla = 1.4;
-  if (S.cfg.voz) habla(l.hz);
+  hablaLinea(R_.spec, linea, l.hz).then(ms => { if (ms) HABLA.voz[R_.spec] = performance.now() + ms; });
   const ops = opcionesReplica(par), buena = ops.findIndex(o => o.ok);
-  const i = await opcionesDuelo(cabezaAtaque(R_, par, l, d.tiempo), ops, d.tiempo);
+  const i = await opcionesDuelo(cabezaAtaque(R_, par, l, d.tiempo, linea), ops, d.tiempo);
   pararReloj();
   const op = i >= 0 ? ops[i] : null;
-  if (op) { HABLA.voz.tito = performance.now() + 900; if (S.cfg.voz) habla(CL(op.key).hz); }
+  if (op) { HABLA.voz.tito = performance.now() + 900; hablaLinea('tito', op.key, CL(op.key).hz); }
   const nuevoA = DUEL.modo === 'aprendiz' && aprende('a', id);
   const extraA = nuevoA ? `Ataque nuevo para tu libreta: ${zh(CL(par.a).py, CL(par.a).hz)}` : '';
   marcarOps(i, buena);
@@ -3720,12 +3790,12 @@ async function ataqueTito() {
   const i = await opcionesDuelo(`<div class="combo"><span>¡Te toca atacar!</span>${comboHtml()}</div>
     <div class="ataque tuyo"><span class="es">Elegí con qué frase lo atacás. Si no sabe qué contestar, ganás el cruce; si la sabe, te la para… y te llevás su réplica.</span></div>`, ops, 0);
   const op = ops[i], par = PAR[op.pid];
-  HABLA.voz.tito = performance.now() + 900; if (S.cfg.voz) habla(CL(op.key).hz);
+  HABLA.voz.tito = performance.now() + 900; hablaLinea('tito', op.key, CL(op.key).hz);
   $$('#olista .op').forEach((b, k) => { b.disabled = true; if (k !== i) b.classList.add('apagada'); });
   await espera(600);
   if (R_.sabe.includes(par.id)) {
     /* la sabe: te la para y nadie suma, pero te llevás la réplica */
-    HABLA.voz[R_.spec] = performance.now() + 900; if (S.cfg.voz) habla(CL(par.r).hz);
+    HABLA.voz[R_.spec] = performance.now() + 900; hablaLinea(R_.spec, par.r, CL(par.r).hz);
     SFX.choque(); ppTexto('¡Parada!', 'chico', 1100);
     const nueva = aprende('r', par.id);
     ppCara('der', 'picaro'); ppCara('izq', nueva ? 'sorpresa' : 'duda');
@@ -3734,7 +3804,7 @@ async function ataqueTito() {
     return;
   }
   const mala = pick(['r_o', 'r_haha']);
-  HABLA.voz[R_.spec] = performance.now() + 700; if (S.cfg.voz) habla(CL(mala).hz);
+  HABLA.voz[R_.spec] = performance.now() + 700; hablaLinea(R_.spec, mala, CL(mala).hz);
   DUEL.combo++;
   const fuerte = DUEL.combo >= 3; if (fuerte) DUEL.combo = 0;
   empuja(fuerte);
@@ -5070,7 +5140,7 @@ let libTab = 'ahora';
 function abrirLibreta(tab) {
   if (tab) libTab = tab;
   const tabs = [['ahora', 'Ahora'], ['duelos', 'Réplicas'], ['gente', 'Gente'], ['frases', 'Frases'], ['sabiduria', 'Sabiduría']];
-  const linea = (k, extra) => { const l = CL(k); return `<div class="ll"><button type="button" class="oir" data-say="${esc(l.hz)}" aria-label="Escuchar">${ico('i-oreja')}</button><div>${zh(l.py, l.hz)}<span class="es">${esc(l.es || '')}</span>${extra || ''}</div></div>`; };
+  const linea = (k, extra) => { const l = CL(k); return `<div class="ll"><button type="button" class="oir" data-say="${esc(l.hz)}" data-quien="tito" data-key="${esc(k)}" aria-label="Escuchar">${ico('i-oreja')}</button><div>${zh(l.py, l.hz)}<span class="es">${esc(l.es || '')}</span>${extra || ''}</div></div>`; };
   let cuerpo = '';
   if (libTab === 'ahora') {
     const o = objetivos();
@@ -5112,9 +5182,15 @@ function pantallaFin() {
 document.addEventListener('click', ev => {
   const b = ev.target.closest('button, [data-act]');
   audio(); Musica.arranca();
-  if (b && b.dataset.say) { ev.stopPropagation(); habla(b.dataset.say); return; }
+  if (b && b.dataset.say) { ev.stopPropagation(); hablaLinea(b.dataset.quien || 'tito', b.dataset.key || '', b.dataset.say); return; }
   if (b && b.dataset.act === 'ok' && momento.listo) { SFX.tic(); momento.listo(); return; }
-  if (b && b.dataset.verbo) { if (UI.ocupado) return; const v = b.dataset.verbo; UI.verbo = UI.verbo === v ? null : v; UI.item = null; renderVerbos(); renderInv(); frase(UI.verbo ? fraseActual(null) : ''); SFX.tic(); return; }
+  if (b && b.dataset.verbo) {
+    if (UI.ocupado) return;
+    const v = b.dataset.verbo;
+    /* con un objeto ya elegido, «Dar» o «Usar» no lo sueltan: cambian lo que se va a hacer con él */
+    if (UI.item && (v === 'dar' || v === 'usar')) { UI.verbo = v; renderVerbos(); renderInv(); frase(fraseActual(null)); SFX.tic(); return; }
+    UI.verbo = UI.verbo === v ? null : v; UI.item = null; renderVerbos(); renderInv(); frase(UI.verbo ? fraseActual(null) : ''); SFX.tic(); return;
+  }
   if (b && b.dataset.item) { tocarItem(b.dataset.item); return; }
   if (b && b.dataset.op != null) { const r = elegido; elegido = null; if (r) { SFX.tic(); r(+b.dataset.op); } return; }
   if (b && b.dataset.cfg) { const k = b.dataset.cfg; S.cfg[k] = !S.cfg[k]; touch(); b.classList.toggle('on', S.cfg[k]); if (k === 'mus' && !S.cfg.mus) Musica.pausa(true); if (k === 'mus' && S.cfg.mus) Musica.pausa(false); if (k === 'voz' && !S.cfg.voz) calla(); return; }
