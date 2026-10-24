@@ -1,7 +1,7 @@
 {
   "name": "Repaso",
   "short_name": "Repaso",
-  "description": "Repaso de las lecciones 1 a 3 de mandarín: tonos, sonidos, saludos, bebidas, números, países, frases y los diálogos, con examen final.",
+  "description": "Repaso de las lecciones 1 a 6 de mandarín: tonos, sonidos, saludos y cortesía, bebidas, números, países, frases y los diálogos, con examen final.",
   "lang": "es-AR",
   "dir": "ltr",
   "start_url": "./",
