@@ -4112,7 +4112,7 @@ const ESC = {};
 
 /* ---------- el muelle ---------- */
 const PESCADOR = {
-  nombre:() => QUIEN.pescador(), persona:true, ir:[244, 166], mira:1,
+  nombre:() => QUIEN.pescador(), persona:true, ir:[138, 166], mira:-1,
   mirar:() => (S.cap === 3 && !F('bote_prestado') ? 'El pescador, sentado en el muelle, mira una taza de té tibio como si le hubiera hecho algo.' : 'Un pescador con sombrero de paja, la caña al hombro y un termo. Pesca con mucha paciencia y ningún pescado.'),
   agarrar:'No se agarra a la gente. Primera regla de cualquier isla.',
   async hablar() {
@@ -4152,12 +4152,15 @@ const PESCADOR = {
 ESC.muelle = {
   id:'muelle', nombre:'El muelle', arte:'muelle', musica:'puerto', piso:[12, 140, 300, 174], inicio:[150, 166, 1],
   entradas:{plaza:[22, 162, 1], barco:[230, 162, -1]},
-  gente() { return [actor('pescador', 'wang_xs', 270, 166, -1, {h:PESCADOR})]; },
+  /* lejos del bote: si no, su caña tapaba el bote y no se podía tocar */
+  gente() { return [actor('pescador', 'wang_xs', 114, 166, 1, {h:PESCADOR})]; },
   puntos:[
     {id:'portal', nombre:'Portal al pueblo', zona:[0, 40, 56, 100], salida:'plaza', entrada:'muelle', ir:[18, 160], lleva:'plaza', flecha:[5, 150, 'izq'], mirar:'Un portal rojo con techito de tejas verdes. Del otro lado está el pueblo.'},
     {id:'bote', nombre:'Bote', zona:[232, 108, 72, 20], ir:[240, 150], brillo:[262, 113], marca:[268, 104], lleva:'barco', flecha:[268, 101, 'abajo'], rotulo:() => S.cap === 3 && F('bote_prestado'),
       mirar:() => (F('bote_prestado') ? 'El bote del señor Wang. Me lo prestó. No lo hundas, Tito.' : 'Un bote de madera. Tiene más parches que mi campera. No es mío.'),
-      agarrar:'Es un bote. No entra en el bolsillo.',
+      /* prestado, tocarlo (o «agarrarlo») es subirse */
+      get def() { return F('bote_prestado') ? 'usar' : undefined; },
+      agarrar() { return F('bote_prestado') ? this.usar() : 'Es un bote. No entra en el bolsillo.'; },
       async usar() {
         if (!F('bote_prestado')) { await dice('tito', S.cap === 3 ? 'Es del señor Wang. Sin su permiso, no.' : 'No es mío. No pienso robar un bote el primer día.'); return; }
         if (!tiene('mate_te') && !tiene('te_caro') && !tiene('mate_caliente')) { await dice('tito', 'No voy a ir a enfrentar a un fantasma sin el último té del mono.'); return; }
@@ -4982,7 +4985,7 @@ async function empezar(dif) {
   await narra('Y justo hoy llega Tito Bombilla, con un mate, un termo y un sueño: ser Maestro del Té.');
   await capitulo(1, 'Un mate en la Isla Verde', 'Buscá la casa de té y a los Maestros del Té.');
   R.tito.visible = true; R.tito.x = 40; R.tito.y = 166;
-  await camina(110, 166);
+  await camina(164, 166);
   primerPlano('tito', {fondo:'sol', emo:'risa', fijo:true});
   await dice('tito', '¡Llegué! Ahora, a buscar a los Maestros del Té. Y mi bombilla. ¿Dónde está mi bombilla? Me llamo Bombilla y no tengo bombilla.');
   sinPrimerPlano();
